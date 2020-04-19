@@ -51,5 +51,9 @@ tm sToDate(string date_str);
 
 //Convert a time string with the format HH:MM to struct tm and return the struct tm
 tm sToTime(string time_str);
-
+struct Semester {
+	string year;
+	string semester;
+};
+//Nhap thong tin year, semester cua phan 3.1 vao text Semester.txt
 #endif // !_GENERAL_H_
