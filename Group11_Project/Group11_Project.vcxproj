@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\allRoles.cpp" />
+    <ClCompile Include="Sources\general.cpp" />
     <ClCompile Include="Sources\main.cpp" />
     <ClCompile Include="Sources\sha256.cpp" />
   </ItemGroup>
