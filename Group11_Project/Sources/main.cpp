@@ -6,7 +6,6 @@ int main() {
 	else cout << "Login failed. Please try again." << endl;
 	int x = 0;
 
-	ofstream fin
-	inputSemester(fin, x);
+	
 	return 0;
 }

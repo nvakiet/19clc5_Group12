@@ -27,9 +27,6 @@
     <ClCompile Include="Sources\general.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AcademicstaffCourrse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\allRoles.h">
@@ -44,7 +41,7 @@
     <ClInclude Include="Headers\main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AcademicstaffCourrse.h">
+    <ClInclude Include="Phan3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
