@@ -14,3 +14,13 @@ tm sToTime(string time_str) {
 	time.tm_min = stoi(time_str.substr(3, 2));
 	return time;
 }
+
+void flushin(istream& input) {
+	input.clear();
+	input.ignore(INT_MAX, '\n');
+}
+void pause() {
+	cout << "Press ENTER to continue..." << endl;
+	flushin(cin);
+	cin.get();
+}

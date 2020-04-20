@@ -24,7 +24,7 @@ bool logIn(Account& user) {
 	if (!fin.eof()) {	//Check if file is empty
 		int n;
 		fin >> n;
-		fin.ignore(2000, '\n');
+		flushin(fin);
 		for (int i = 0; i < n; i++) {
 			getline(fin, fileUsername);
 			getline(fin, filePassword);
@@ -38,7 +38,7 @@ bool logIn(Account& user) {
 			else {	//The format of the file will have a blank line after each user info so we must skip n+1 lines
 				//With n = number of data fields besides username and password
 				for (int j = 0; j < 4; j++)
-					fin.ignore(2000, '\n');
+					fin.ignore(INT_MAX, '\n');
 			}
 		}
 	}
@@ -55,7 +55,7 @@ bool logIn(Account& user) {
 	if (!fin.eof()) {
 		int n;
 		fin >> n;
-		fin.ignore(2000, '\n');
+		flushin(fin);
 		for (int i = 0; i < n; i++) {
 			getline(fin, fileUsername);
 			getline(fin, filePassword);
@@ -66,14 +66,14 @@ bool logIn(Account& user) {
 				getline(fin, user.lecturerProfile.email);
 				getline(fin, user.lecturerProfile.academicRank);
 				fin >> user.lecturerProfile.gender;
-				fin.ignore(2000, '\n');
+				flushin(fin);
 				getline(fin, DoB);
 				user.lecturerProfile.birthDate = sToDate(DoB);
 				return true;
 			}
 			else {
 				for (int j = 0; j < 6; j++)
-					fin.ignore(2000, '\n');
+					fin.ignore(INT_MAX, '\n');
 			}
 		}
 	}
@@ -90,7 +90,7 @@ bool logIn(Account& user) {
 	if (!fin.eof()) {
 		int n;
 		fin >> n;
-		fin.ignore(2000, '\n');
+		flushin(fin);
 		for (int i = 0; i < n; i++) {
 			getline(fin, fileUsername);
 			getline(fin, filePassword);
@@ -102,10 +102,11 @@ bool logIn(Account& user) {
 				getline(fin, user.studentProfile.classID);
 				getline(fin, user.studentProfile.email);
 				fin >> user.studentProfile.gender;
-				fin.ignore(2000, '\n');
+				flushin(fin);
 				getline(fin, DoB);
 				user.studentProfile.birthDate = sToDate(DoB);
 				fin >> user.studentProfile.active;
+				flushin(fin);
 				return true;
 			}
 			else {
@@ -167,7 +168,7 @@ bool changePassword(Account& user) {
 			return false;
 		}
 		fin >> n;
-		fin.ignore(2000, '\n');
+		flushin(fin);
 		userArr = new Account[n];
 		for (int i = 0; i < n; i++) {
 			getline(fin, userArr[i].username);
@@ -175,8 +176,8 @@ bool changePassword(Account& user) {
 			getline(fin, userArr[i].staffProfile.fullname);
 			getline(fin, userArr[i].staffProfile.email);
 			fin >> userArr[i].staffProfile.gender;
-			fin.ignore(2000, '\n');	//This one is to flush the buffer
-			fin.ignore(2000, '\n'); //This one is to skip the blank line
+			flushin(fin);	//This one is to flush the buffer
+			fin.ignore(INT_MAX, '\n'); //This one is to skip the blank line
 			if (userArr[i].username == user.username && userArr[i].password == user.password) {
 				//Change password of the account currently logging in and the one in data file
 				userArr[i].password = passwordInput;
@@ -215,7 +216,7 @@ bool changePassword(Account& user) {
 			return false;
 		}
 		fin >> n;
-		fin.ignore(2000, '\n');
+		flushin(fin);
 		userArr = new Account[n];
 		for (int i = 0; i < n; i++) {
 			getline(fin, userArr[i].username);
@@ -224,10 +225,10 @@ bool changePassword(Account& user) {
 			getline(fin, userArr[i].lecturerProfile.email);
 			getline(fin, userArr[i].lecturerProfile.academicRank);
 			fin >> userArr[i].lecturerProfile.gender;
-			fin.ignore(2000, '\n');	//Flush the buffer
+			flushin(fin);	//Flush the buffer
 			getline(fin, DoB);
 			userArr[i].lecturerProfile.birthDate = sToDate(DoB);
-			fin.ignore(2000, '\n'); //This one is to skip the blank line
+			fin.ignore(INT_MAX, '\n'); //This one is to skip the blank line
 			if (userArr[i].username == user.username && userArr[i].password == user.password) {
 				//Change password of the account currently logging in and the one in data file
 				userArr[i].password = passwordInput;
@@ -270,7 +271,7 @@ bool changePassword(Account& user) {
 			return false;
 		}
 		fin >> n;
-		fin.ignore(2000, '\n');
+		flushin(fin);
 		userArr = new Account[n];
 		for (int i = 0; i < n; i++) {
 			getline(fin, userArr[i].username);
@@ -280,12 +281,12 @@ bool changePassword(Account& user) {
 			getline(fin, userArr[i].studentProfile.classID);
 			getline(fin, userArr[i].studentProfile.email);
 			fin >> userArr[i].studentProfile.gender;
-			fin.ignore(2000, '\n');	//Flush the buffer
+			flushin(fin);	//Flush the buffer
 			getline(fin, DoB);
 			userArr[i].studentProfile.birthDate = sToDate(DoB);
 			fin >> userArr[i].studentProfile.active;
-			fin.ignore(2000, '\n');	//Flush the buffer
-			fin.ignore(2000, '\n');	//Skip the blank line
+			flushin(fin);	//Flush the buffer
+			fin.ignore(INT_MAX, '\n');	//Skip the blank line
 			if (userArr[i].username == user.username && userArr[i].password == user.password) {
 				//Change password of the account currently logging in and the one in data file
 				userArr[i].password = passwordInput;
@@ -321,4 +322,39 @@ bool changePassword(Account& user) {
 		break;
 	}
 	return true;
+}
+
+int menuStart() {
+	cout << string(50, '*') << endl;
+	cout << string(12, ' ') << "STUDENT MANAGEMENT SYSTEM" << string(12, ' ') << endl;
+	cout << string(50, '*') << endl;
+	cout << "1 - LOGIN" << endl;
+	cout << "2 - EXIT" << endl;
+	int choice = 0;
+	while (choice != 1 && choice != 2) {
+		cout << "--> CHOOSE: ";
+		cin >> choice;
+	}
+	flushin(cin);
+	return choice;
+}
+
+int menuStaff() {
+	cout << string(50, '*') << endl;
+	cout << string(16, ' ') << "MAIN MENU - STAFF" << string(16, ' ') << endl;
+	cout << string(50, '*') << endl;
+	cout << "1 - ACCOUNT PROFILE" << endl;
+	cout << "2 - CHANGE PASSWORD" << endl;
+	cout << "3 - MENU: CLASS" << endl;
+	cout << "4 - MENU: COURSE" << endl;
+	cout << "5 - MENU: SCOREBOARD" << endl;
+	cout << "6 - MENU: ATTENDANCE LIST" << endl;
+	cout << "7 - LOG OUT" << endl;
+	int choice = 0;
+	while (choice < 1 && choice > 7) {
+		cout << "--> CHOOSE: ";
+		cin >> choice;
+	}
+	flushin(cin);
+	return choice;
 }

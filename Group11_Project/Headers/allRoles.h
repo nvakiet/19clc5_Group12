@@ -16,15 +16,15 @@ bool logIn(Account& user);
 //True: password changed successfully
 bool changePassword(Account& user);
 
-////Prints Startup menu to the screen, take user's choice and return the choice back to the system
-// //1: Login; 2: Exit program
-////Menu loop break condition: when choose exit
-//int menuStart();
-//
-////Prints main menu for Academic Staff user
-////Menu loop break condition: when user role is changed to 0 by logOut function
-//int menuStaff();
-//
+//Prints Startup menu to the screen, take user's choice and return the choice back to the system
+ //1: Login; 2: Exit program
+//Menu loop break condition: when choose exit
+int menuStart();
+
+//Prints main menu for Academic Staff user
+//Menu loop break condition: when user role is changed to 0 by logOut function
+int menuStaff();
+
 ////Prints main menu for Lecturer user
 ////Menu loop break condition: when user role is changed to 0 by logOut function
 //int menuLecturer();

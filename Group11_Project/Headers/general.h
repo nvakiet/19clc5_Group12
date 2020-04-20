@@ -41,7 +41,7 @@ struct Student {
 
 struct Account {//When "role" value is changed, the corresponding profile will be loaded
 	string username, password; //Password is always in hashed form
-	int role; //0 = logged out; 1 = Staff; 2 = Lecturer; 3 = Student
+	int role = 0; //0 = logged out; 1 = Staff; 2 = Lecturer; 3 = Student
 	Staff staffProfile;
 	Lecturer lecturerProfile;
 	Student studentProfile;
@@ -78,7 +78,6 @@ struct scoreBoard {
 
 struct attendanceList {
 	Course courseInfo;
-	tm* courseDates; //1D array of size nWeeks for n class dates in the course
 	bool* checkList; //2D array of size nStudents * nWeeks; True = on class - False = absent
 };
 //Convert a date string with the format YYYY-MM-DD to struct tm and return the struct tm
@@ -87,4 +86,9 @@ tm sToDate(string date_str);
 //Convert a time string with the format HH:MM to struct tm and return the struct tm
 tm sToTime(string time_str);
 
+//flush the input stream to not cause error for getline
+void flushin(istream& input);
+
+//Semi-pause the program until user hit ENTER
+void pause();
 #endif // !_GENERAL_H_
