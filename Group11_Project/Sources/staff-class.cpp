@@ -11,12 +11,15 @@ bool importFromCSV(string& path) {
 		return false;
 	}
 
-	int n = 3;
-	string DoB, sex;
+	int count=0;
+	string DoB, sex, line;
+
+	while (getline(fin, line))
+		count++;
 
 	Account* newUser;
-	newUser = new Account[n];
-	for (int i = 0; i < n; i++) {
+	newUser = new Account[count];
+	for (int i = 0; i < count; i++) {
 		getline(fin, newUser[i].studentProfile.ID, ';');
 		getline(fin, newUser[i].studentProfile.fullname, ';');
 		getline(fin, sex, ';');
@@ -37,7 +40,7 @@ bool importFromCSV(string& path) {
 		return false;
 	}
 
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < count; i++) {
 		newUser[i].username = newUser[i].studentProfile.ID;
 
 		string newyyyy = to_string(newUser[i].studentProfile.birthDate.tm_year + 1900);
