@@ -99,6 +99,7 @@ bool logIn(Account& user) {
 				string DoB;
 				getline(fin, user.studentProfile.fullname);
 				getline(fin, user.studentProfile.ID);
+				getline(fin, user.studentProfile.classID);
 				getline(fin, user.studentProfile.email);
 				fin >> user.studentProfile.gender;
 				fin.ignore(2000, '\n');
@@ -276,6 +277,7 @@ bool changePassword(Account& user) {
 			getline(fin, userArr[i].password);
 			getline(fin, userArr[i].studentProfile.fullname);
 			getline(fin, userArr[i].studentProfile.ID);
+			getline(fin, userArr[i].studentProfile.classID);
 			getline(fin, userArr[i].studentProfile.email);
 			fin >> userArr[i].studentProfile.gender;
 			fin.ignore(2000, '\n');	//Flush the buffer
@@ -303,6 +305,7 @@ bool changePassword(Account& user) {
 				<< userArr[i].password << endl
 				<< userArr[i].studentProfile.fullname << endl
 				<< userArr[i].studentProfile.ID << endl
+				<< userArr[i].studentProfile.classID << endl
 				<< userArr[i].studentProfile.email << endl
 				<< userArr[i].studentProfile.gender << endl
 				<< userArr[i].studentProfile.birthDate.tm_year + 1900 << '-'
