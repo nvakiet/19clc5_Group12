@@ -23,8 +23,10 @@
     <ClCompile Include="Sources\general.cpp" />
     <ClCompile Include="Sources\main.cpp" />
     <ClCompile Include="Sources\sha256.cpp" />
+    <ClCompile Include="Sources\staff-class.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Headers\staff-class.h" />
     <ClInclude Include="Headers\allRoles.h" />
     <ClInclude Include="Headers\general.h" />
     <ClInclude Include="Headers\main.h" />
