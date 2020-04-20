@@ -29,7 +29,6 @@
     <ClInclude Include="Headers\general.h" />
     <ClInclude Include="Headers\main.h" />
     <ClInclude Include="Headers\sha256.h" />
-    <ClInclude Include="Phan3.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

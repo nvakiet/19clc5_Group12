@@ -8,14 +8,14 @@
 //True = logged in successfully
 bool logIn(Account& user);	
 
-////Asks user to re-input old password, if correct then asks user to input new password twice
-////If both times are the same then starts scanning account files according to "role" value
-////As we scan through the file, load the data into a single linked list
-////If the username is found, load the new password to the linked list instead
-////Output contents in linked list to the account file in truncate mode
-////True: password changed successfully
-//bool changePassword(Account& user);
-//
+//Asks user to re-input old password, if correct then asks user to input new password twice
+//If both times are the same then starts scanning account files according to "role" value
+//As we scan through the file, load the data into a single linked list
+//If the username is found, load the new password to the linked list instead
+//Output contents in linked list to the account file in truncate mode
+//True: password changed successfully
+bool changePassword(Account& user);
+
 ////Prints Startup menu to the screen, take user's choice and return the choice back to the system
 // //1: Login; 2: Exit program
 ////Menu loop break condition: when choose exit

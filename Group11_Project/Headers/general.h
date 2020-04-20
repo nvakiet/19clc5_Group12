@@ -14,22 +14,22 @@ using namespace std;
 struct Staff {
 	string fullname;
 	string email;
-	bool gender; //False/0 = Female; True/1 = Male
+	bool gender = false; //False/0 = Female; True/1 = Male
 };
 
 struct Lecturer {
 	string fullname;
 	string email;
 	string academicRank;//Rank: Master/PhD/Professor
-	bool gender; //False/0 = Female; True/1 = Male
+	bool gender = false; //False/0 = Female; True/1 = Male
 	tm birthDate;
 };
 
 struct Student {
 	string fullname, ID, email;
-	bool gender; //False/0 = Female; True/1 = Male
+	bool gender = false; //False/0 = Female; True/1 = Male
 	tm birthDate;
-	bool active; //Default state: Active = currently studying
+	bool active = true; //Default state: Active = currently studying
 };
 
 struct Account {//When "role" value is changed, the corresponding profile will be loaded
