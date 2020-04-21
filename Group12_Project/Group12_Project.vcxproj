@@ -26,17 +26,17 @@
     <ClCompile Include="Sources\staff-class.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\staff-class.h" />
     <ClInclude Include="Headers\allRoles.h" />
     <ClInclude Include="Headers\general.h" />
     <ClInclude Include="Headers\main.h" />
     <ClInclude Include="Headers\sha256.h" />
+    <ClInclude Include="Headers\staff-class.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{4B447980-C9F9-48E4-8D7B-FC332131AECD}</ProjectGuid>
+    <ProjectGuid>{90E3A740-BCE2-4E6D-B3A8-BBBA0C33AC11}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Group11Project</RootNamespace>
+    <RootNamespace>Group12Project</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -86,8 +86,6 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)Headers</IncludePath>
-    <SourcePath>$(VC_SourcePath);$(ProjectDir)Sources</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -106,7 +104,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

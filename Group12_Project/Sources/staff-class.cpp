@@ -1,25 +1,22 @@
 #include "../Headers/staff-class.h"
-bool importFromCSV(string& path) {
+bool importClass(string& path) {
 
 	cout << "Enter csv file path: ";	//./TextFiles/19CLC10-student.csv
 	cin >> path;
 	ifstream fin;
-	fin.open("./TextFiles/19CLC10-student.csv");
+	fin.open("./TextFiles/19CLC10-student.csv" );
 
 	if (!fin.is_open()) {
 		cerr << "Cannot open file";
 		return false;
 	}
 
-	int count=0;
-	string DoB, sex, line;
-
-	while (getline(fin, line))
-		count++;
+	int n = 3;
+	string DoB, sex;
 
 	Account* newUser;
-	newUser = new Account[count];
-	for (int i = 0; i < count; i++) {
+	newUser = new Account[n];
+	for (int i = 0; i < n; i++) {
 		getline(fin, newUser[i].studentProfile.ID, ';');
 		getline(fin, newUser[i].studentProfile.fullname, ';');
 		getline(fin, sex, ';');
@@ -40,7 +37,7 @@ bool importFromCSV(string& path) {
 		return false;
 	}
 
-	for (int i = 0; i < count; i++) {
+	for (int i = 0; i < n; i++) {
 		newUser[i].username = newUser[i].studentProfile.ID;
 
 		string newyyyy = to_string(newUser[i].studentProfile.birthDate.tm_year + 1900);

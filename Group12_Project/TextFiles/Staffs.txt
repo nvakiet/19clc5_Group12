@@ -2,18 +2,18 @@
 httu
 f89ecb21e280afc6cea764bbccb5b1f2edb15660bbb6de7a29ba708c8483cbe5
 Hoang Thanh Tu
-httu@student.hcmus.edu.vn
+httu@hcmus.edu.vn
 0
 
 ntmphuc
 15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225
 Nguyen Thi Minh Phuc
-ntmphuc@student.hcmus.edu.vn
+ntmphuc@hcmus.edu.vn
 0
 
 ltathao
 16a17169ce5255ae63081924a6966796d873934d7b6b9eaf1a5c19dea09f7276
 Le Thi Anh Thao
-ltathao@student.hcmus.edu.vn
+ltathao@hcmus.edu.vn
 0
 

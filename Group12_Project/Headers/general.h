@@ -53,7 +53,13 @@ struct Class {
 	Student* studentArr = nullptr;	//Ptr to dynamic array of students
 };
 
+struct Semester {	//Semester info from SemesterList
+	string year;	//Academic year "YearA-YearB"
+	string semester;//First or Second or Third semester
+};
+
 struct Course {
+	Semester c_semester;
 	string courseID, courseName;
 	Class courseClass;
 	Lecturer courseLecturer;
@@ -62,13 +68,6 @@ struct Course {
 	string classDay;
 	tm startTime, endTime;
 	string room;
-};
-
-struct Semester {	//Semester info from SemesterList
-	string year;	//Academic year "YearA-YearB"
-	string semester;//First or Second or Third semester
-	int nCourses = 0; //Number of courses in a semester
-	Course* courseList = nullptr; //Ptr to dynamic array of courses info in a semester
 };
 
 struct scoreBoard {

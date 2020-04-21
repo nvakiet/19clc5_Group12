@@ -18,13 +18,13 @@
     <ClCompile Include="Sources\allRoles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\sha256.cpp">
+    <ClCompile Include="Sources\general.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sources\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\general.cpp">
+    <ClCompile Include="Sources\sha256.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sources\staff-class.cpp">
@@ -38,10 +38,10 @@
     <ClInclude Include="Headers\general.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\sha256.h">
+    <ClInclude Include="Headers\main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\main.h">
+    <ClInclude Include="Headers\sha256.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\staff-class.h">

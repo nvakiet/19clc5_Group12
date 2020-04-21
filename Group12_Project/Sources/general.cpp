@@ -19,6 +19,7 @@ void flushin(istream& input) {
 	input.clear();
 	input.ignore(INT_MAX, '\n');
 }
+
 void pause() {
 	cout << "Press ENTER to continue..." << endl;
 	flushin(cin);

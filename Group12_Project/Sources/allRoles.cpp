@@ -13,7 +13,7 @@ bool logIn(Account& user) {
 	cout << "\nLogging in. Please wait..." << endl;
 
 	//Check the inputs with the staff accounts
-	string Path = "./TextFiles/staffAccounts.txt";
+	string Path = "./TextFiles/Staffs.txt";
 	ifstream fin;
 	fin.open(Path);
 	if (!fin.is_open()) {
@@ -45,7 +45,7 @@ bool logIn(Account& user) {
 	fin.close();
 
 	//Check the inputs with lecturer accounts
-	Path = "./TextFiles/lecturerAccounts.txt";
+	Path = "./TextFiles/Lecturers.txt";
 	fin.open(Path);
 	if (!fin.is_open()) {
 		cerr << "Can't open data file in the path: " << Path << endl;
@@ -80,7 +80,7 @@ bool logIn(Account& user) {
 	fin.close();
 
 	//Check the inputs with student accounts
-	Path = "./TextFiles/studentAccounts.txt";
+	Path = "./TextFiles/Students.txt";
 	fin.open(Path);
 	if (!fin.is_open()) {
 		cerr << "Can't open data file in the path: " << Path << endl;
@@ -160,7 +160,7 @@ bool changePassword(Account& user) {
 	switch (user.role) {
 	//Staff account
 	case 1:
-		filePath = "./TextFiles/staffAccounts.txt";
+		filePath = "./TextFiles/Staffs.txt";
 		//Store data file into account array
 		fin.open(filePath);
 		if (!fin.is_open()) {
@@ -208,7 +208,7 @@ bool changePassword(Account& user) {
 
 	//Lecturer account
 	case 2:
-		filePath = "./TextFiles/lecturerAccounts.txt";
+		filePath = "./TextFiles/Lecturers.txt";
 		//Store data file into account array
 		fin.open(filePath);
 		if (!fin.is_open()) {
@@ -263,7 +263,7 @@ bool changePassword(Account& user) {
 
 	//Student account
 	case 3:
-		filePath = "./TextFiles/studentAccounts.txt";
+		filePath = "./TextFiles/Students.txt";
 		//Store data file into account array
 		fin.open(filePath);
 		if (!fin.is_open()) {
@@ -330,13 +330,15 @@ int menuStart() {
 	cout << string(50, '*') << endl;
 	cout << "1 - LOGIN" << endl;
 	cout << "2 - EXIT" << endl;
+	cout << "--> CHOICE: ";
 	int choice = 0;
-	while (choice != 1 && choice != 2) {
-		cout << "--> CHOOSE: ";
-		cin >> choice;
+	cin >> choice;
+	if (choice > 0 && choice < 3)
+		return choice;
+	else {
+		cerr << "Invalid option. Please try again." << endl;
+		return 0;
 	}
-	flushin(cin);
-	return choice;
 }
 
 int menuStaff() {
@@ -351,10 +353,11 @@ int menuStaff() {
 	cout << "6 - MENU: ATTENDANCE LIST" << endl;
 	cout << "7 - LOG OUT" << endl;
 	int choice = 0;
-	while (choice < 1 && choice > 7) {
-		cout << "--> CHOOSE: ";
-		cin >> choice;
+	cin >> choice;
+	if (choice > 0 && choice < 8)
+		return choice;
+	else {
+		cerr << "Invalid option. Please try again." << endl;
+		return 0;
 	}
-	flushin(cin);
-	return choice;
 }
