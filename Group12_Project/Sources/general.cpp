@@ -2,17 +2,49 @@
 
 tm sToDate(string date_str) {
 	tm date;
-	date.tm_year = stoi(date_str.substr(0, 4)) - 1900;
-	date.tm_mon = stoi(date_str.substr(5, 2)) - 1;
-	date.tm_mday = stoi(date_str.substr(8, 2));
+	int len = date_str.length() + 1;
+	char* datestr = new char[len];
+	char* nextToken = nullptr;
+	strcpy_s(datestr, date_str.size() + 1, date_str.c_str());
+	char* token = strtok_s(datestr, "-/\n", &nextToken);
+	date.tm_year = atoi(token) - 1900;
+	if (token != nullptr) {
+		token = strtok_s(nullptr, "-/\n", &nextToken);
+		date.tm_mon = atoi(token) - 1;
+	}
+	if (token != nullptr) {
+		token = strtok_s(nullptr, "-/\n", &nextToken);
+		date.tm_mday = atoi(token);
+	}
+	delete[] datestr;
 	return date;
+}
+
+void printDate(ostream& stream, tm date) {
+	stream << date.tm_year + 1900 << '-' 
+		<< setfill('0') << setw(2) << date.tm_mon + 1 << '-' 
+		<< setfill('0') << setw(2) << date.tm_mday << endl;
 }
 
 tm sToTime(string time_str) {
 	tm time;
-	time.tm_hour = stoi(time_str.substr(0, 2));
-	time.tm_min = stoi(time_str.substr(3, 2));
+	int len = time_str.length() + 1;
+	char* timestr = new char[len];
+	char* nextToken = nullptr;
+	strcpy_s(timestr, time_str.size() + 1, time_str.c_str());
+	char* token = strtok_s(timestr, ":\n", &nextToken);
+	time.tm_hour = atoi(token);
+	if (token != nullptr) {
+		token = strtok_s(nullptr, ":\n", &nextToken);
+		time.tm_min = atoi(token);
+	}
+	delete[] timestr;
 	return time;
+}
+
+void printTime(ostream& stream, tm time) {
+	stream << setfill('0') << setw(2) << time.tm_hour << ':' 
+		<< setfill('0') << setw(2) << time.tm_min << endl;
 }
 
 void flushin(istream& input) {

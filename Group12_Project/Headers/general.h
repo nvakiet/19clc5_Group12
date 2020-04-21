@@ -21,20 +21,20 @@ struct score {
 struct Staff {
 	string fullname;
 	string email;
-	bool gender = false; //False/0 = Female; True/1 = Male
+	char gender = 'M'; //'F' for female and 'M' for male
 };
 
 struct Lecturer {
 	string fullname;
 	string email;
 	string academicRank;//Rank: Master/PhD/Professor
-	bool gender = false; //False/0 = Female; True/1 = Male
+	char gender = 'M'; //'F' for female and 'M' for male
 	tm birthDate;
 };
 
 struct Student {
-	string fullname, ID, classID, email;
-	bool gender = false; //False/0 = Female; True/1 = Male
+	string fullname, ID, classID;
+	char gender = 'M'; //'F' for female and 'M' for male
 	tm birthDate;
 	bool active = true; //Default state: Active = currently studying
 };
@@ -84,6 +84,12 @@ tm sToDate(string date_str);
 
 //Convert a time string with the format HH:MM to struct tm and return the struct tm
 tm sToTime(string time_str);
+
+//Print struct tm in date YYYY-MM-DD format
+void printDate(ostream& stream, tm date);
+
+//Print struct tm in time HH:MM format
+void printTime(ostream &stream, tm time);
 
 //flush the input stream to not cause error for getline
 void flushin(istream& input);

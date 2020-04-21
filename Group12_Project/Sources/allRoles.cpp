@@ -4,7 +4,7 @@ bool logIn(Account& user) {
 	//Return value: 
 	// - True if username and password are found in one of the account data files
 	// - False if one of the files fail to open or can't find any correct set of username and password in all files
-	string fileUsername, filePassword;
+	string fileUsername, filePassword, line;
 	cout << "Enter username: ";
 	cin >> user.username;
 	cout << "Enter password: ";
@@ -23,8 +23,8 @@ bool logIn(Account& user) {
 	}
 	if (!fin.eof()) {	//Check if file is empty
 		int n;
-		fin >> n;
-		flushin(fin);
+		getline(fin, line);
+		n = stoi(line);
 		for (int i = 0; i < n; i++) {
 			getline(fin, fileUsername);
 			getline(fin, filePassword);
@@ -32,7 +32,8 @@ bool logIn(Account& user) {
 				user.role = 1;
 				getline(fin, user.staffProfile.fullname);
 				getline(fin, user.staffProfile.email);
-				fin >> user.staffProfile.gender;
+				getline(fin, line);
+				user.staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
 				return true;
 			}
 			else {	//The format of the file will have a blank line after each user info so we must skip n+1 lines
@@ -54,21 +55,20 @@ bool logIn(Account& user) {
 	}
 	if (!fin.eof()) {
 		int n;
-		fin >> n;
-		flushin(fin);
+		getline(fin, line);
+		n = stoi(line);
 		for (int i = 0; i < n; i++) {
 			getline(fin, fileUsername);
 			getline(fin, filePassword);
 			if (fileUsername == user.username && filePassword == user.password) {
 				user.role = 2;
-				string DoB;
 				getline(fin, user.lecturerProfile.fullname);
 				getline(fin, user.lecturerProfile.email);
 				getline(fin, user.lecturerProfile.academicRank);
-				fin >> user.lecturerProfile.gender;
-				flushin(fin);
-				getline(fin, DoB);
-				user.lecturerProfile.birthDate = sToDate(DoB);
+				getline(fin, line);
+				user.staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
+				getline(fin, line);
+				user.lecturerProfile.birthDate = sToDate(line);
 				return true;
 			}
 			else {
@@ -89,29 +89,27 @@ bool logIn(Account& user) {
 	}
 	if (!fin.eof()) {
 		int n;
-		fin >> n;
-		flushin(fin);
+		getline(fin, line);
+		n = stoi(line);
 		for (int i = 0; i < n; i++) {
 			getline(fin, fileUsername);
 			getline(fin, filePassword);
 			if (fileUsername == user.username && filePassword == user.password) {
 				user.role = 3;
-				string DoB;
 				getline(fin, user.studentProfile.fullname);
-				getline(fin, user.studentProfile.ID);
 				getline(fin, user.studentProfile.classID);
-				getline(fin, user.studentProfile.email);
-				fin >> user.studentProfile.gender;
-				flushin(fin);
-				getline(fin, DoB);
-				user.studentProfile.birthDate = sToDate(DoB);
-				fin >> user.studentProfile.active;
-				flushin(fin);
+				getline(fin, line);
+				user.staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
+				getline(fin, line);
+				user.studentProfile.birthDate = sToDate(line);
+				getline(fin, line);
+				user.studentProfile.active = stoi(line);
+				user.studentProfile.ID = user.username;
 				return true;
 			}
 			else {
-				for (int j = 0; j < 7; j++)
-					fin.ignore(2000, '\n');
+				for (int j = 0; j < 6; j++)
+					fin.ignore(INT_MAX, '\n');
 			}
 		}
 	}
@@ -142,21 +140,20 @@ bool changePassword(Account& user) {
 		return false;
 	}
 	//Get new password once more time
-	string temp;
+	string line;
 	cout << "Enter new password again: ";
-	cin >> temp;
-	if (temp != passwordInput) {
+	cin >> line;
+	if (line != passwordInput) {
 		cerr << "The password you re-entered does not match!" << endl;
 		return false;
 	}
-	temp.clear();
 	//Scan the correct file depending on account role
 	passwordInput = sha256(passwordInput);	//Hash the new password string
 	Account* userArr; //Use an array of account to temporarily store the file data
 	int n;
 	ifstream fin;
 	ofstream fout;
-	string filePath, DoB;
+	string filePath;
 	switch (user.role) {
 	//Staff account
 	case 1:
@@ -167,16 +164,16 @@ bool changePassword(Account& user) {
 			cerr << "Can't find account data at " << filePath << endl;
 			return false;
 		}
-		fin >> n;
-		flushin(fin);
+		getline(fin, line);
+		n = stoi(line);
 		userArr = new Account[n];
 		for (int i = 0; i < n; i++) {
 			getline(fin, userArr[i].username);
 			getline(fin, userArr[i].password);
 			getline(fin, userArr[i].staffProfile.fullname);
 			getline(fin, userArr[i].staffProfile.email);
-			fin >> userArr[i].staffProfile.gender;
-			flushin(fin);	//This one is to flush the buffer
+			getline(fin, line);
+			user.staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
 			fin.ignore(INT_MAX, '\n'); //This one is to skip the blank line
 			if (userArr[i].username == user.username && userArr[i].password == user.password) {
 				//Change password of the account currently logging in and the one in data file
@@ -215,8 +212,8 @@ bool changePassword(Account& user) {
 			cerr << "Can't find account data at " << filePath << endl;
 			return false;
 		}
-		fin >> n;
-		flushin(fin);
+		getline(fin, line);
+		n = stoi(line);
 		userArr = new Account[n];
 		for (int i = 0; i < n; i++) {
 			getline(fin, userArr[i].username);
@@ -224,10 +221,10 @@ bool changePassword(Account& user) {
 			getline(fin, userArr[i].lecturerProfile.fullname);
 			getline(fin, userArr[i].lecturerProfile.email);
 			getline(fin, userArr[i].lecturerProfile.academicRank);
-			fin >> userArr[i].lecturerProfile.gender;
-			flushin(fin);	//Flush the buffer
-			getline(fin, DoB);
-			userArr[i].lecturerProfile.birthDate = sToDate(DoB);
+			getline(fin, line);
+			user.staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
+			getline(fin, line);
+			userArr[i].lecturerProfile.birthDate = sToDate(line);
 			fin.ignore(INT_MAX, '\n'); //This one is to skip the blank line
 			if (userArr[i].username == user.username && userArr[i].password == user.password) {
 				//Change password of the account currently logging in and the one in data file
@@ -249,10 +246,8 @@ bool changePassword(Account& user) {
 				<< userArr[i].lecturerProfile.fullname << endl
 				<< userArr[i].lecturerProfile.email << endl
 				<< userArr[i].lecturerProfile.academicRank << endl
-				<< userArr[i].lecturerProfile.gender << endl
-				<< userArr[i].lecturerProfile.birthDate.tm_year + 1900 << '-'
-				<< userArr[i].lecturerProfile.birthDate.tm_mon + 1 << '-'
-				<< userArr[i].lecturerProfile.birthDate.tm_mday << endl;
+				<< userArr[i].lecturerProfile.gender << endl;
+			printDate(fout, userArr[i].lecturerProfile.birthDate);
 			fout << endl;
 		}
 		fout.close();
@@ -270,22 +265,20 @@ bool changePassword(Account& user) {
 			cerr << "Can't find account data at " << filePath << endl;
 			return false;
 		}
-		fin >> n;
-		flushin(fin);
+		getline(fin, line);
+		n = stoi(line);
 		userArr = new Account[n];
 		for (int i = 0; i < n; i++) {
 			getline(fin, userArr[i].username);
 			getline(fin, userArr[i].password);
 			getline(fin, userArr[i].studentProfile.fullname);
-			getline(fin, userArr[i].studentProfile.ID);
 			getline(fin, userArr[i].studentProfile.classID);
-			getline(fin, userArr[i].studentProfile.email);
-			fin >> userArr[i].studentProfile.gender;
-			flushin(fin);	//Flush the buffer
-			getline(fin, DoB);
-			userArr[i].studentProfile.birthDate = sToDate(DoB);
-			fin >> userArr[i].studentProfile.active;
-			flushin(fin);	//Flush the buffer
+			getline(fin, line);
+			user.staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
+			getline(fin, line);
+			userArr[i].studentProfile.birthDate = sToDate(line);
+			getline(fin, line);
+			userArr[i].studentProfile.active = stoi(line);
 			fin.ignore(INT_MAX, '\n');	//Skip the blank line
 			if (userArr[i].username == user.username && userArr[i].password == user.password) {
 				//Change password of the account currently logging in and the one in data file
@@ -305,14 +298,10 @@ bool changePassword(Account& user) {
 			fout << userArr[i].username << endl
 				<< userArr[i].password << endl
 				<< userArr[i].studentProfile.fullname << endl
-				<< userArr[i].studentProfile.ID << endl
 				<< userArr[i].studentProfile.classID << endl
-				<< userArr[i].studentProfile.email << endl
-				<< userArr[i].studentProfile.gender << endl
-				<< userArr[i].studentProfile.birthDate.tm_year + 1900 << '-'
-				<< userArr[i].studentProfile.birthDate.tm_mon + 1 << '-'
-				<< userArr[i].studentProfile.birthDate.tm_mday << endl
-				<< userArr[i].studentProfile.active << endl;
+				<< userArr[i].studentProfile.gender << endl;
+			printDate(fout, userArr[i].studentProfile.birthDate);
+			fout << userArr[i].studentProfile.active << endl;
 			fout << endl;
 		}
 		fout.close();
@@ -331,8 +320,9 @@ int menuStart() {
 	cout << "1 - LOGIN" << endl;
 	cout << "2 - EXIT" << endl;
 	cout << "--> CHOICE: ";
-	int choice = 0;
-	cin >> choice;
+	string input;
+	getline(cin, input);
+	int choice = stoi(input);
 	if (choice > 0 && choice < 3)
 		return choice;
 	else {
@@ -352,8 +342,9 @@ int menuStaff() {
 	cout << "5 - MENU: SCOREBOARD" << endl;
 	cout << "6 - MENU: ATTENDANCE LIST" << endl;
 	cout << "7 - LOG OUT" << endl;
-	int choice = 0;
-	cin >> choice;
+	string input;
+	getline(cin, input);
+	int choice = stoi(input);
 	if (choice > 0 && choice < 8)
 		return choice;
 	else {
