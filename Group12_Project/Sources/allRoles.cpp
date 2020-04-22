@@ -18,10 +18,19 @@ bool logIn(Account& user) {
 	fin.open(Path);
 	if (!fin.is_open()) {
 		cerr << "Can't open data file in the path: " << Path << endl;
-		cerr << "The user database may be missing!" << endl;
-		return false;
+		if (generateFile(Path, "")) {
+			cout << "A new file has been generated!" << endl;
+			cout << "Some data may be lost. The program will continue." << endl;
+			cout << endl;
+			fin.clear();
+			fin.open(Path);
+		}
+		else {
+			cerr << "Failed to generate a new data file" << endl;
+			return false;
+		}
 	}
-	if (!fin.eof()) {	//Check if file is empty
+	if (!emptyFile(Path)) {
 		int n;
 		getline(fin, line);
 		n = stoi(line);
@@ -50,10 +59,19 @@ bool logIn(Account& user) {
 	fin.open(Path);
 	if (!fin.is_open()) {
 		cerr << "Can't open data file in the path: " << Path << endl;
-		cerr << "The user database may be missing!" << endl;
-		return false;
+		if (generateFile(Path, "")) {
+			cout << "A new file has been generated!" << endl;
+			cout << "Some data may be lost. The program will continue." << endl;
+			cout << endl;
+			fin.clear();
+			fin.open(Path);
+		}
+		else {
+			cerr << "Failed to generate a new data file" << endl;
+			return false;
+		}
 	}
-	if (!fin.eof()) {
+	if (!emptyFile(Path)) {
 		int n;
 		getline(fin, line);
 		n = stoi(line);
@@ -84,10 +102,19 @@ bool logIn(Account& user) {
 	fin.open(Path);
 	if (!fin.is_open()) {
 		cerr << "Can't open data file in the path: " << Path << endl;
-		cerr << "The user database may be missing!" << endl;
-		return false;
+		if (generateFile(Path, "")) {
+			cout << "A new file has been generated!" << endl;
+			cout << "Some data may be lost. The program will continue." << endl;
+			cout << endl;
+			fin.clear();
+			fin.open(Path);
+		}
+		else {
+			cerr << "Failed to generate a new data file" << endl;
+			return false;
+		}
 	}
-	if (!fin.eof()) {
+	if (!emptyFile(Path)) {
 		int n;
 		getline(fin, line);
 		n = stoi(line);
@@ -153,15 +180,15 @@ bool changePassword(Account& user) {
 	int n;
 	ifstream fin;
 	ofstream fout;
-	string filePath;
+	string Path;
 	switch (user.role) {
 	//Staff account
 	case 1:
-		filePath = "./TextFiles/Staffs.txt";
+		Path = "./TextFiles/Staffs.txt";
 		//Store data file into account array
-		fin.open(filePath);
-		if (!fin.is_open()) {
-			cerr << "Can't find account data at " << filePath << endl;
+		fin.open(Path);
+		if (!fin.is_open() || emptyFile(Path)) {
+			cerr << "Can't access account database at " << Path << endl;
 			return false;
 		}
 		getline(fin, line);
@@ -183,9 +210,9 @@ bool changePassword(Account& user) {
 		}
 		fin.close();
 		//Overwrite data file with the modified array
-		fout.open(filePath);
+		fout.open(Path);
 		if (!fout.is_open()) {
-			cerr << "Can't find account data at " << filePath << endl;
+			cerr << "Can't access account database at " << Path << endl;
 			return false;
 		}
 		fout << n << endl;
@@ -205,11 +232,11 @@ bool changePassword(Account& user) {
 
 	//Lecturer account
 	case 2:
-		filePath = "./TextFiles/Lecturers.txt";
+		Path = "./TextFiles/Lecturers.txt";
 		//Store data file into account array
-		fin.open(filePath);
-		if (!fin.is_open()) {
-			cerr << "Can't find account data at " << filePath << endl;
+		fin.open(Path);
+		if (!fin.is_open() || emptyFile(Path)) {
+			cerr << "Can't access account database at " << Path << endl;
 			return false;
 		}
 		getline(fin, line);
@@ -234,9 +261,9 @@ bool changePassword(Account& user) {
 		}
 		fin.close();
 		//Overwrite data file with the modified array
-		fout.open(filePath);
+		fout.open(Path);
 		if (!fout.is_open()) {
-			cerr << "Can't find account data at " << filePath << endl;
+			cerr << "Can't access account database at " << Path << endl;
 			return false;
 		}
 		fout << n << endl;
@@ -258,11 +285,11 @@ bool changePassword(Account& user) {
 
 	//Student account
 	case 3:
-		filePath = "./TextFiles/Students.txt";
+		Path = "./TextFiles/Students.txt";
 		//Store data file into account array
-		fin.open(filePath);
-		if (!fin.is_open()) {
-			cerr << "Can't find account data at " << filePath << endl;
+		fin.open(Path);
+		if (!fin.is_open() || emptyFile(Path)) {
+			cerr << "Can't access account database at " << Path << endl;
 			return false;
 		}
 		getline(fin, line);
@@ -288,9 +315,9 @@ bool changePassword(Account& user) {
 		}
 		fin.close();
 		//Overwrite data file with the modified array
-		fout.open(filePath);
+		fout.open(Path);
 		if (!fout.is_open()) {
-			cerr << "Can't find account data at " << filePath << endl;
+			cerr << "Can't access account database at " << Path << endl;
 			return false;
 		}
 		fout << n << endl;

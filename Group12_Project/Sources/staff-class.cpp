@@ -14,7 +14,7 @@ bool importClassCSV(string& path) /* <--- Ko can tham so o day, chi nhung ham ch
 	//  vvvvv Ko phai class nao cung co n = 3
 	int n = 3;	//Nen keu nguoi dung tu nhap si so lop n va ten lop de code thuan tien hon, li do se noi o duoi
 	string DoB, sex;
-//	vvvvvvv Nen su dung struct Student vi du lieu nhap vao chi thuoc ve Student, goi struct account se ton them memory cho cac members khac ngoai student
+//	vvvvvvv Nen su dung struct Class vi du lieu thuoc ve 1 nhom hoc sinh, goi struct account se ton them memory cho cac members khac ngoai student
 	Account* newUser;
 	newUser = new Account[n];
 
@@ -33,11 +33,11 @@ bool importClassCSV(string& path) /* <--- Ko can tham so o day, chi nhung ham ch
 	}
 	fin.close();
 	/* Cac viec can lam trong ham nay sau khi load tu cai file csv vao mang 
-	Viec 1: Load them 1 mang student tu file Students.txt:
+	Viec 1: Load them 1 mang Student tu file Students.txt:
 	- Khi load thi skip dong password va dong trong o cuoi moi 1 student, con dong username cung la ID cua student
 	- n duoc de o dong dau cua file nay;
-	- Sau khi load vao mang thu 2 xong, doi chieu students cua 2 mang voi nhau
-	- Neu co student nao trong mang load tu file csv co ID (ko dc so sanh bang ten) KO trung voi tat ca ben Students.txt thi:
+	- Sau khi load vao mang thu 2 xong, doi chieu students cua Class va students cua mang voi nhau
+	- Neu co student nao trong load tu file csv co ID (ko dc so sanh bang ten) KO trung voi tat ca ben Students.txt thi:
 		+ Mo lai file Students.txt bang ofstream, che do append
 		+ LUU Y XU LY TRUONG HOP LAN CHAY DAU TIEN KO CO FILE STUDENTS.TXT/FILE RONG VI CHUA CO DANG KI STUDENT NAO
 		+ TRU FILE STAFFS.TXT RA THI CAC FILE CON LAI KO DC TU TAO TU BEN NGOAI DE CHUONG TRINH HOAT DONG TRONG MOI TRUONG HOP
@@ -53,12 +53,12 @@ bool importClassCSV(string& path) /* <--- Ko can tham so o day, chi nhung ham ch
 	- Neu ten lop bi trung thi hoi nguoi dung co muon overwrite file csv voi class dang co trong he thong ko:
 		+ Neu nguoi dung chon co thi in het mang student da load tu file csv vao file txt trong he thong
 		+ Neu chon ko, thong bao tien trinh import bi huy, tra ve false
-	- Neu ten lop ko bi trung thi in mang student cua file csv vao file .txt moi nhu binh thuong
+	- Neu ten lop ko bi trung thi in mang student cua Class vao file .txt moi nhu binh thuong
 	- Viec in thong tin student co the tham khao code trong case 3 cua ham changePassword
-	- LUU Y: XUYEN SUOT HAM NAY LUON SU DUNG MANG STUDENT, KO DUNG GI TOI STRUCT ACCOUNT
+	- LUU Y: HAM NAY CHI CAN SU DUNG STRUCT CLASS, MANG STUDENT VA MANG STRING
 	- LUU Y XU LY TRUONG HOP LAN CHAY DAU TIEN KO CO FILE CLASSES.TXT/FILE RONG VI CHUA CO IMPORT CLASS NAO
 		TRU FILE STAFFS.TXT RA THI CAC FILE CON LAI KO DC TU TAO TU BEN NGOAI DE CHUONG TRINH HOAT DONG TRONG MOI TRUONG HOP
-	- LUU Y: CU PHAP TEN CUA FILE .TXT MOI TAO KHI IMPORT LA "[Ten class nhap hoi dau ham]_Students.txt"
+	- LUU Y: CU PHAP TEN CUA FILE .TXT MOI TAO KHI IMPORT LA "[Ten class nguoi dung nhap o dau ham]_Students.txt"
 		VD: fout.open(systemPath + classID + "_Students.txt")
 		Co the dat 1 bien string systemPath = "./TextFiles/" va 1 bien string fileEx = "_Students.txt" neu thich
 	*/

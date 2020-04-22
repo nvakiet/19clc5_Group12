@@ -96,4 +96,10 @@ void flushin(istream& input);
 
 //Semi-pause the program until user hit ENTER
 void pause();
+
+//Check if a successfully opened input file is empty
+bool emptyFile(string filePath);
+
+//Generate a text file with an initial line
+bool generateFile(string filePath, string init);
 #endif // !_GENERAL_H_

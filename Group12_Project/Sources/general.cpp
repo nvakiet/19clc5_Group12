@@ -57,3 +57,32 @@ void pause() {
 	flushin(cin);
 	cin.get();
 }
+
+bool emptyFile(string filePath) {
+	string line;
+	ifstream fin;
+	bool flag;
+	fin.open(filePath);
+	if (fin.is_open() && fin.good()) {
+		while (!fin.eof()) {
+			getline(fin, line);
+			if (!line.empty())
+				flag = false;
+		}
+	}
+	fin.close();
+	flag = true;
+	return flag;
+}
+
+bool generateFile(string filePath, string init) {
+	ofstream fout(filePath);
+	bool flag;
+	if (fout.is_open() && fout.good()) {
+		fout << init << endl;
+		flag = true;
+	}
+	else flag = false;
+	fout.close();
+	return flag;
+}

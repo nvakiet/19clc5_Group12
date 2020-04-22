@@ -23,6 +23,5 @@ int main() {
 			choice = menuStaff();
 		}
 	}
-
 	return 0;
 }
