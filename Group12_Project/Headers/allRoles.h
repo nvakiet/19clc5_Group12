@@ -25,34 +25,34 @@ int menuStart();
 //Menu loop break condition: when user role is changed to 0 by logOut function
 int menuStaff();
 
-////Prints main menu for Lecturer user
-////Menu loop break condition: when user role is changed to 0 by logOut function
-//int menuLecturer();
-//
-////Prints main menu for Student user
-////Menu loop break condition: when user role is changed to 0 by logOut function
-//int menuStudent();
-//
-////Prints Class menu
-////Menu loop break condition: When user choice is "Back to main menu"
-//int menuClass();
-//
-////Prints Course menu
-////Menu loop break condition: When user choice is "Back to main menu"
-//int menuCourse();
-//
-////Prints Scoreboard menu
-////Menu loop break condition: When user choice is "Back to main menu"
-//int menuScoreboard();
-//
-////Prints Attendance List menu
-////Menu loop break condition: When user choice is "Back to main menu"
-//int menuAttendanceList();
-//
-////Simply prints out the profile stored in the account currently logging in
-////The profile printed out will be depended on the "role" value
-//void viewProfile(Account user);
-//
+//Prints main menu for Lecturer user
+//Menu loop break condition: when user role is changed to 0 by logOut function
+int menuLecturer();
+
+//Prints main menu for Student user
+//Menu loop break condition: when user role is changed to 0 by logOut function
+int menuStudent();
+
+//Prints Class menu
+//Menu loop break condition: When user choice is "Back to main menu"
+int menuClass();
+
+//Prints Course menu
+//Menu loop break condition: When user choice is "Back to main menu"
+int menuCourse();
+
+//Prints Scoreboard menu
+//Menu loop break condition: When user choice is "Back to main menu"
+int menuScoreboard();
+
+//Prints Attendance List menu
+//Menu loop break condition: When user choice is "Back to main menu"
+int menuAttendanceList();
+
+//simply prints out the profile stored in the account currently logging in
+//the profile printed out will be depended on the "role" value
+void viewProfile(Account user);
+
 ////Asks user for confirmation first
 ////If the user surely wants to log out then reset the account to blank state, set the account role to 0
 ////Return true: Logged out successfully, return to Startup menu

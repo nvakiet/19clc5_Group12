@@ -30,7 +30,7 @@ bool logIn(Account& user) {
 			return false;
 		}
 	}
-	if (!emptyFile(Path)) {
+	if (emptyFile(Path) == false) {
 		int n;
 		getline(fin, line);
 		n = stoi(line);
@@ -71,7 +71,7 @@ bool logIn(Account& user) {
 			return false;
 		}
 	}
-	if (!emptyFile(Path)) {
+	if (emptyFile(Path) == false) {
 		int n;
 		getline(fin, line);
 		n = stoi(line);
@@ -114,7 +114,7 @@ bool logIn(Account& user) {
 			return false;
 		}
 	}
-	if (!emptyFile(Path)) {
+	if (emptyFile(Path) == false) {
 		int n;
 		getline(fin, line);
 		n = stoi(line);
@@ -364,10 +364,10 @@ int menuStaff() {
 	cout << string(50, '*') << endl;
 	cout << "1 - ACCOUNT PROFILE" << endl;
 	cout << "2 - CHANGE PASSWORD" << endl;
-	cout << "3 - MENU: CLASS" << endl;
-	cout << "4 - MENU: COURSE" << endl;
-	cout << "5 - MENU: SCOREBOARD" << endl;
-	cout << "6 - MENU: ATTENDANCE LIST" << endl;
+	cout << "3 - MENU: CLASSES" << endl;
+	cout << "4 - MENU: COURSES" << endl;
+	cout << "5 - MENU: SCOREBOARDS" << endl;
+	cout << "6 - MENU: ATTENDANCE LISTS" << endl;
 	cout << "7 - LOG OUT" << endl;
 	string input;
 	getline(cin, input);
@@ -378,4 +378,143 @@ int menuStaff() {
 		cerr << "Invalid option. Please try again." << endl;
 		return 0;
 	}
+}
+
+int menuLecturer() {
+	cout << string(50, '*') << endl;
+	cout << string(15, ' ') << "MAIN MENU - LECTURER" << string(14, ' ') << endl;
+	cout << string(50, '*') << endl;
+	cout << "1 - ACCOUNT PROFILE" << endl;
+	cout << "2 - CHANGE PASSWORD" << endl;
+	cout << "3 - VIEW: COURSES OF CURRENT SEMESTER" << endl;
+	cout << "4 - VIEW: STUDENTS OF A COURSE" << endl;
+	cout << "5 - VIEW: COURSE ATTENDANCE LIST" << endl;
+	cout << "6 - EDIT: ATTENDANCE LIST" << endl;
+	cout << "7 - IMPORT SCOREBOARD" << endl;
+	cout << "8 - EDIT: STUDENT GRADE" << endl;
+	cout << "9 - VIEW: SCOREBOARD" << endl;
+	cout << "10 - LOG OUT" << endl;
+	string input;
+	getline(cin, input);
+	int choice = stoi(input);
+	if (choice > 0 && choice < 11)
+		return choice;
+	else {
+		cerr << "Invalid option. Please try again." << endl;
+		return 0;
+	}
+}
+
+int menuStudent() {
+	cout << string(50, '*') << endl;
+	cout << string(15, ' ') << "MAIN MENU - STUDENT" << string(15, ' ') << endl;
+	cout << string(50, '*') << endl;
+	cout << "1 - ACCOUNT PROFILE" << endl;
+	cout << "2 - CHANGE PASSWORD" << endl;
+	cout << "3 - CHECK IN" << endl;
+	cout << "4 - VIEW: CHECK IN RESULT" << endl;
+	cout << "5 - VIEW: SCHEDULES" << endl;
+	cout << "6 - VIEW: COURSE SCORES" << endl;
+	cout << "7 - LOG OUT" << endl;
+	string input;
+	getline(cin, input);
+	int choice = stoi(input);
+	if (choice > 0 && choice < 8)
+		return choice;
+	else {
+		cerr << "Invalid option. Please try again." << endl;
+		return 0;
+	}
+}
+
+int menuClass() {
+	cout << string(50, '*') << endl;
+	cout << string(21, ' ') << "CLASSES" << string(21, ' ') << endl;
+	cout << string(50, '*') << endl;
+	cout << "1 - IMPORT CLASS" << endl;
+	cout << "2 - ADD A STUDENT" << endl;
+	cout << "3 - EDIT A STUDENT" << endl;
+	cout << "4 - REMOVE A STUDENT" << endl;
+	cout << "5 - CHANGE CLASS" << endl;
+	cout << "6 - VIEW: CLASSES" << endl;
+	cout << "7 - VIEW: CLASS STUDENTS" << endl;
+	cout << "8 - RETURN" << endl;
+	string input;
+	getline(cin, input);
+	int choice = stoi(input);
+	if (choice > 0 && choice < 9)
+		return choice;
+	else {
+		cerr << "Invalid option. Please try again." << endl;
+		return 0;
+	}
+}
+
+int menuCourse() {
+	cout << string(50, '*') << endl;
+	cout << string(21, ' ') << "COURSES" << string(21, ' ') << endl;
+	cout << string(50, '*') << endl;
+	cout << "1 - VIEW: ALL SEMESTERS" << endl;
+	cout << "2 - VIEW: CURRENT SEMESTER" << endl;
+	cout << "3 - DELETE A SEMESTER" << endl;
+	cout << "4 - IMPORT: COURSE LIST OF A SEMESTER" << endl;
+	cout << "5 - ADD A COURSE" << endl;
+	cout << "6 - EDIT A COURSE" << endl;
+	cout << "7 - REMOVE A COURSE" << endl;
+	cout << "8 - REMOVE STUDENT FROM A COURSE" << endl;
+	cout << "9 - ADD A STUDENT TO A COURSE" << endl;
+	cout << "10 - VIEW: COURSES IN THE CURRENT SEMESTER" << endl;
+	cout << "11 - VIEW: STUDENT OF A COURSE" << endl;
+	cout << "12 - VIEW: ATTENDANCE LIST OF A COURSE" << endl;
+	cout << "13 - VIEW: ALL LECTURERS AVAILABLE" << endl;
+	cout << "14 - RETURN" << endl;
+	string input;
+	getline(cin, input);
+	int choice = stoi(input);
+	if (choice > 0 && choice < 15)
+		return choice;
+	else {
+		cerr << "Invalid option. Please try again." << endl;
+		return 0;
+	}
+}
+
+int menuScoreboard() {
+	cout << string(50, '*') << endl;
+	cout << string(19, ' ') << "SCOREBOARDS" << string(19, ' ') << endl;
+	cout << string(50, '*') << endl;
+	cout << "1 - SEARCH SCOREBOARD" << endl;
+	cout << "2 - EXPORT SCOREBOARD" << endl;
+	cout << "3 - RETURN" << endl;
+	string input;
+	getline(cin, input);
+	int choice = stoi(input);
+	if (choice > 0 && choice < 4)
+		return choice;
+	else {
+		cerr << "Invalid option. Please try again." << endl;
+		return 0;
+	}
+}
+
+int menuAttendanceList() {
+	cout << string(50, '*') << endl;
+	cout << string(17, ' ') << "ATTENDANCE LIST" << string(17, ' ') << endl;
+	cout << string(50, '*') << endl;
+	cout << "1 - SEARCH ATTENDANCE LIST" << endl;
+	cout << "2 - EXPORT ATTENDANCE LIST" << endl;
+	cout << "3 - RETURN" << endl;
+	string input;
+	getline(cin, input);
+	int choice = stoi(input);
+	if (choice > 0 && choice < 4)
+		return choice;
+	else {
+		cerr << "Invalid option. Please try again." << endl;
+		return 0;
+	}
+}
+
+void viewProfile(Account user) {
+
 }

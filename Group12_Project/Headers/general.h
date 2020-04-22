@@ -61,24 +61,19 @@ struct Semester {	//Semester info from SemesterList
 struct Course {
 	Semester c_semester;
 	string courseID, courseName;
-	Class courseClass;
+	string className;
+	int nStudents = 0;
+	Student* studentArr = nullptr;	//Ptr to dynamic array of students
 	Lecturer courseLecturer;
 	tm startDate, endDate;
 	int nWeeks = 0; //number of weeks of a course = (endDate - startDate)/7
 	string classDay;
 	tm startTime, endTime;
 	string room;
-};
-
-struct scoreBoard {
-	Course courseInfo; //Also contains an array of students in a class
 	score* board = nullptr;	//This array will use the same indices/iterators as the student array
+	bool* checkList = nullptr; //2D array of size nStudents * nWeeks; True = on class - False = absent
 };
 
-struct attendanceList {
-	Course courseInfo;
-	bool* checkList; //2D array of size nStudents * nWeeks; True = on class - False = absent
-};
 //Convert a date string with the format YYYY-MM-DD to struct tm and return the struct tm
 tm sToDate(string date_str);
 
