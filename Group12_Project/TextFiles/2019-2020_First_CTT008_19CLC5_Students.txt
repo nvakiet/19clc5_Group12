@@ -1,17 +1,63 @@
-Ky thuat lap trinh
-Dinh Ba Tien
-dbtien@hcmus.edu.vn
-PhD
+3	//N so sinh vien
+19127001	//Mssv hs 1
+Nguyen Van A	//Ten sv
+M	//Gioi tinh
+2001-10-01	//Ngay sinh
+1	//Co dang di hoc hay ko
+9	//Diem giua ki
+4.5	//Diem cuoi ki
+3	//Bonus
+7	//Total
+10	//N so tuan hoc cua mon
+2020-04-23 0	//String classDate[i] bool checkin[i*nWeeks + j] (i < nStudents va j < nWeeks)
+2020-04-30 0
+2020-05-07 0
+2020-05-14 0
+2020-05-21 0
+2020-05-28 0
+2020-06-04 0
+2020-06-11 0
+2020-06-18 0
+2020-06-25 0
+
+19127002
+Nguyen Van B
+F
+2001-10-02
+0
+0
+0
+0
+0
+10	//N so tuan hoc cua mon
+2020-04-23 0	//String classDate[i] bool checkin[i*nWeeks + j] (i < nStudents va j < nWeeks)
+2020-04-30 0
+2020-05-07 0
+2020-05-14 0
+2020-05-21 0
+2020-05-28 0
+2020-06-04 0
+2020-06-11 0
+2020-06-18 0
+2020-06-25 0
+
+19127003
+Nguyen Van C
 M
-1999-11-10
-2020-01-13
-2020-04-13
-[nWeeks] (VD = 10)
-Wed
-07:30
-11:30
-I53
+2001-10-03
+1
+9
+4.5
 3
-19127001;Nguyen Van A;M;2001-10-01;1;9;4.5;3;7;1;0;1;1;0;1;1;1;1;1
-19127002;Nguyen Van B;F;2001-10-02;0;0;0;0;0;1;0;1;1;0;1;1;1;1;1
-19127003;Nguyen Van C;M;2001-10-03;1;9;4.5;3;7;1;0;1;1;0;1;1;1;1;1
+7
+10	//N so tuan hoc cua mon
+2020-04-23 0	//String classDate[i] bool checkin[i*nWeeks + j] (i < nStudents va j < nWeeks)
+2020-04-30 0
+2020-05-07 0
+2020-05-14 0
+2020-05-21 0
+2020-05-28 0
+2020-06-04 0
+2020-06-11 0
+2020-06-18 0
+2020-06-25 0

@@ -54,7 +54,7 @@ struct Class {
 };
 
 struct Semester {	//Semester info from SemesterList
-	string year;	//Academic year "YearA-YearB"
+	string year;	//Academic year "YearA-YearB". Example: 2018-2019
 	string semester;//First or Second or Third semester
 };
 
@@ -70,8 +70,15 @@ struct Course {
 	string classDay;
 	tm startTime, endTime;
 	string room;
-	score* board = nullptr;	//This array will use the same indices/iterators as the student array
+	score* board = nullptr;	//This 1D array will use the same indices/iterators as the student array
 	bool* checkList = nullptr; //2D array of size nStudents * nWeeks; True = on class - False = absent
+	//bool checklist = new bool[nStudents*nWeeks]
+	//For (int i = 0; i < nStudents;i++){
+	//	For(int j = 0; j < nWeeks; j++){
+	//		Truy cap *(checklist + i * nWeeks + j) hoac checklist[i][j] hoac checklist[i*nWeeks+j]
+	//				... Lam cai gi trong mang nay
+	//	}
+	//}
 };
 
 //Convert a date string with the format YYYY-MM-DD to struct tm and return the struct tm
