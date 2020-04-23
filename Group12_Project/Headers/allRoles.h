@@ -53,9 +53,9 @@ int menuAttendanceList();
 //the profile printed out will be depended on the "role" value
 void viewProfile(Account user);
 
-////Asks user for confirmation first
-////If the user surely wants to log out then reset the account to blank state, set the account role to 0
-////Return true: Logged out successfully, return to Startup menu
-//bool logOut(Account& user);
+//Asks user for confirmation first
+//If the user surely wants to log out then reset the account to blank state, set the account role to 0
+//Return true: Logged out successfully, return to Startup menu
+void logOut(Account& user);
 
 #endif // !_ALLROLES_H_

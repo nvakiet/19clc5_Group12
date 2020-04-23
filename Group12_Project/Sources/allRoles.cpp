@@ -30,7 +30,7 @@ bool logIn(Account& user) {
 			return false;
 		}
 	}
-	if (emptyFile(Path) == false) {
+	if (!emptyFile(Path)) {
 		int n;
 		getline(fin, line);
 		n = stoi(line);
@@ -71,7 +71,7 @@ bool logIn(Account& user) {
 			return false;
 		}
 	}
-	if (emptyFile(Path) == false) {
+	if (!emptyFile(Path)) {
 		int n;
 		getline(fin, line);
 		n = stoi(line);
@@ -114,7 +114,7 @@ bool logIn(Account& user) {
 			return false;
 		}
 	}
-	if (emptyFile(Path) == false) {
+	if (!emptyFile(Path)) {
 		int n;
 		getline(fin, line);
 		n = stoi(line);
@@ -200,7 +200,7 @@ bool changePassword(Account& user) {
 			getline(fin, userArr[i].staffProfile.fullname);
 			getline(fin, userArr[i].staffProfile.email);
 			getline(fin, line);
-			user.staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
+			userArr[i].staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
 			fin.ignore(INT_MAX, '\n'); //This one is to skip the blank line
 			if (userArr[i].username == user.username && userArr[i].password == user.password) {
 				//Change password of the account currently logging in and the one in data file
@@ -249,7 +249,7 @@ bool changePassword(Account& user) {
 			getline(fin, userArr[i].lecturerProfile.email);
 			getline(fin, userArr[i].lecturerProfile.academicRank);
 			getline(fin, line);
-			user.staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
+			userArr[i].staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
 			getline(fin, line);
 			userArr[i].lecturerProfile.birthDate = sToDate(line);
 			fin.ignore(INT_MAX, '\n'); //This one is to skip the blank line
@@ -301,7 +301,7 @@ bool changePassword(Account& user) {
 			getline(fin, userArr[i].studentProfile.fullname);
 			getline(fin, userArr[i].studentProfile.classID);
 			getline(fin, line);
-			user.staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
+			userArr[i].staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
 			getline(fin, line);
 			userArr[i].studentProfile.birthDate = sToDate(line);
 			getline(fin, line);
@@ -346,16 +346,17 @@ int menuStart() {
 	cout << string(50, '*') << endl;
 	cout << "1 - LOGIN" << endl;
 	cout << "2 - EXIT" << endl;
-	cout << "--> CHOICE: ";
-	string input;
-	getline(cin, input);
-	int choice = stoi(input);
-	if (choice > 0 && choice < 3)
-		return choice;
-	else {
-		cerr << "Invalid option. Please try again." << endl;
-		return 0;
+	cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+	int choice;
+	cin >> choice;
+	while (!cin || choice < 1 || choice > 2) {
+		flushin(cin);
+		cerr << "Invalid input!" << endl;
+		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+		cin >> choice;
 	}
+	cout << endl;
+	return choice;
 }
 
 int menuStaff() {
@@ -369,15 +370,17 @@ int menuStaff() {
 	cout << "5 - MENU: SCOREBOARDS" << endl;
 	cout << "6 - MENU: ATTENDANCE LISTS" << endl;
 	cout << "7 - LOG OUT" << endl;
-	string input;
-	getline(cin, input);
-	int choice = stoi(input);
-	if (choice > 0 && choice < 8)
-		return choice;
-	else {
-		cerr << "Invalid option. Please try again." << endl;
-		return 0;
+	cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+	int choice;
+	cin >> choice;
+	while (!cin || choice < 1 || choice > 7) {
+		flushin(cin);
+		cerr << "Invalid input!" << endl;
+		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+		cin >> choice;
 	}
+	cout << endl;
+	return choice;
 }
 
 int menuLecturer() {
@@ -394,15 +397,17 @@ int menuLecturer() {
 	cout << "8 - EDIT: STUDENT GRADE" << endl;
 	cout << "9 - VIEW: SCOREBOARD" << endl;
 	cout << "10 - LOG OUT" << endl;
-	string input;
-	getline(cin, input);
-	int choice = stoi(input);
-	if (choice > 0 && choice < 11)
-		return choice;
-	else {
-		cerr << "Invalid option. Please try again." << endl;
-		return 0;
+	cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+	int choice;
+	cin >> choice;
+	while (!cin || choice < 1 || choice > 10) {
+		flushin(cin);
+		cerr << "Invalid input!" << endl;
+		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+		cin >> choice;
 	}
+	cout << endl;
+	return choice;
 }
 
 int menuStudent() {
@@ -416,15 +421,17 @@ int menuStudent() {
 	cout << "5 - VIEW: SCHEDULES" << endl;
 	cout << "6 - VIEW: COURSE SCORES" << endl;
 	cout << "7 - LOG OUT" << endl;
-	string input;
-	getline(cin, input);
-	int choice = stoi(input);
-	if (choice > 0 && choice < 8)
-		return choice;
-	else {
-		cerr << "Invalid option. Please try again." << endl;
-		return 0;
+	cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+	int choice;
+	cin >> choice;
+	while (!cin || choice < 1 || choice > 7) {
+		flushin(cin);
+		cerr << "Invalid input!" << endl;
+		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+		cin >> choice;
 	}
+	cout << endl;
+	return choice;
 }
 
 int menuClass() {
@@ -439,15 +446,17 @@ int menuClass() {
 	cout << "6 - VIEW: CLASSES" << endl;
 	cout << "7 - VIEW: CLASS STUDENTS" << endl;
 	cout << "8 - RETURN" << endl;
-	string input;
-	getline(cin, input);
-	int choice = stoi(input);
-	if (choice > 0 && choice < 9)
-		return choice;
-	else {
-		cerr << "Invalid option. Please try again." << endl;
-		return 0;
+	cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+	int choice;
+	cin >> choice;
+	while (!cin || choice < 1 || choice > 8) {
+		flushin(cin);
+		cerr << "Invalid input!" << endl;
+		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+		cin >> choice;
 	}
+	cout << endl;
+	return choice;
 }
 
 int menuCourse() {
@@ -468,15 +477,17 @@ int menuCourse() {
 	cout << "12 - VIEW: ATTENDANCE LIST OF A COURSE" << endl;
 	cout << "13 - VIEW: ALL LECTURERS AVAILABLE" << endl;
 	cout << "14 - RETURN" << endl;
-	string input;
-	getline(cin, input);
-	int choice = stoi(input);
-	if (choice > 0 && choice < 15)
-		return choice;
-	else {
-		cerr << "Invalid option. Please try again." << endl;
-		return 0;
+	cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+	int choice;
+	cin >> choice;
+	while (!cin || choice < 1 || choice > 14) {
+		flushin(cin);
+		cerr << "Invalid input!" << endl;
+		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+		cin >> choice;
 	}
+	cout << endl;
+	return choice;
 }
 
 int menuScoreboard() {
@@ -486,15 +497,17 @@ int menuScoreboard() {
 	cout << "1 - SEARCH SCOREBOARD" << endl;
 	cout << "2 - EXPORT SCOREBOARD" << endl;
 	cout << "3 - RETURN" << endl;
-	string input;
-	getline(cin, input);
-	int choice = stoi(input);
-	if (choice > 0 && choice < 4)
-		return choice;
-	else {
-		cerr << "Invalid option. Please try again." << endl;
-		return 0;
+	cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+	int choice;
+	cin >> choice;
+	while (!cin || choice < 1 || choice > 3) {
+		flushin(cin);
+		cerr << "Invalid input!" << endl;
+		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+		cin >> choice;
 	}
+	cout << endl;
+	return choice;
 }
 
 int menuAttendanceList() {
@@ -504,17 +517,90 @@ int menuAttendanceList() {
 	cout << "1 - SEARCH ATTENDANCE LIST" << endl;
 	cout << "2 - EXPORT ATTENDANCE LIST" << endl;
 	cout << "3 - RETURN" << endl;
-	string input;
-	getline(cin, input);
-	int choice = stoi(input);
-	if (choice > 0 && choice < 4)
-		return choice;
-	else {
-		cerr << "Invalid option. Please try again." << endl;
-		return 0;
+	cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+	int choice;
+	cin >> choice;
+	while (!cin || choice < 1 || choice > 3) {
+		flushin(cin);
+		cerr << "Invalid input!" << endl;
+		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+		cin >> choice;
 	}
+	cout << endl;
+	return choice;
 }
 
 void viewProfile(Account user) {
+	cout << endl;
+	switch (user.role) {
+	case 1:
+		cout << "PROFILE: Academic Staff" << endl;
+		cout << "Username: " << setw(20) << left << user.username << endl;
+		cout << "Full Name: " << setw(30) << left << user.staffProfile.fullname << endl;
+		if (user.staffProfile.gender == 'M' || user.staffProfile.gender == 'm')
+			cout << "Gender: " << setw(7) << left << "Male" << endl;
+		if (user.staffProfile.gender == 'F' || user.staffProfile.gender == 'f')
+			cout << "Gender: " << setw(7) << left << "Female" << endl;
+		cout << "Email: " << setw(40) << left << user.staffProfile.email << endl;
+		return;
 
+	case 2:
+		cout << "PROFILE: Lecturer" << endl;
+		cout << "Username: " << setw(20) << left << user.username << endl;
+		cout << "Full Name: " << setw(30) << left << user.lecturerProfile.fullname << endl;
+		cout << "Academic Rank: " << setw(15) << left << user.lecturerProfile.academicRank << endl;
+		if (user.lecturerProfile.gender == 'M' || user.lecturerProfile.gender == 'm')
+			cout << "Gender: " << setw(7) << left << "Male" << endl;
+		if (user.lecturerProfile.gender == 'F' || user.lecturerProfile.gender == 'f')
+			cout << "Gender: " << setw(7) << left << "Female" << endl;
+		cout << "Birthday: ";
+		printDate(cout, user.lecturerProfile.birthDate);
+		cout << "Email: " << setw(40) << left << user.lecturerProfile.email << endl;
+		return;
+
+	case 3:
+		cout << "PROFILE: Student" << endl;
+		cout << "ID: " << setw(15) << left << user.studentProfile.ID << endl;
+		cout << "Full Name: " << setw(30) << left << user.studentProfile.fullname << endl;
+		cout << "Class: " << setw(10) << left << user.studentProfile.classID << endl;
+		if (user.studentProfile.gender == 'M' || user.studentProfile.gender == 'm')
+			cout << "Gender: " << setw(7) << left << "Male" << endl;
+		if (user.studentProfile.gender == 'F' || user.studentProfile.gender == 'f')
+			cout << "Gender: " << setw(7) << left << "Female" << endl;
+		cout << "Birthday: ";
+		printDate(cout, user.studentProfile.birthDate);
+		if (user.studentProfile.active == true)
+			cout << "Status: Active" << endl;
+		else cout << "Status: Dropped Out" << endl;
+		return;
+	}
+}
+
+void logOut(Account& user) {
+	switch (user.role) {
+	case 1:
+		user.staffProfile.fullname.clear();
+		user.staffProfile.email.clear();
+		user.staffProfile.gender = NULL;
+		break;
+
+	case 2:
+		user.lecturerProfile.fullname.clear();
+		user.lecturerProfile.academicRank.clear();
+		user.lecturerProfile.email.clear();
+		user.lecturerProfile.gender = NULL;
+		resetTM(user.lecturerProfile.birthDate);
+		break;
+
+	case 3:
+		user.studentProfile.fullname.clear();
+		user.studentProfile.ID.clear();
+		user.studentProfile.classID.clear();
+		user.studentProfile.gender = NULL;
+		resetTM(user.studentProfile.birthDate);
+		break;
+	}
+	user.username.clear();
+	user.password.clear();
+	user.role = 0;
 }

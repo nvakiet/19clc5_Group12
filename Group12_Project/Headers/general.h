@@ -21,20 +21,20 @@ struct score {
 struct Staff {
 	string fullname;
 	string email;
-	char gender = 'M'; //'F' for female and 'M' for male
+	char gender = NULL; //'F' for female and 'M' for male
 };
 
 struct Lecturer {
 	string fullname;
 	string email;
 	string academicRank;//Rank: Master/PhD/Professor
-	char gender = 'M'; //'F' for female and 'M' for male
+	char gender = NULL; //'F' for female and 'M' for male
 	tm birthDate;
 };
 
 struct Student {
 	string fullname, ID, classID;
-	char gender = 'M'; //'F' for female and 'M' for male
+	char gender = NULL; //'F' for female and 'M' for male
 	tm birthDate;
 	bool active = true; //Default state: Active = currently studying
 };
@@ -81,6 +81,9 @@ struct Course {
 	//}
 };
 
+//Reset struct tm value
+void resetTM(tm& time);
+
 //Convert a date string with the format YYYY-MM-DD to struct tm and return the struct tm
 tm sToDate(string date_str);
 
@@ -102,6 +105,6 @@ void pause();
 //Check if a successfully opened input file is empty
 bool emptyFile(string filePath);
 
-//Generate a text file with an initial line
+//Generate a text file with an initial string
 bool generateFile(string filePath, string init);
 #endif // !_GENERAL_H_

@@ -21,9 +21,21 @@ tm sToDate(string date_str) {
 }
 
 void printDate(ostream& stream, tm date) {
-	stream << date.tm_year + 1900 << '-' 
-		<< setfill('0') << setw(2) << date.tm_mon + 1 << '-' 
-		<< setfill('0') << setw(2) << date.tm_mday << endl;
+	stream << setfill('0') << right << date.tm_year + 1900 << '-'
+		<< setw(2) << date.tm_mon + 1 << '-' 
+		<< setw(2) << date.tm_mday << endl;
+}
+
+void resetTM(tm &time) {
+	time.tm_year = 0;
+	time.tm_mon = 0;
+	time.tm_mday = 1;
+	time.tm_hour = 0;
+	time.tm_min = 0;
+	time.tm_sec = 0;
+	time.tm_wday = 0;
+	time.tm_yday = 0;
+	time.tm_isdst = 0;
 }
 
 tm sToTime(string time_str) {
@@ -43,8 +55,8 @@ tm sToTime(string time_str) {
 }
 
 void printTime(ostream& stream, tm time) {
-	stream << setfill('0') << setw(2) << time.tm_hour << ':' 
-		<< setfill('0') << setw(2) << time.tm_min << endl;
+	stream << setfill('0') << right << setw(2) << time.tm_hour << ':' 
+		   << setw(2) << time.tm_min << endl;
 }
 
 void flushin(istream& input) {
@@ -53,7 +65,7 @@ void flushin(istream& input) {
 }
 
 void pause() {
-	cout << "Press ENTER to continue..." << endl;
+	cout << "\nPress ENTER to continue..." << endl;
 	flushin(cin);
 	cin.get();
 }
@@ -61,17 +73,15 @@ void pause() {
 bool emptyFile(string filePath) {
 	string line;
 	ifstream fin;
-	bool flag;
+	bool flag = true;
 	fin.open(filePath);
 	if (fin.is_open() && fin.good()) {
-		while (!fin.eof()) {
+		while (!fin.eof() && flag != false) {
 			getline(fin, line);
-			if (!line.empty())
-				flag = false;
+			if (!line.empty()) flag = false;
 		}
 	}
 	fin.close();
-	flag = true;
 	return flag;
 }
 
@@ -79,7 +89,7 @@ bool generateFile(string filePath, string init) {
 	ofstream fout(filePath);
 	bool flag;
 	if (fout.is_open() && fout.good()) {
-		fout << init << endl;
+		fout << init;
 		flag = true;
 	}
 	else flag = false;
