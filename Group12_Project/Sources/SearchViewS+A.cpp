@@ -17,7 +17,7 @@ void viewScoreboard(Course B)
 }
 void SearchandViewScoreboard(Course B)
 {
-	string x = "Students";
+	string x = "Students", path = "./TextFiles/";
 	string line;
 	printf("Enter years : ");
 	getline(cin, B.c_semester.year);
@@ -25,10 +25,10 @@ void SearchandViewScoreboard(Course B)
 	getline(cin, B.c_semester.semester);
 	printf("Enter course ID: ");
 	getline(cin, B.courseID);
-	printf("Enter course Name: ");
-	getline(cin, B.courseName);
+	printf("Enter class ID: ");
+	getline(cin, B.className);
 	ifstream fin;
-	fin.open(B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.courseName + "_" + x + ".txt");
+	fin.open(path + B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + x + ".txt");
 	if (fin.fail())
 	{
 		printf("Failed to open this file!\n");
@@ -75,7 +75,7 @@ void SearchandViewScoreboard(Course B)
 }
 void SearchandViewAttendance(Course B)
 {
-	string x = "Students";
+	string x = "Students", path = "./TextFiles/";
 	string line;
 	printf("Enter years : ");
 	getline(cin, B.c_semester.year);
@@ -83,10 +83,10 @@ void SearchandViewAttendance(Course B)
 	getline(cin, B.c_semester.semester);
 	printf("Enter course ID: ");
 	getline(cin, B.courseID);
-	printf("Enter course Name: ");
-	getline(cin, B.courseName);
+	printf("Enter class ID: ");
+	getline(cin, B.className);
 	ifstream fin;
-	fin.open(B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.courseName + "_" + x + ".txt");
+	fin.open(path + B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + x + ".txt");
 	if (fin.fail())
 	{
 		printf("Failed to open this file!\n");

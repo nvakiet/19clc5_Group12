@@ -3,7 +3,8 @@
 Semester getCurrentSemester() {
 	time_t current = time(NULL);
 	Semester curSem;
-	tm timeinfo = *(localtime(&current));
+	tm timeinfo;
+	localtime_s(&timeinfo, &current);
 	if (timeinfo.tm_mon > 7) {
 		curSem.semester = "HK1";
 		curSem.year = to_string(timeinfo.tm_year + 1900) + '-' + to_string(timeinfo.tm_year + 1900 + 1);

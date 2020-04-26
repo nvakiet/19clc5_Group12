@@ -174,8 +174,8 @@ int main() {
 	//	}
 	//}
 	Course B;
-	SearchandViewAttendance(B);
 	SearchandViewScoreboard(B);
+	SearchandViewAttendance(B);
 
 	return 0;
 }
