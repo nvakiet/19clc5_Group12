@@ -14,7 +14,6 @@ int main() {
 			else {
 				cerr << "Login failed! Please try again." << endl;
 				pause();
-				continue;
 			}
 		}
 
@@ -32,12 +31,10 @@ int main() {
 				if (changePassword(user)) {
 					cout << "Your password has been changed successfully!" << endl;
 					pause();
-					continue;
 				}
 				else {
 					cerr << "Failed to change password! Please try again." << endl;
 					pause();
-					continue;
 				}
 			}
 			//CLASSES MENU
@@ -112,12 +109,10 @@ int main() {
 				if (changePassword(user)) {
 					cout << "Your password has been changed successfully!" << endl;
 					pause();
-					continue;
 				}
 				else {
 					cerr << "Failed to change password! Please try again." << endl;
 					pause();
-					continue;
 				}
 			}
 			/*	ADD FUNCTIONS FOR CHOICE 3 TO 9 HERE
@@ -149,12 +144,10 @@ int main() {
 				if (changePassword(user)) {
 					cout << "Your password has been changed successfully!" << endl;
 					pause();
-					continue;
 				}
 				else {
 					cerr << "Failed to change password! Please try again." << endl;
 					pause();
-					continue;
 				}
 			}
 			/*	ADD FUNCTIONS FOR CHOICE 3 TO 6 HERE

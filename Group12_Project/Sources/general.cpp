@@ -66,8 +66,7 @@ void flushin(istream& input) {
 
 void pause() {
 	cout << "\nPress ENTER to continue..." << endl;
-	flushin(cin);
-	cin.get();
+	cin.ignore(INT_MAX, '\n');
 }
 
 bool emptyFile(string filePath) {

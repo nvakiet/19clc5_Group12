@@ -6,9 +6,9 @@ bool logIn(Account& user) {
 	// - False if one of the files fail to open or can't find any correct set of username and password in all files
 	string fileUsername, filePassword, line;
 	cout << "Enter username: ";
-	cin >> user.username;
+	getline(cin, user.username);
 	cout << "Enter password: ";
-	cin >> user.password;
+	getline(cin, user.password);
 	user.password = sha256(user.password);	//Hash password right after it is entered
 	cout << "\nLogging in. Please wait..." << endl;
 
@@ -154,14 +154,14 @@ bool changePassword(Account& user) {
 	string passwordInput;
 	//Get old password
 	cout << "Enter current password: ";
-	cin >> passwordInput;
+	getline(cin, passwordInput);
 	if (sha256(passwordInput) != user.password) {
 		cerr << "The password you entered is incorrect!" << endl;
 		return false;
 	}
 	//Get new password
 	cout << "Enter new password (Minimum length: 8 characters): ";
-	cin >> passwordInput;
+	getline(cin, passwordInput);
 	if (passwordInput.length() < 8) {
 		cerr << "The password must be at least 8 characters long!" << endl;
 		return false;
@@ -169,7 +169,7 @@ bool changePassword(Account& user) {
 	//Get new password once more time
 	string line;
 	cout << "Enter new password again: ";
-	cin >> line;
+	getline(cin, line);
 	if (line != passwordInput) {
 		cerr << "The password you re-entered does not match!" << endl;
 		return false;
@@ -356,6 +356,7 @@ int menuStart() {
 		cin >> choice;
 	}
 	cout << endl;
+	flushin(cin);
 	return choice;
 }
 
@@ -380,6 +381,7 @@ int menuStaff() {
 		cin >> choice;
 	}
 	cout << endl;
+	flushin(cin);
 	return choice;
 }
 
@@ -407,6 +409,7 @@ int menuLecturer() {
 		cin >> choice;
 	}
 	cout << endl;
+	flushin(cin);
 	return choice;
 }
 
@@ -431,6 +434,7 @@ int menuStudent() {
 		cin >> choice;
 	}
 	cout << endl;
+	flushin(cin);
 	return choice;
 }
 
@@ -456,6 +460,7 @@ int menuClass() {
 		cin >> choice;
 	}
 	cout << endl;
+	flushin(cin);
 	return choice;
 }
 
@@ -487,6 +492,7 @@ int menuCourse() {
 		cin >> choice;
 	}
 	cout << endl;
+	flushin(cin);
 	return choice;
 }
 
@@ -507,6 +513,7 @@ int menuScoreboard() {
 		cin >> choice;
 	}
 	cout << endl;
+	flushin(cin);
 	return choice;
 }
 
@@ -527,6 +534,7 @@ int menuAttendanceList() {
 		cin >> choice;
 	}
 	cout << endl;
+	flushin(cin);
 	return choice;
 }
 
