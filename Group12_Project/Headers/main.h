@@ -3,5 +3,6 @@
 
 #include "allRoles.h"
 #include "staff-class.h"
+#include "staff-course.h"
 
 #endif // !_MAIN_H_

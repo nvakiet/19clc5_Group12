@@ -24,6 +24,7 @@
     <ClCompile Include="Sources\main.cpp" />
     <ClCompile Include="Sources\sha256.cpp" />
     <ClCompile Include="Sources\staff-class.cpp" />
+    <ClCompile Include="Sources\staff-course.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\allRoles.h" />
@@ -31,6 +32,7 @@
     <ClInclude Include="Headers\main.h" />
     <ClInclude Include="Headers\sha256.h" />
     <ClInclude Include="Headers\staff-class.h" />
+    <ClInclude Include="Headers\staff-course.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

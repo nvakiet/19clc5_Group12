@@ -85,8 +85,6 @@ bool logIn(Account& user) {
 				getline(fin, user.lecturerProfile.academicRank);
 				getline(fin, line);
 				user.staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
-				getline(fin, line);
-				user.lecturerProfile.birthDate = sToDate(line);
 				return true;
 			}
 			else {
@@ -250,8 +248,6 @@ bool changePassword(Account& user) {
 			getline(fin, userArr[i].lecturerProfile.academicRank);
 			getline(fin, line);
 			userArr[i].staffProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
-			getline(fin, line);
-			userArr[i].lecturerProfile.birthDate = sToDate(line);
 			fin.ignore(INT_MAX, '\n'); //This one is to skip the blank line
 			if (userArr[i].username == user.username && userArr[i].password == user.password) {
 				//Change password of the account currently logging in and the one in data file
@@ -274,7 +270,6 @@ bool changePassword(Account& user) {
 				<< userArr[i].lecturerProfile.email << endl
 				<< userArr[i].lecturerProfile.academicRank << endl
 				<< userArr[i].lecturerProfile.gender << endl;
-			printDate(fout, userArr[i].lecturerProfile.birthDate);
 			fout << endl;
 		}
 		fout.close();
@@ -561,8 +556,6 @@ void viewProfile(Account user) {
 			cout << "Gender: " << setw(7) << left << "Male" << endl;
 		if (user.lecturerProfile.gender == 'F' || user.lecturerProfile.gender == 'f')
 			cout << "Gender: " << setw(7) << left << "Female" << endl;
-		cout << "Birthday: ";
-		printDate(cout, user.lecturerProfile.birthDate);
 		cout << "Email: " << setw(40) << left << user.lecturerProfile.email << endl;
 		return;
 
@@ -597,7 +590,6 @@ void logOut(Account& user) {
 		user.lecturerProfile.academicRank.clear();
 		user.lecturerProfile.email.clear();
 		user.lecturerProfile.gender = NULL;
-		resetTM(user.lecturerProfile.birthDate);
 		break;
 
 	case 3:

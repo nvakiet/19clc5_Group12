@@ -29,7 +29,6 @@ struct Lecturer {
 	string email;
 	string academicRank;//Rank: Master/PhD/Professor
 	char gender = NULL; //'F' for female and 'M' for male
-	tm birthDate;
 };
 
 struct Student {
