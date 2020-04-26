@@ -3,5 +3,5 @@
 
 #include "allRoles.h"
 #include "staff-class.h"
-
+#include "SearchViewS+A.h"
 #endif // !_MAIN_H_
