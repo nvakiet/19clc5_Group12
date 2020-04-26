@@ -22,6 +22,7 @@
     <ClCompile Include="Sources\allRoles.cpp" />
     <ClCompile Include="Sources\general.cpp" />
     <ClCompile Include="Sources\main.cpp" />
+    <ClCompile Include="Sources\SearchViewS+A.cpp" />
     <ClCompile Include="Sources\sha256.cpp" />
     <ClCompile Include="Sources\staff-class.cpp" />
     <ClCompile Include="Sources\staff-course.cpp" />
@@ -30,6 +31,7 @@
     <ClInclude Include="Headers\allRoles.h" />
     <ClInclude Include="Headers\general.h" />
     <ClInclude Include="Headers\main.h" />
+    <ClInclude Include="Headers\SearchViewS+A.h" />
     <ClInclude Include="Headers\sha256.h" />
     <ClInclude Include="Headers\staff-class.h" />
     <ClInclude Include="Headers\staff-course.h" />
