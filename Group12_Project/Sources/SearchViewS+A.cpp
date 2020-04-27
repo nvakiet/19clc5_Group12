@@ -15,8 +15,9 @@ void viewScoreboard(Course B)
 		cout << endl;
 	}
 }
-void SearchandViewScoreboard(Course B)
+void SearchandViewScoreboard()
 {
+	Course B;
 	string x = "Students", path = "./TextFiles/";
 	string line;
 	printf("Enter years : ");
@@ -40,8 +41,7 @@ void SearchandViewScoreboard(Course B)
 	B.nStudents = stoi(line);
 	B.studentArr = new Student[B.nStudents];
 	B.board = new score[B.nStudents];
-	while (!fin.eof())
-	{
+	
 		for (int i = 0; i < B.nStudents; i++)
 		{
 			getline(fin, B.studentArr[i].ID);
@@ -66,15 +66,32 @@ void SearchandViewScoreboard(Course B)
 			}
 
 		}
-	}
+	
 
 	fin.close();
 	viewScoreboard(B);
 	delete[]B.studentArr;
 	delete[]B.board;
 }
-void SearchandViewAttendance(Course B)
+void viewAttendance(Course B, string*& classdate)
 {
+	for (int i = 0; i < B.nStudents; i++)
+	{
+		cout << B.studentArr[i].ID << endl;
+		cout << B.studentArr[i].fullname << endl;
+		cout << B.studentArr[i].gender << endl;
+		printDate(cout, B.studentArr[i].birthDate);
+		cout << B.studentArr[i].active << endl;
+		for (int j = 0; j < B.nWeeks; j++)
+		{
+			cout << classdate[j] << " " << *(B.checkList + i * B.nWeeks + j) << endl;
+		}
+		cout << endl;
+	}
+}
+void SearchandViewAttendance()
+{
+	Course B;
 	string x = "Students", path = "./TextFiles/";
 	string line;
 	printf("Enter years : ");
@@ -99,8 +116,8 @@ void SearchandViewAttendance(Course B)
 	string* classdate = new string[B.nWeeks];
 	B.checkList = new bool[B.nStudents * B.nWeeks];
 	B.studentArr = new Student[B.nStudents];
-	while (!fin.eof())
-	{
+	
+	
 		for (int i = 0; i < B.nStudents; i++)
 		{
 			getline(fin, B.studentArr[i].ID);
@@ -122,20 +139,10 @@ void SearchandViewAttendance(Course B)
 				*(B.checkList + i * B.nWeeks + j) = stoi(line);
 
 			}
-			fin.ignore(INT_MAX, '\n');
-			cout << B.studentArr[i].ID << endl;
-			cout << B.studentArr[i].fullname << endl;
-			cout << B.studentArr[i].gender << endl;
-			printDate(cout, B.studentArr[i].birthDate);
-			cout << B.studentArr[i].active << endl;
-			for (int j = 0; j < B.nWeeks; j++)
-			{
-				cout << classdate[j] << " " << *(B.checkList + i * B.nWeeks + j) << endl;
-			}
-			cout << endl;
 		}
-	}
+	
 	fin.close();
+	viewAttendance(B, classdate);
 	delete[]classdate;
 	delete[]B.checkList;
 	delete[]B.studentArr;
