@@ -211,6 +211,7 @@ bool changePassword(Account& user) {
 		fout.open(Path);
 		if (!fout.is_open()) {
 			cerr << "Can't access account database at " << Path << endl;
+			delete[] userArr;
 			return false;
 		}
 		fout << n << endl;
@@ -260,6 +261,7 @@ bool changePassword(Account& user) {
 		fout.open(Path);
 		if (!fout.is_open()) {
 			cerr << "Can't access account database at " << Path << endl;
+			delete[] userArr;
 			return false;
 		}
 		fout << n << endl;
@@ -313,6 +315,7 @@ bool changePassword(Account& user) {
 		fout.open(Path);
 		if (!fout.is_open()) {
 			cerr << "Can't access account database at " << Path << endl;
+			delete[] userArr;
 			return false;
 		}
 		fout << n << endl;
