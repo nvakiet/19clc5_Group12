@@ -2,6 +2,7 @@
 #define _SearchViewSA_H_
 #include "../Headers/general.h"
 void viewScoreboard(Course B);
-void SearchandViewScoreboard(Course B);
-void SearchandViewAttendance(Course B);
+void viewAttendance(Course B, string* classdate);
+void SearchandViewScoreboard();
+void SearchandViewAttendance();
 #endif // !_SearchViewS+A_H_

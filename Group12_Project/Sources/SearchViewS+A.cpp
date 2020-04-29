@@ -3,11 +3,11 @@ void viewScoreboard(Course B)
 {
 	for (int i = 0; i < B.nStudents; i++)
 	{
+		if (B.studentArr[i].active == false) continue;
 		cout << B.studentArr[i].ID << endl;
 		cout << B.studentArr[i].fullname << endl;
 		cout << B.studentArr[i].gender << endl;
 		printDate(cout, B.studentArr[i].birthDate);
-		cout << B.studentArr[i].active << endl;
 		cout << B.board[i].midterm << endl;
 		cout << B.board[i].final << endl;
 		cout << B.board[i].bonus << endl;
@@ -28,6 +28,7 @@ void SearchandViewScoreboard()
 	getline(cin, B.courseID);
 	printf("Enter class ID: ");
 	getline(cin, B.className);
+	cout << endl;
 	ifstream fin;
 	fin.open(path + B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + x + ".txt");
 	if (fin.fail())
@@ -42,30 +43,30 @@ void SearchandViewScoreboard()
 	B.studentArr = new Student[B.nStudents];
 	B.board = new score[B.nStudents];
 	
-		for (int i = 0; i < B.nStudents; i++)
+	for (int i = 0; i < B.nStudents; i++)
+	{
+		getline(fin, B.studentArr[i].ID);
+		getline(fin, B.studentArr[i].fullname);
+		getline(fin, line);
+		B.studentArr[i].gender = line.front();
+		getline(fin, line);
+		B.studentArr[i].birthDate = sToDate(line);
+		getline(fin, line);
+		B.studentArr[i].active = stoi(line);
+		getline(fin, line);
+		B.board[i].midterm = stof(line);
+		getline(fin, line);
+		B.board[i].final = stof(line);
+		getline(fin, line);
+		B.board[i].bonus = stof(line);
+		getline(fin, line);
+		B.board[i].total = stof(line);
+		for (int i = 0; i <= B.nWeeks; i++)
 		{
-			getline(fin, B.studentArr[i].ID);
-			getline(fin, B.studentArr[i].fullname);
-			getline(fin, line);
-			B.studentArr[i].gender = line.front();
-			getline(fin, line);
-			B.studentArr[i].birthDate = sToDate(line);
-			getline(fin, line);
-			B.studentArr[i].active = stoi(line);
-			getline(fin, line);
-			B.board[i].midterm = stof(line);
-			getline(fin, line);
-			B.board[i].final = stof(line);
-			getline(fin, line);
-			B.board[i].bonus = stof(line);
-			getline(fin, line);
-			B.board[i].total = stof(line);
-			for (int i = 0; i <= B.nWeeks; i++)
-			{
-				fin.ignore(INT_MAX, '\n');
-			}
-
+			fin.ignore(INT_MAX, '\n');
 		}
+
+	}
 	
 
 	fin.close();
@@ -73,15 +74,15 @@ void SearchandViewScoreboard()
 	delete[]B.studentArr;
 	delete[]B.board;
 }
-void viewAttendance(Course B, string*& classdate)
+void viewAttendance(Course B, string* classdate)
 {
 	for (int i = 0; i < B.nStudents; i++)
 	{
+		if (B.studentArr[i].active == false) continue;
 		cout << B.studentArr[i].ID << endl;
 		cout << B.studentArr[i].fullname << endl;
 		cout << B.studentArr[i].gender << endl;
 		printDate(cout, B.studentArr[i].birthDate);
-		cout << B.studentArr[i].active << endl;
 		for (int j = 0; j < B.nWeeks; j++)
 		{
 			cout << classdate[j] << " " << *(B.checkList + i * B.nWeeks + j) << endl;
@@ -102,6 +103,7 @@ void SearchandViewAttendance()
 	getline(cin, B.courseID);
 	printf("Enter class ID: ");
 	getline(cin, B.className);
+	cout << endl;
 	ifstream fin;
 	fin.open(path + B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + x + ".txt");
 	if (fin.fail())
@@ -118,28 +120,28 @@ void SearchandViewAttendance()
 	B.studentArr = new Student[B.nStudents];
 	
 	
-		for (int i = 0; i < B.nStudents; i++)
+	for (int i = 0; i < B.nStudents; i++)
+	{
+		getline(fin, B.studentArr[i].ID);
+		getline(fin, B.studentArr[i].fullname);
+		getline(fin, line);
+		B.studentArr[i].gender = line.front();
+		getline(fin, line);
+		B.studentArr[i].birthDate = sToDate(line);
+		getline(fin, line);
+		B.studentArr[i].active = stoi(line);
+		for (int i = 0; i < 4; i++)
 		{
-			getline(fin, B.studentArr[i].ID);
-			getline(fin, B.studentArr[i].fullname);
-			getline(fin, line);
-			B.studentArr[i].gender = line.front();
-			getline(fin, line);
-			B.studentArr[i].birthDate = sToDate(line);
-			getline(fin, line);
-			B.studentArr[i].active = stoi(line);
-			for (int i = 0; i < 4; i++)
-			{
-				fin.ignore(INT_MAX, '\n');
-			}
-			for (int j = 0; j < B.nWeeks; j++)
-			{
-				getline(fin, classdate[j], ' ');
-				getline(fin, line);
-				*(B.checkList + i * B.nWeeks + j) = stoi(line);
-
-			}
+			fin.ignore(INT_MAX, '\n');
 		}
+		for (int j = 0; j < B.nWeeks; j++)
+		{
+			getline(fin, classdate[j], ' ');
+			getline(fin, line);
+			*(B.checkList + i * B.nWeeks + j) = stoi(line);
+		}
+		fin.ignore(INT_MAX, '\n');
+	}
 	
 	fin.close();
 	viewAttendance(B, classdate);

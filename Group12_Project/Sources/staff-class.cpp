@@ -5,23 +5,23 @@ bool importClass() {
 	cout << "Enter csv file path: ";
 
 	ifstream fin;
-	string path;
-	cin >> path;
-	flushin(cin);
+	string path = "E:/GitHub/19clc5_Group12/19CLC5-student.csv";
+	/*cin >> path;
+	flushin(cin);*/
 	fin.open(path);
 
-	int n;
-	string DoB, sex, ClassID, line, No, lastname, firstname;
+	int n = 4;
+	string DoB, sex, ClassID = "19CLC5", line, No, lastname, firstname;
 	cout << "Enter class ID: ";
-	cin >> ClassID;
-	flushin(cin);
+	/*cin >> ClassID;
+	flushin(cin);*/
 	cout << "Enter number of students in the class: ";
-	cin >> n;
-	flushin(cin);
+	/*cin >> n;
+	flushin(cin);*/
 
 	Student* newStu;
 	newStu = new Student[n];
-
+	//Read the csv
 	if (!fin.is_open()) {
 		cerr << "Can't open data file in the path: " << path << endl;
 		return false;
@@ -40,7 +40,7 @@ bool importClass() {
 
 	}
 	fin.close();
-	/*
+	//Register students
 	string path2 = "./TextFiles/Students.txt";
 	fin.open(path2);
 
@@ -58,21 +58,18 @@ bool importClass() {
 			return false;
 		}
 	}
+	//Case 1: if Students.txt is empty, paste all students to the file
+	//Case 2: if not
 	if (!emptyFile(path2)) {
 		int n2;
 		getline(fin, line);
 		n2 = stoi(line);
-		Account* user;
-		user = new Account[n2];
+		string* userID;
+		userID = new string[n2];
 		for (int i = 0; i < n2; i++) {
-			getline(fin, user[i].username);
-			fin.ignore(INT_MAX, '\n');
-			fin.ignore(INT_MAX, '\n');
-			fin.ignore(INT_MAX, '\n');
-			fin.ignore(INT_MAX, '\n');
-			fin.ignore(INT_MAX, '\n');
-			fin.ignore(INT_MAX, '\n');
-			fin.ignore(INT_MAX, '\n');
+			getline(fin, userID[i]);
+			for (int j = 0; j < 7; j++)
+				fin.ignore(INT_MAX, '\n');
 		}
 		fin.close();
 
@@ -82,30 +79,34 @@ bool importClass() {
 			cerr << "Cannot open file";
 			return false;
 		}
-		fout << endl;
-		for (int i = 0; i < n; i++)
-			for (int j = 0; j < n2; j++) {
-				if (newStu[i].ID == user[j].username)
-					break;
-				fout << newStu[i].ID << endl
-					<< setfill('0') << right << newStu[i].birthDate.tm_year + 1900
+		for (int i = 0; i < n; i++) {
+			bool sameStudent = false;
+			for (int j = 0; j < n2 && sameStudent == false; j++)
+				if (newStu[i].ID == userID[j]) sameStudent = true;
+			if (!sameStudent){
+				fout << newStu[i].ID << endl;
+				ostringstream temp;
+				temp << setfill('0') << right << newStu[i].birthDate.tm_year + 1900
 					<< setw(2) << newStu[i].birthDate.tm_mon + 1
-					<< setw(2) << newStu[i].birthDate.tm_mday << endl
-					<< newStu[i].fullname << endl
-					<< ClassID << endl
-					<< newStu[i].gender << endl;
-				printDate(fout, newStu[i].birthDate);
-				fout << 1 << endl;
-				fout << endl;
+					<< setw(2) << newStu[i].birthDate.tm_mday << endl;
+				DoB = temp.str();
+				fout << sha256(DoB) << endl
+				<<	newStu[i].fullname << endl
+				<< ClassID << endl
+				<< newStu[i].gender << endl;
+			printDate(fout, newStu[i].birthDate);
+			fout << 1 << endl;
+			fout << endl;
 			}
+		}
 		fout.close();
-		delete[] user;
-		user = nullptr;
+		delete[] userID;
+		userID = nullptr;
 	}
-	*/
+	//Import students of a class to txt file and update Classes.txt
 	string path3 = "./TextFiles/Classes.txt";
 	fin.open(path3);
-	if (!fin.is_open()) {
+	/*if (!fin.is_open()) {
 		cerr << "Can't open data file in the path: " << path3 << endl;
 		if (generateFile(path3, "")) {
 			cout << "A new file has been generated!" << endl;
@@ -118,7 +119,12 @@ bool importClass() {
 			cerr << "Failed to generate a new data file" << endl;
 			return false;
 		}
-	}
+	}*/
+
+	//Dung emptyFile kiem tra co Classes.txt ko
+	//True: - fout so 1 o dong dau trong Classes.txt, dong 2 thi fout classID nguoi dung nhap => close fout
+	//		- Mo lai fout theo cu phap da ban roi truyen du lieu tu mang newStu vao file do
+	//False: - Hoi co muon overwrite: Neu ko thi return, neu co thi bat file o che do default (ios::trunc), ghi dong dau n, cac dong sau la thong tin sinh vien cach nhau 1 dong moi sv
 	if (!emptyFile(path3)) {
 		int n3;
 		getline(fin, line);
@@ -135,6 +141,7 @@ bool importClass() {
 				cerr << "The class already existed. Overwrite?" << endl
 					<< "1.Yes" << endl
 					<< "0.No" << endl;
+				cout << "Enter 1 or 0: ";
 				cin >> choice;
 				while (!cin || choice < 0 || choice > 1) {
 					flushin(cin);

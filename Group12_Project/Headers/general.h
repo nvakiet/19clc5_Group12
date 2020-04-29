@@ -8,6 +8,7 @@
 #include <string>
 #include <cstring>
 #include <ctime>
+#include <sstream>
 #include "../Headers/sha256.h"
 using namespace std;
 
