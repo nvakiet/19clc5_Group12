@@ -85,11 +85,9 @@ bool importClass() {
 				if (newStu[i].ID == userID[j]) sameStudent = true;
 			if (!sameStudent){
 				fout << newStu[i].ID << endl;
-				ostringstream temp;
-				temp << setfill('0') << right << newStu[i].birthDate.tm_year + 1900
-					<< setw(2) << newStu[i].birthDate.tm_mon + 1
-					<< setw(2) << newStu[i].birthDate.tm_mday << endl;
-				DoB = temp.str();
+				char temp[9];
+				strftime(temp, 9, "%Y%m%d", &newStu[i].birthDate);
+				DoB.assign(temp);
 				fout << sha256(DoB) << endl
 				<<	newStu[i].fullname << endl
 				<< ClassID << endl
