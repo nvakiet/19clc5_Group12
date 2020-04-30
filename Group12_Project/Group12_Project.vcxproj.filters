@@ -27,10 +27,16 @@
     <ClCompile Include="Sources\sha256.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\staff-class.cpp">
+    <ClCompile Include="Sources\staff-course.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\staff-course.cpp">
+    <ClCompile Include="Sources\SearchViewS+A.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\NOTES.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\staff-class.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -51,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\staff-course.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\SearchViewS+A.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

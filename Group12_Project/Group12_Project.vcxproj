@@ -24,6 +24,7 @@
     <ClCompile Include="Sources\main.cpp" />
     <ClCompile Include="Sources\SearchViewS+A.cpp" />
     <ClCompile Include="Sources\sha256.cpp" />
+    <ClCompile Include="Sources\NOTES.cpp" />
     <ClCompile Include="Sources\staff-class.cpp" />
     <ClCompile Include="Sources\staff-course.cpp" />
   </ItemGroup>

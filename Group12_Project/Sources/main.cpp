@@ -1,5 +1,5 @@
 #include "../Headers/main.h"
-int main() {
+int main() {/*
 	Account user;
 	Semester currentSemester;
 	int choice = 0; //Represent user's choice throughout the program
@@ -54,7 +54,7 @@ int main() {
 
 
 					*/
-				}
+	/*			}
 				continue;
 			}
 			//COURSES MENU
@@ -89,7 +89,7 @@ int main() {
 					
 					
 					*/
-				}
+	/*			}
 				continue;
 			}
 			//SCOREBOARD MENU
@@ -106,7 +106,7 @@ int main() {
 
 
 					*/
-				}
+	/*			}
 				continue;
 			}
 			//ATTENDANCE LIST MENU
@@ -122,7 +122,7 @@ int main() {
 
 
 					*/
-				}
+/*				}
 				continue;
 			}
 			//LOG OUT
@@ -162,7 +162,7 @@ int main() {
 
 
 			*/
-			//LOG OUT
+	/*		//LOG OUT
 			if (choice == 10) {
 				logOut(user);
 				cout << "The account has been logged out!" << endl;
@@ -199,7 +199,7 @@ int main() {
 
 
 			*/
-			//LOG OUT
+	/*		//LOG OUT
 			if (choice == 7) {
 				logOut(user);
 				cout << "The account has been logged out!" << endl;
@@ -207,8 +207,8 @@ int main() {
 			}
 		}
 	}
-	
-
+	*/
+importClass();
 
 	return 0;
 }

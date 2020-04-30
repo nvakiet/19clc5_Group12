@@ -5,13 +5,13 @@ bool importClass() {
 	cout << "Enter csv file path: ";
 
 	ifstream fin;
-	string path = "E:/GitHub/19clc5_Group12/19CLC5-student.csv";
-	/*cin >> path;
+	string path = "C:/Users/User/source/repos/19clc5_Group11_19127596/19CLC5-student.csv";
+	/*cin >> path/
 	flushin(cin);*/
 	fin.open(path);
 
 	int n = 4;
-	string DoB, sex, ClassID = "19CLC5", line, No, lastname, firstname;
+	string DoB, sex, ClassID = "19CLC5", line, lastname, firstname;
 	cout << "Enter class ID: ";
 	/*cin >> ClassID;
 	flushin(cin);*/
@@ -28,7 +28,7 @@ bool importClass() {
 	}
 	fin.ignore(INT_MAX, '\n');
 	for (int i = 0; i < n; i++) {
-		getline(fin, No, ';');
+		fin.ignore(INT_MAX, ';');
 		getline(fin, newStu[i].ID, ';');
 		getline(fin, lastname, ';');
 		getline(fin, firstname, ';');
@@ -37,7 +37,6 @@ bool importClass() {
 		newStu[i].gender = sex.front();
 		getline(fin, DoB);
 		newStu[i].birthDate = sToDate(DoB);
-
 	}
 	fin.close();
 	//Register students
@@ -59,6 +58,30 @@ bool importClass() {
 		}
 	}
 	//Case 1: if Students.txt is empty, paste all students to the file
+	if (emptyFile(path2)) {
+		fin.close();
+		ofstream fout;
+		fout.open(path2);
+		if (!fout.is_open()) {
+			cerr << "Cannot open file";
+			return false;
+		}
+		fout << n << endl;
+		for (int i = 0; i < n; i++) {
+			fout << newStu[i].ID << endl;
+			char temp[9];
+			strftime(temp, 9, "%Y%m%d", &newStu[i].birthDate);
+			DoB.assign(temp);
+			fout << sha256(DoB) << endl
+				<< newStu[i].fullname << endl
+				<< ClassID << endl
+				<< newStu[i].gender << endl;
+			printDate(fout, newStu[i].birthDate);
+			fout << 1 << endl;
+			fout << endl;
+		}
+		fout.close();
+	}
 	//Case 2: if not
 	if (!emptyFile(path2)) {
 		int n2;
@@ -104,7 +127,7 @@ bool importClass() {
 	//Import students of a class to txt file and update Classes.txt
 	string path3 = "./TextFiles/Classes.txt";
 	fin.open(path3);
-	/*if (!fin.is_open()) {
+	if (!fin.is_open()) {
 		cerr << "Can't open data file in the path: " << path3 << endl;
 		if (generateFile(path3, "")) {
 			cout << "A new file has been generated!" << endl;
@@ -117,12 +140,39 @@ bool importClass() {
 			cerr << "Failed to generate a new data file" << endl;
 			return false;
 		}
-	}*/
-
+	}
 	//Dung emptyFile kiem tra co Classes.txt ko
 	//True: - fout so 1 o dong dau trong Classes.txt, dong 2 thi fout classID nguoi dung nhap => close fout
 	//		- Mo lai fout theo cu phap da ban roi truyen du lieu tu mang newStu vao file do
 	//False: - Hoi co muon overwrite: Neu ko thi return, neu co thi bat file o che do default (ios::trunc), ghi dong dau n, cac dong sau la thong tin sinh vien cach nhau 1 dong moi sv
+	if (emptyFile(path3)) {
+		fin.close();
+		ofstream fout;
+		fout.open(path3);
+		if (!fout.is_open()) {
+			cerr << "Cannot open file";
+			return false;
+		}
+		fout << 1 << endl
+			<< ClassID;
+		fout.close();
+
+		fout.open(systemPath + ClassID + "_Students.txt");
+		if (!fout.is_open()) {
+			cerr << "Cannot open file";
+			return false;
+		}
+		fout << n << endl;
+		for (int i = 0; i < n; i++) {
+			fout << newStu[i].ID << endl
+				<< newStu[i].fullname << endl
+				<< newStu[i].gender << endl;
+			printDate(fout, newStu[i].birthDate);
+			fout << 1 << endl;
+			fout << endl;
+		}
+		fout.close();
+	}
 	if (!emptyFile(path3)) {
 		int n3;
 		getline(fin, line);
@@ -133,8 +183,10 @@ bool importClass() {
 			getline(fin, classes[i].className);
 		fin.close();
 
+		bool flag = false;
 		for (int i = 0; i < n3; i++) {
 			if (ClassID == classes[i].className) {
+				flag = true;
 				int choice;
 				cerr << "The class already existed. Overwrite?" << endl
 					<< "1.Yes" << endl
@@ -156,10 +208,11 @@ bool importClass() {
 					}
 					fout << n << endl;
 					for (int i = 0; i < n; i++) {
-						fout << newStu[i].ID << endl
-							<< setfill('0') << right << newStu[i].birthDate.tm_year + 1900
-							<< setw(2) << newStu[i].birthDate.tm_mon + 1
-							<< setw(2) << newStu[i].birthDate.tm_mday << endl
+						fout << newStu[i].ID << endl;
+						char temp[9];
+						strftime(temp, 9, "%Y%m%d", &newStu[i].birthDate);
+						DoB.assign(temp);
+						fout << sha256(DoB) << endl
 							<< newStu[i].fullname << endl
 							<< ClassID << endl
 							<< newStu[i].gender << endl;
@@ -171,10 +224,12 @@ bool importClass() {
 					return true;
 				}
 				if (choice == 0) {
-					cerr << "Import cancelled";
+					cerr << "Import stopped";
 					return false;
 				}
 			}
+		}
+		if (flag == false) {
 			ofstream fout;
 			fout.open(systemPath + ClassID + "_Students.txt", ios::app);
 			if (!fout.is_open()) {
@@ -184,11 +239,7 @@ bool importClass() {
 			fout << n << endl;
 			for (int i = 0; i < n; i++) {
 				fout << newStu[i].ID << endl
-					<< setfill('0') << right << newStu[i].birthDate.tm_year + 1900
-					<< setw(2) << newStu[i].birthDate.tm_mon + 1
-					<< setw(2) << newStu[i].birthDate.tm_mday << endl
 					<< newStu[i].fullname << endl
-					<< ClassID << endl
 					<< newStu[i].gender << endl;
 				printDate(fout, newStu[i].birthDate);
 				fout << 1 << endl;
