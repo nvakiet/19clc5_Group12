@@ -247,6 +247,8 @@ bool importClass() {
 			}
 			fout.close();
 		}
+		delete[] classes;
+		classes = nullptr;
 	}
 	delete[] newStu;
 	newStu = nullptr;
