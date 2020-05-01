@@ -5,4 +5,6 @@ void viewScoreboard(Course B);
 void viewAttendance(Course B, string* classdate);
 void SearchandViewScoreboard();
 void SearchandViewAttendance();
+void CSVScoreboard(Course B);
+void CSVAttendance(Course B, string*& classdate);
 #endif // !_SearchViewS+A_H_

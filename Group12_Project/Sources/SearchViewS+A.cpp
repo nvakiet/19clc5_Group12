@@ -15,6 +15,65 @@ void viewScoreboard(Course B)
 		cout << endl;
 	}
 }
+void CSVScoreboard(Course B)
+{
+
+	string y = "Students", path = "./TextFiles/";
+	int x;
+	int z = 1;//De luu tru thu tu hoc sinh
+	cout << "Do you want to export this file to CSV ? (1: Yes/0 : No) : ";
+	cin >> x;
+	if (x == 1)
+	{
+		ofstream fout;
+		fout.open(path +B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.courseName + "_" + y + ".csv");
+		fout << "[NO]" << ";" << "[ID]" << ";" << "[First Name]" << ";" << "[Last Name]" << ";" << "[Gender]" << ";" << "[BirthDate]" << ";" << "[Midterm]" << ";" << "[Final]" << ";" << "[Bonus]" << ";" << "[Total]" << endl;
+		for (int i = 0; i < B.nStudents; i++)
+		{
+			size_t found = B.studentArr[i].fullname.find_last_of(" ");
+			fout << z << ";" << B.studentArr[i].ID << ";" << B.studentArr[i].fullname.substr(0, found) << ";" << B.studentArr[i].fullname.substr(found + 1) << ";" << B.studentArr[i].gender << ";";
+			fout << setfill('0') << right << B.studentArr[i].birthDate.tm_year + 1900 << '-'
+				<< setw(2) << B.studentArr[i].birthDate.tm_mon + 1 << '-'
+				<< setw(2) << B.studentArr[i].birthDate.tm_mday;
+			fout << ";" << B.board[i].midterm << ";" << B.board[i].final << ";" << B.board[i].bonus << ";" << B.board[i].total << "\n";
+			z++;
+		}
+		fout.close();
+	}
+}
+void CSVAttendance(Course B, string*& classdate)
+{
+	string y = "Students", path = "./TextFiles/";
+	int x;
+	int z = 1;//De luu tru thu tu hoc sinh
+	cout << "Do you want to export this file to CSV ? (1: Yes/0 : No) : ";
+	cin >> x;
+	if (x == 1)
+	{
+		ofstream fout;
+		fout.open(path +B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.courseName + "_" + y + ".csv");
+		fout << "[NO]" << ";" << "[ID]" << ";" << "[First Name]" << ";" << "[Last Name]" << ";" << "[Gender]" << ";" << "[BirthDate]";
+		for (int i = 0; i < B.nWeeks; i++)
+			fout << ";" << classdate[i];
+		fout << endl;
+		for (int i = 0; i < B.nStudents; i++)
+		{
+
+			size_t found = B.studentArr[i].fullname.find_last_of(" ");
+			fout << z << ";" << B.studentArr[i].ID << ";" << B.studentArr[i].fullname.substr(0, found) << ";" << B.studentArr[i].fullname.substr(found + 1) << ";" << B.studentArr[i].gender << ";";
+			fout << setfill('0') << right << B.studentArr[i].birthDate.tm_year + 1900 << '-'
+				<< setw(2) << B.studentArr[i].birthDate.tm_mon + 1 << '-'
+				<< setw(2) << B.studentArr[i].birthDate.tm_mday;
+			for (int j = 0; j < B.nWeeks; j++)
+			{
+				fout << ";" << *(B.checkList + i * B.nWeeks + j);
+			}
+			fout << "\n";
+			z++;
+		}
+		fout.close();
+	}
+}
 void SearchandViewScoreboard()
 {
 	Course B;
@@ -71,6 +130,7 @@ void SearchandViewScoreboard()
 
 	fin.close();
 	viewScoreboard(B);
+	CSVScoreboard(B);
 	delete[]B.studentArr;
 	delete[]B.board;
 }
@@ -145,6 +205,7 @@ void SearchandViewAttendance()
 	
 	fin.close();
 	viewAttendance(B, classdate);
+	CSVAttendance(B, classdate);
 	delete[]classdate;
 	delete[]B.checkList;
 	delete[]B.studentArr;
