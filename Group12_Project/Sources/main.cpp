@@ -49,6 +49,12 @@ int main() {
 				choice = 0;
 				while (choice != 8) {
 					choice = menuClass();
+					if (choice == 1) {
+						if (importClass())
+							cout << "Import class successfully!" << endl;
+						else cerr << "Failed to import class!" << endl;
+						pause();
+					}
 					/*Do something with classes data here
 
 
@@ -92,38 +98,15 @@ int main() {
 				}
 				continue;
 			}
-			//SCOREBOARD MENU
+			//SEARCH - VIEW - EXPORT SCOREBOARD
 			if (choice == 5) {
-				choice = 0;
-				while (choice != 3) {
-					choice = menuScoreboard();
-					if (choice == 1) {
-						SearchandViewScoreboard();
-						pause();
-					}
-					/*Do something with course scoreboards data here
-
-
-
-					*/
-				}
-				continue;
+				SearchandViewScoreboard();
+				pause();
 			}
-			//ATTENDANCE LIST MENU
+			//SEARCH - VIEW - EXPORT ATTENDANCE LIST
 			if (choice == 6) {
-				choice = 0;
-				while (choice != 3) {
-					choice = menuAttendanceList();
-					if (choice == 1) {
-						SearchandViewAttendance();
-						pause();
-					}
-					/*Do something with course attendance data here
-
-
-					*/
-				}
-				continue;
+				SearchandViewAttendance();
+				pause();
 			}
 			//LOG OUT
 			if (choice == 7) {
@@ -207,5 +190,6 @@ int main() {
 			}
 		}
 	}
+
 	return 0;
 }

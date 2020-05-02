@@ -366,8 +366,8 @@ int menuStaff() {
 	cout << "2 - CHANGE PASSWORD" << endl;
 	cout << "3 - MENU: CLASSES" << endl;
 	cout << "4 - MENU: COURSES" << endl;
-	cout << "5 - MENU: SCOREBOARDS" << endl;
-	cout << "6 - MENU: ATTENDANCE LISTS" << endl;
+	cout << "5 - SEARCH: SCOREBOARD" << endl;
+	cout << "6 - SEARCH: ATTENDANCE LIST" << endl;
 	cout << "7 - LOG OUT" << endl;
 	cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
 	int choice;
@@ -484,48 +484,6 @@ int menuCourse() {
 	int choice;
 	cin >> choice;
 	while (!cin || choice < 1 || choice > 14) {
-		flushin(cin);
-		cerr << "Invalid input!" << endl;
-		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
-		cin >> choice;
-	}
-	cout << endl;
-	flushin(cin);
-	return choice;
-}
-
-int menuScoreboard() {
-	cout << string(50, '*') << endl;
-	cout << string(19, ' ') << "SCOREBOARDS" << string(19, ' ') << endl;
-	cout << string(50, '*') << endl;
-	cout << "1 - SEARCH SCOREBOARD" << endl;
-	cout << "2 - EXPORT SCOREBOARD" << endl;
-	cout << "3 - RETURN" << endl;
-	cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
-	int choice;
-	cin >> choice;
-	while (!cin || choice < 1 || choice > 3) {
-		flushin(cin);
-		cerr << "Invalid input!" << endl;
-		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
-		cin >> choice;
-	}
-	cout << endl;
-	flushin(cin);
-	return choice;
-}
-
-int menuAttendanceList() {
-	cout << string(50, '*') << endl;
-	cout << string(17, ' ') << "ATTENDANCE LIST" << string(17, ' ') << endl;
-	cout << string(50, '*') << endl;
-	cout << "1 - SEARCH ATTENDANCE LIST" << endl;
-	cout << "2 - EXPORT ATTENDANCE LIST" << endl;
-	cout << "3 - RETURN" << endl;
-	cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
-	int choice;
-	cin >> choice;
-	while (!cin || choice < 1 || choice > 3) {
 		flushin(cin);
 		cerr << "Invalid input!" << endl;
 		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
