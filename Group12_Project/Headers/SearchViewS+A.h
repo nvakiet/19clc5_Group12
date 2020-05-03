@@ -7,4 +7,5 @@ void SearchandViewScoreboard();
 void SearchandViewAttendance();
 void CSVScoreboard(Course B);
 void CSVAttendance(Course B, string*& classdate);
+bool viewcheckin();
 #endif // !_SearchViewS+A_H_

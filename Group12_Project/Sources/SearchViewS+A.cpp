@@ -210,3 +210,65 @@ void SearchandViewAttendance()
 	delete[]B.checkList;
 	delete[]B.studentArr;
 }
+bool viewcheckin()
+{
+	Course B;
+	string x = "Students";
+	string line;
+	string ID;
+	printf("Enter years : ");
+	getline(cin, B.c_semester.year);
+	printf("Enter semester : ");
+	getline(cin, B.c_semester.semester);
+	printf("Enter course ID: ");
+	getline(cin, B.courseID);
+	printf("Enter course Name: ");
+	getline(cin, B.courseName);
+	printf("Enter your ID : ");
+	getline(cin, ID);
+	ifstream fin;
+	fin.open(B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.courseName + "_" + x + ".txt");
+	if (fin.fail())
+	{
+		printf("Failed to open this file!\n");
+		return false;
+	}
+	getline(fin, line);
+	B.nWeeks = stoi(line);
+	getline(fin, line);
+	B.nStudents = stoi(line);
+	string* classdate = new string[B.nWeeks];
+	B.checkList = new bool[B.nStudents * B.nWeeks];
+	B.studentArr = new Student[B.nStudents];
+	for (int i = 0; i < B.nStudents; i++)
+	{
+		getline(fin, B.studentArr[i].ID);
+		if (B.studentArr[i].ID == ID)
+		{
+			for (int i = 0; i < 8; i++)
+				fin.ignore(INT_MAX, '\n');
+			for (int j = 0; j < B.nWeeks; j++)
+			{
+				getline(fin, classdate[j], ' ');
+				getline(fin, line);
+				*(B.checkList + i * B.nWeeks + j) = stoi(line);
+			}
+			for (int j = 0; j < B.nWeeks; j++)
+			{
+				cout << classdate[j] << " " << *(B.checkList + i * B.nWeeks + j) << endl;
+			}
+			cout << endl;
+			return true;//co hoc sinh de xuat ra
+		}
+		else
+		{
+			for (int i = 0; i < 19; i++)
+				fin.ignore(INT_MAX, '\n');
+		}
+	}
+	return false;//khong co hoc sinh de xuat ra;
+	fin.close();
+	delete[]classdate;
+	delete[]B.checkList;
+	delete[]B.studentArr;
+}
