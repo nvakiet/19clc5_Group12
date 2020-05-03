@@ -23,10 +23,18 @@ void CSVScoreboard(Course B)
 	int z = 1;//De luu tru thu tu hoc sinh
 	cout << "Do you want to export this file to CSV ? (1: Yes/0 : No) : ";
 	cin >> x;
+	while (!cin || x < 0 || x > 1) {
+		flushin(cin);
+		cerr << "Invalid input!" << endl;
+		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+		cin >> x;
+	}
+	cout << endl;
+	flushin(cin);
 	if (x == 1)
 	{
 		ofstream fout;
-		fout.open(path +B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.courseName + "_" + y + ".csv");
+		fout.open(path +B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + y + ".csv");
 		fout << "[NO]" << ";" << "[ID]" << ";" << "[First Name]" << ";" << "[Last Name]" << ";" << "[Gender]" << ";" << "[BirthDate]" << ";" << "[Midterm]" << ";" << "[Final]" << ";" << "[Bonus]" << ";" << "[Total]" << endl;
 		for (int i = 0; i < B.nStudents; i++)
 		{
@@ -39,6 +47,7 @@ void CSVScoreboard(Course B)
 			z++;
 		}
 		fout.close();
+		cout << "Export successfully!" << endl;
 	}
 }
 void CSVAttendance(Course B, string*& classdate)
@@ -48,10 +57,18 @@ void CSVAttendance(Course B, string*& classdate)
 	int z = 1;//De luu tru thu tu hoc sinh
 	cout << "Do you want to export this file to CSV ? (1: Yes/0 : No) : ";
 	cin >> x;
+	while (!cin || x < 0 || x > 1) {
+		flushin(cin);
+		cerr << "Invalid input!" << endl;
+		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+		cin >> x;
+	}
+	cout << endl;
+	flushin(cin);
 	if (x == 1)
 	{
 		ofstream fout;
-		fout.open(path +B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.courseName + "_" + y + ".csv");
+		fout.open(path +B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + y + ".csv");
 		fout << "[NO]" << ";" << "[ID]" << ";" << "[First Name]" << ";" << "[Last Name]" << ";" << "[Gender]" << ";" << "[BirthDate]";
 		for (int i = 0; i < B.nWeeks; i++)
 			fout << ";" << classdate[i];
@@ -72,6 +89,7 @@ void CSVAttendance(Course B, string*& classdate)
 			z++;
 		}
 		fout.close();
+		cout << "Export successfully!" << endl;
 	}
 }
 void SearchandViewScoreboard()

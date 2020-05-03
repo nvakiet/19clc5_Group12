@@ -2,22 +2,20 @@
 
 bool importClass() {
 	string systemPath = "./TextFiles/", fileEx = "_Students.txt";
-	cout << "Enter csv file path: ";
-
 	ifstream fin;
-	string path = "C:/Users/User/source/repos/19clc5_Group11_19127596/19CLC5-student.csv";
-	/*cin >> path/
-	flushin(cin);*/
+	ofstream fout;
+	int n;
+	string path, DoB, sex, ClassID, line, lastname, firstname;
+	cout << "Enter csv file path: ";
+	cin >> path;
+	flushin(cin);
 	fin.open(path);
-
-	int n = 4;
-	string DoB, sex, ClassID = "19CLC5", line, lastname, firstname;
 	cout << "Enter class ID: ";
-	/*cin >> ClassID;
-	flushin(cin);*/
+	cin >> ClassID;
+	flushin(cin);
 	cout << "Enter number of students in the class: ";
-	/*cin >> n;
-	flushin(cin);*/
+	cin >> n;
+	flushin(cin);
 
 	Student* newStu;
 	newStu = new Student[n];
@@ -39,28 +37,11 @@ bool importClass() {
 		newStu[i].birthDate = sToDate(DoB);
 	}
 	fin.close();
+
 	//Register students
 	string path2 = "./TextFiles/Students.txt";
-	fin.open(path2);
-
-	if (!fin.is_open()) {
-		cerr << "Can't open data file in the path: " << path2 << endl;
-		if (generateFile(path2, "")) {
-			cout << "A new file has been generated!" << endl;
-			cout << "Some data may be lost. The program will continue." << endl;
-			cout << endl;
-			fin.clear();
-			fin.open(path2);
-		}
-		else {
-			cerr << "Failed to generate a new data file" << endl;
-			return false;
-		}
-	}
 	//Case 1: if Students.txt is empty, paste all students to the file
 	if (emptyFile(path2)) {
-		fin.close();
-		ofstream fout;
 		fout.open(path2);
 		if (!fout.is_open()) {
 			cerr << "Cannot open file";
@@ -83,30 +64,63 @@ bool importClass() {
 		fout.close();
 	}
 	//Case 2: if not
-	if (!emptyFile(path2)) {
+	else {
+		//Load the Students.txt file to an account array
+		fin.open(path2);
 		int n2;
 		getline(fin, line);
 		n2 = stoi(line);
-		string* userID;
-		userID = new string[n2];
+		Account* oldStu;
+		oldStu = new Account[n2];
 		for (int i = 0; i < n2; i++) {
-			getline(fin, userID[i]);
-			for (int j = 0; j < 7; j++)
-				fin.ignore(INT_MAX, '\n');
+			getline(fin, oldStu[i].username);
+			getline(fin, oldStu[i].password);
+			getline(fin, oldStu[i].studentProfile.fullname);
+			getline(fin, oldStu[i].studentProfile.classID);
+			getline(fin, line);
+			oldStu[i].studentProfile.gender = line.front();
+			getline(fin, line);
+			oldStu[i].studentProfile.birthDate = sToDate(line);
+			getline(fin, line);
+			oldStu[i].studentProfile.active = stoi(line);
+			fin.ignore(INT_MAX, '\n');
 		}
 		fin.close();
 
-		ofstream fout;
-		fout.open(path2, ios::app);
+		//Get new number of student accounts and check whether a student is already registered
+		int newN2 = n2 + n;
+		bool* sameStudent = new bool[n] {false};
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n2 && sameStudent[i] == false; j++) {
+				if (newStu[i].ID == oldStu[j].username) {
+					sameStudent[i] = true;
+					newN2--;
+				}
+				else sameStudent[i] = false;
+			}
+		}
+
+		//Save old accounts and new unique accounts to the file
+		fout.open(path2);
 		if (!fout.is_open()) {
 			cerr << "Cannot open file";
 			return false;
 		}
+		fout << newN2 << endl;
+		for (int j = 0; j < n2; j++) {
+			//Save old accounts
+			fout << oldStu[j].username << endl
+				<< oldStu[j].password << endl
+				<< oldStu[j].studentProfile.fullname << endl
+				<< oldStu[j].studentProfile.classID << endl
+				<< oldStu[j].studentProfile.gender << endl;
+			printDate(fout, oldStu[j].studentProfile.birthDate);
+			fout << oldStu[j].studentProfile.active << endl;
+			fout << endl;
+		}
 		for (int i = 0; i < n; i++) {
-			bool sameStudent = false;
-			for (int j = 0; j < n2 && sameStudent == false; j++)
-				if (newStu[i].ID == userID[j]) sameStudent = true;
-			if (!sameStudent){
+			//Save new accounts if student is not the same
+			if (!sameStudent[i]){
 				fout << newStu[i].ID << endl;
 				char temp[9];
 				strftime(temp, 9, "%Y%m%d", &newStu[i].birthDate);
@@ -121,119 +135,74 @@ bool importClass() {
 			}
 		}
 		fout.close();
-		delete[] userID;
-		userID = nullptr;
+		delete[] oldStu;
+		delete[] sameStudent;
+		oldStu = nullptr;
+		sameStudent = nullptr;
 	}
-	//Import students of a class to txt file and update Classes.txt
+
+	//Update Classes.txt
 	string path3 = "./TextFiles/Classes.txt";
-	fin.open(path3);
-	if (!fin.is_open()) {
-		cerr << "Can't open data file in the path: " << path3 << endl;
-		if (generateFile(path3, "")) {
-			cout << "A new file has been generated!" << endl;
-			cout << "Some data may be lost. The program will continue." << endl;
-			cout << endl;
-			fin.clear();
-			fin.open(path3);
-		}
-		else {
-			cerr << "Failed to generate a new data file" << endl;
-			return false;
-		}
-	}
-	//Dung emptyFile kiem tra co Classes.txt ko
-	//True: - fout so 1 o dong dau trong Classes.txt, dong 2 thi fout classID nguoi dung nhap => close fout
-	//		- Mo lai fout theo cu phap da ban roi truyen du lieu tu mang newStu vao file do
-	//False: - Hoi co muon overwrite: Neu ko thi return, neu co thi bat file o che do default (ios::trunc), ghi dong dau n, cac dong sau la thong tin sinh vien cach nhau 1 dong moi sv
+	bool flag = false; //Flag to check if the class already existed
 	if (emptyFile(path3)) {
-		fin.close();
-		ofstream fout;
 		fout.open(path3);
 		if (!fout.is_open()) {
 			cerr << "Cannot open file";
 			return false;
 		}
 		fout << 1 << endl
-			<< ClassID;
-		fout.close();
-
-		fout.open(systemPath + ClassID + "_Students.txt");
-		if (!fout.is_open()) {
-			cerr << "Cannot open file";
-			return false;
-		}
-		fout << n << endl;
-		for (int i = 0; i < n; i++) {
-			fout << newStu[i].ID << endl
-				<< newStu[i].fullname << endl
-				<< newStu[i].gender << endl;
-			printDate(fout, newStu[i].birthDate);
-			fout << 1 << endl;
-			fout << endl;
-		}
+			<< ClassID << endl;
 		fout.close();
 	}
-	if (!emptyFile(path3)) {
+	else {
 		int n3;
+		fin.open(path3);
 		getline(fin, line);
 		n3 = stoi(line);
 		Class* classes;
-		classes = new Class[n];
+		classes = new Class[n3];
 		for (int i = 0; i < n3; i++)
 			getline(fin, classes[i].className);
 		fin.close();
 
-		bool flag = false;
-		for (int i = 0; i < n3; i++) {
-			if (ClassID == classes[i].className) {
+		//Check if the same classID
+		for (int i = 0; i < n3 && flag == false; i++) {
+			if (ClassID == classes[i].className)
 				flag = true;
-				int choice;
-				cerr << "The class already existed. Overwrite?" << endl
-					<< "1.Yes" << endl
-					<< "0.No" << endl;
-				cout << "Enter 1 or 0: ";
-				cin >> choice;
-				while (!cin || choice < 0 || choice > 1) {
-					flushin(cin);
-					cerr << "Invalid input!" << endl;
-					cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
-					cin >> choice;
-				}
-				if (choice == 1) {
-					ofstream fout;
-					fout.open(systemPath + ClassID + "_Students.txt");
-					if (!fout.is_open()) {
-						cerr << "Cannot open file";
-						return false;
-					}
-					fout << n << endl;
-					for (int i = 0; i < n; i++) {
-						fout << newStu[i].ID << endl;
-						char temp[9];
-						strftime(temp, 9, "%Y%m%d", &newStu[i].birthDate);
-						DoB.assign(temp);
-						fout << sha256(DoB) << endl
-							<< newStu[i].fullname << endl
-							<< ClassID << endl
-							<< newStu[i].gender << endl;
-						printDate(fout, newStu[i].birthDate);
-						fout << 1 << endl;
-						fout << endl;
-					}
-					fout.close();
-					return true;
-				}
-				if (choice == 0) {
-					cerr << "Import stopped";
-					return false;
-				}
-			}
 		}
+		//If not the same classID, update to Classes.txt
 		if (flag == false) {
-			ofstream fout;
-			fout.open(systemPath + ClassID + "_Students.txt", ios::app);
+			fout.open(path3);
+			fout << n3 + 1 << endl;
+			for (int i = 0; i < n3; i++)
+				fout << classes[i].className << endl;
+			fout << ClassID << endl;
+			fout.close();
+		}
+		delete[] classes;
+		classes = nullptr;
+	}
+
+	//Import the student array to a txt file
+	//Case 1: If the class already existed
+	if (flag == true) {
+		int choice;
+		cerr << "The class already existed. Overwrite?" << endl
+			<< "1.Yes" << endl
+			<< "0.No" << endl;
+		cout << "Enter 1 or 0: ";
+		cin >> choice;
+		while (!cin || choice < 0 || choice > 1) {
+			flushin(cin);
+			cerr << "Invalid input!" << endl;
+			cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
+			cin >> choice;
+		}
+		flushin(cin);
+		if (choice == 1) {
+			fout.open(systemPath + ClassID + "_Students.txt");
 			if (!fout.is_open()) {
-				cerr << "Cannot open file";
+				cerr << "Cannot open file" << endl;
 				return false;
 			}
 			fout << n << endl;
@@ -246,9 +215,31 @@ bool importClass() {
 				fout << endl;
 			}
 			fout.close();
+			return true;
 		}
-		delete[] classes;
-		classes = nullptr;
+		if (choice == 0) {
+			cerr << "Import stopped!" << endl;
+			return false;
+		}
+	}
+	//If the class is new
+	if (flag == false) {
+		fout.open(systemPath + ClassID + "_Students.txt");
+		if (!fout.is_open()) {
+			cerr << "Cannot open file" << endl;
+			return false;
+		}
+		fout << n << endl;
+		for (int i = 0; i < n; i++) {
+			fout << newStu[i].ID << endl
+				<< newStu[i].fullname << endl
+				<< newStu[i].gender << endl;
+			printDate(fout, newStu[i].birthDate);
+			fout << 1 << endl;
+			fout << endl;
+		}
+		fout.close();
+		return true;
 	}
 	delete[] newStu;
 	newStu = nullptr;
