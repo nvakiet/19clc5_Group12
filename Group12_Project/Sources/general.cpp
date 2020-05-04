@@ -106,8 +106,8 @@ tm* getWeeks(tm startDate, tm endDate, int *nWeeks = nullptr) {
 	time_t end = mktime(&endDate);
 	int n = difftime(end, begin) / secWeek;	//Get number of weeks between 2 dates
 	if (n < 0) return nullptr;
-	if (nWeeks != nullptr) *nWeeks = n;
-	tm* dateArr = new tm[n + 1]; //This array will also contain end date
+	if (nWeeks != nullptr) *nWeeks = n + 1; //nWeeks also counts the starting date as week 1
+	tm* dateArr = new tm[n + 1]; //This array will contain start date and end date
 	for (int i = 0; i <= n; i++) {
 		time_t weekDate = begin + time_t(i * secWeek); //Get i next week from beginning time_t, value in seconds 
 		localtime_s(&dateArr[i], &weekDate);

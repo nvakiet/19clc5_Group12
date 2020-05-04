@@ -86,8 +86,7 @@ struct RegCourses { //Store the registered courses of a student
 	string studentClass;
 	int nCourses = 0;
 	string* courseID;	//These are all 1D array using same iterator of nCourses
-	string* courseName; //If struct is an array then these becomes 2D array of nCourses*nStudents
-	string* classID;
+	string* classID;	//If struct is an array then these becomes 2D array of nCourses*nStudents
 };
 
 //Reset struct tm member values to least significant value in their range
