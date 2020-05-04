@@ -8,15 +8,14 @@
 #include <string>
 #include <cstring>
 #include <ctime>
-#include <sstream>
 #include "../Headers/sha256.h"
 using namespace std;
 
 struct score {
-	float midterm = 0;
-	float final = 0;
-	float bonus = 0;
-	float total = 0;
+	float midterm = -1;
+	float final = -1;
+	float bonus = -1;
+	float total = -1;
 };
 
 struct Staff {
@@ -81,7 +80,17 @@ struct Course {
 	//}
 };
 
-//Reset struct tm value
+struct RegCourses { //Store the registered courses of a student
+	string studentID;
+	string studentName;
+	string studentClass;
+	int nCourses = 0;
+	string* courseID;	//These are all 1D array using same iterator of nCourses
+	string* courseName; //If struct is an array then these becomes 2D array of nCourses*nStudents
+	string* classID;
+};
+
+//Reset struct tm member values to least significant value in their range
 void resetTM(tm& time);
 
 //Convert a date string with the format YYYY-MM-DD to struct tm and return the struct tm
@@ -107,4 +116,7 @@ bool emptyFile(string filePath);
 
 //Generate a text file with an initial string
 bool generateFile(string filePath, string init);
+
+//Calculate difference between 2 dates in number of weeks and return a pointer to an array containing week dates starting from startDate
+tm* getWeeks(tm startDate, tm endDate, int* nWeeks);
 #endif // !_GENERAL_H_

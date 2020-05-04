@@ -2,6 +2,7 @@
 
 tm sToDate(string date_str) {
 	tm date;
+	resetTM(date);
 	int len = date_str.length() + 1;
 	char* datestr = new char[len];
 	char* nextToken = nullptr;
@@ -40,6 +41,7 @@ void resetTM(tm &time) {
 
 tm sToTime(string time_str) {
 	tm time;
+	resetTM(time);
 	int len = time_str.length() + 1;
 	char* timestr = new char[len];
 	char* nextToken = nullptr;
@@ -94,4 +96,21 @@ bool generateFile(string filePath, string init) {
 	else flag = false;
 	fout.close();
 	return flag;
+}
+
+tm* getWeeks(tm startDate, tm endDate, int *nWeeks = nullptr) {
+	//1 week in seconds = 7 * 24 * 60 * 60 = 604800 seconds
+	//n weeks in seconds = nWeeks * 604800 seconds
+	int secWeek = 604800; //Number of seconds in a week
+	time_t begin = mktime(&startDate);
+	time_t end = mktime(&endDate);
+	int n = difftime(end, begin) / secWeek;	//Get number of weeks between 2 dates
+	if (n < 0) return nullptr;
+	if (nWeeks != nullptr) *nWeeks = n;
+	tm* dateArr = new tm[n + 1]; //This array will also contain end date
+	for (int i = 0; i <= n; i++) {
+		time_t weekDate = begin + time_t(i * secWeek); //Get i next week from beginning time_t, value in seconds 
+		localtime_s(&dateArr[i], &weekDate);
+	}
+	return dateArr;
 }

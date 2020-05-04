@@ -19,5 +19,9 @@ bool deleteSemester();
 //Print content of Semesters.txt to the screen
 void viewSemesterList();
 
+//Get inputs from user and import those information to the system
+bool addCourse();
 
+//Parameter version to use with importCourse function
+bool addCourse(Course inCourse);
 #endif // !_COURSE_H
