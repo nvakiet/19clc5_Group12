@@ -228,8 +228,9 @@ void SearchandViewAttendance()
 	delete[]B.checkList;
 	delete[]B.studentArr;
 }
-bool viewcheckin()
+bool viewcheckin(Account user)
 {
+	string ID = user.studentProfile.ID;//Truyen thong tin ID vao bien ID
 	Course B;
 	string x = "Students";
 	string line;
@@ -241,11 +242,9 @@ bool viewcheckin()
 	printf("Enter course ID: ");
 	getline(cin, B.courseID);
 	printf("Enter course Name: ");
-	getline(cin, B.courseName);
-	printf("Enter your ID : ");
-	getline(cin, ID);
+	getline(cin, B.className);
 	ifstream fin;
-	fin.open(B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.courseName + "_" + x + ".txt");
+	fin.open(B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + x + ".txt");
 	if (fin.fail())
 	{
 		printf("Failed to open this file!\n");
