@@ -190,7 +190,7 @@ int main() {
 	//		}
 	//	}
 	//}
-	
-
+addStudent();
+//removeStudent();
 	return 0;
 }

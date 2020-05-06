@@ -234,7 +234,6 @@ bool viewcheckin(Account user)
 	Course B;
 	string x = "Students";
 	string line;
-	string ID;
 	printf("Enter years : ");
 	getline(cin, B.c_semester.year);
 	printf("Enter semester : ");
