@@ -212,6 +212,7 @@ bool addCourse() {
 	while (!cin) {
 		cerr << "Invalid date input!" << endl;
 		flushin(cin);
+		cout << "Enter start date of course (YYYY-MM-DD): ";
 		cin >> get_time(&inCourse.startDate, "%Y-%m-%d");
 	}
 	flushin(cin);
@@ -221,6 +222,7 @@ bool addCourse() {
 	while (!cin) {
 		cerr << "Invalid date input!" << endl;
 		flushin(cin);
+		cout << "Enter end date of course (YYYY-MM-DD): ";
 		cin >> get_time(&inCourse.endDate, "%Y-%m-%d");
 	}
 	flushin(cin);
@@ -230,8 +232,9 @@ bool addCourse() {
 	cout << "Enter start time of class (HH:MM): ";
 	cin >> get_time(&inCourse.startTime, "%H:%M");
 	while (!cin) {
-		cerr << "Invalid date input!" << endl;
+		cerr << "Invalid time input!" << endl;
 		flushin(cin);
+		cout << "Enter start time of class (HH:MM): ";
 		cin >> get_time(&inCourse.startTime, "%H:%M");
 	}
 	flushin(cin);
@@ -239,14 +242,15 @@ bool addCourse() {
 	cout << "Enter end time of class (HH:MM): ";
 	cin >> get_time(&inCourse.endTime, "%H:%M");
 	while (!cin) {
-		cerr << "Invalid date input!" << endl;
+		cerr << "Invalid time input!" << endl;
 		flushin(cin);
+		cout << "Enter end time of class (HH:MM): ";
 		cin >> get_time(&inCourse.endTime, "%H:%M");
 	}
 	flushin(cin);
-	cout << "Enter classroom ID: ";
+	cout << "Enter classroom number: ";
 	getline(cin, inCourse.room);
-
+	cout << endl;
 	//* Register lecturer account in Lecturers.txt
 	cout << "Registering lecturer's account if it's new..." << endl;
 	string Path = "./TextFiles/Lecturers.txt";
@@ -579,6 +583,7 @@ bool addCourse() {
 			for (int j = 0; j < regStudents[i].nCourses; j++) {
 				getline(fin, regStudents[i].courseID[j], ' ');
 				getline(fin, regStudents[i].classID[j]);
+				//In case the student is in this class but already enrolled in the same course of another class
 				if (regStudents[i].courseID[j] == inCourse.courseID) sameCourse[i] = true;
 			}
 			fin.ignore(INT_MAX, '\n');
@@ -599,7 +604,7 @@ bool addCourse() {
 					fout << regStudents[i].courseID[j] << ' ' << regStudents[i].classID[j] << endl;
 				fout << endl;
 			}
-			for (int i = 0; i < inCourse.nStudents; i++) {	//Add studentArr of this class with 1 new course
+			for (int i = 0; i < inCourse.nStudents; i++) {	//Add studentArr of this class with a new course
 				fout << inCourse.studentArr[i].ID << endl
 					<< inCourse.studentArr[i].fullname << endl
 					<< inCourse.className << endl
@@ -610,9 +615,34 @@ bool addCourse() {
 		}
 		if (addedClass == true) {
 			//If the class has been recorded
-			
+			fout << nReg << endl;
+			for (int i = 0; i < nReg; i++) {	//Output existed regStudents
+				fout << regStudents[i].studentID << endl
+					<< regStudents[i].studentName << endl
+					<< regStudents[i].studentClass << endl;
+				if (regStudents[i].studentClass == inCourse.className && sameCourse[i] == false) {
+					//If it's the student in the class and they haven't enrolled in the course
+					fout << regStudents[i].nCourses + 1 << endl;
+					fout << inCourse.courseID << ' ' << inCourse.className << endl;
+				}
+				else fout << regStudents[i].nCourses << endl;
+				for (int j = 0; j < regStudents[i].nCourses; j++)
+					fout << regStudents[i].courseID[j] << ' ' << regStudents[i].classID[j] << endl;
+				fout << endl;
+			}
 		}
 		fout.close();
+		cout << "The course has been added to the students' Enrolled Courses list!" << endl;
 		//REMEMBER TO DELETE THE ARRAY INSIDE EACH STRUCT ELEMENT AND THE STRUCT ARRAY ITSELF
+		delete[] sameCourse;
+		for (int i = 0; i < nReg; i++) {
+			delete[] regStudents[i].classID;
+			delete[] regStudents[i].courseID;
+		}
+		delete[] regStudents;
 	}
+	//Function only returns true after all processes are done, student array of input class and date array are deleted 
+	delete[] inCourse.studentArr;
+	delete[] dateArr;
+	return true;
 }
