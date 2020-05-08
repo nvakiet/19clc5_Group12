@@ -1,4 +1,4 @@
-4
+3
 19127001
 Nguyen Van A
 M
@@ -15,11 +15,5 @@ F
 Nguyen Van C
 M
 2001-10-03
-1
-
-19127172
-Nguyen Duy Khang
-M
-2001-01-30
 1
 
