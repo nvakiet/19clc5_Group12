@@ -3,4 +3,7 @@
 
 #include "../Headers/general.h"
 bool importClass();
+bool addStudent();
+bool removeStudent();
+bool editStudent();
 #endif
