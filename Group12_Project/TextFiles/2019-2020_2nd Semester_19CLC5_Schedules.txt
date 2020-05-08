@@ -1,15 +1,29 @@
-1
-CTT008
-Do Nothing Course
+2
+CS162
+Introduction to Programming
 dbtien
 Dinh Ba Tien
 dbtien@hcmus.edu.vn
 PhD
 M
-2020-04-23
-2020-06-25
-Thu
+2020-04-06
+2020-06-01
+Mon
 07:30
 11:30
-I32
+I42
+
+CM101
+Communications
+dnvu
+Duong Nguyen Vu
+dnvu@hcmus.edu.vn
+Professor
+M
+2020-04-06
+2020-06-01
+Sat
+13:30
+17:30
+I23
 

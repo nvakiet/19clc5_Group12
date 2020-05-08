@@ -23,5 +23,8 @@ void viewSemesterList();
 bool addCourse();
 
 //Parameter version to use with importCourse function
-bool addCourse(Course inCourse);
+bool addCourse(Course inCourse, string slackName);
+
+//Import course data from csv file to the system
+bool importCourse();
 #endif // !_COURSE_H
