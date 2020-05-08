@@ -232,9 +232,8 @@ bool viewcheckin(Account user)
 {
 	string ID = user.studentProfile.ID;//Truyen thong tin ID vao bien ID
 	Course B;
-	string x = "Students";
+	string x = "Students", path = "./TextFiles/";
 	string line;
-	string ID;
 	printf("Enter years : ");
 	getline(cin, B.c_semester.year);
 	printf("Enter semester : ");
@@ -244,7 +243,7 @@ bool viewcheckin(Account user)
 	printf("Enter course Name: ");
 	getline(cin, B.className);
 	ifstream fin;
-	fin.open(B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + x + ".txt");
+	fin.open(path + B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + x + ".txt");
 	if (fin.fail())
 	{
 		printf("Failed to open this file!\n");
@@ -287,5 +286,59 @@ bool viewcheckin(Account user)
 	fin.close();
 	delete[]classdate;
 	delete[]B.checkList;
+	delete[]B.studentArr;
+}
+bool viewscore(Account user)
+{
+	Course B;
+	string x = "Students", path = "./TextFiles/";
+	string line;
+	string ID=user.studentProfile.ID;
+	printf("Enter years : ");
+	getline(cin, B.c_semester.year);
+	printf("Enter semester : ");
+	getline(cin, B.c_semester.semester);
+	printf("Enter course ID: ");
+	getline(cin, B.courseID);
+	printf("Enter course Name: ");
+	getline(cin, B.className);
+	ifstream fin;
+	fin.open(path + B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + x + ".txt");
+	if (fin.fail())
+	{
+		printf("Failed to open this file!\n");
+		return false;
+	}
+	getline(fin, line);
+	B.nWeeks = stoi(line);
+	getline(fin, line);
+	B.nStudents = stoi(line);
+	B.studentArr = new Student[B.nStudents];
+	for (int i = 0; i < B.nStudents; i++)
+	{
+		getline(fin, B.studentArr[i].ID);
+		if (B.studentArr[i].ID == ID)
+		{
+			for (int i = 0; i < 3; i++)
+				fin.ignore(INT_MAX, '\n');
+			getline(fin, line);
+			cout << "Mid : " << line << endl;
+			getline(fin, line);
+			cout << "Final : " << line << endl;
+			getline(fin, line);
+			cout << "Bonus : " << line << endl;
+			getline(fin, line);
+			cout << "Total : " << line << endl;
+
+			return true;
+		}
+		else
+		{
+			for (int i = 0; i < 19; i++)
+				fin.ignore(INT_MAX, '\n');
+		}
+	}
+	return false;//khong co hoc sinh de xuat ra;
+	fin.close();
 	delete[]B.studentArr;
 }
