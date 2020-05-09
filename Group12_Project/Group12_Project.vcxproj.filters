@@ -33,9 +33,6 @@
     <ClCompile Include="Sources\SearchViewS+A.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\NOTES.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\staff-class.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

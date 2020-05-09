@@ -191,21 +191,23 @@ int main() {
 					continue;
 				}
 			}
-			/*	ADD FUNCTIONS FOR CHOICE 3 TO 6 HERE
-
-
-
-
-
-
-			*/
-			//LOG OUT
+			if (choice == 4) {
+				if (!viewcheckin(user))
+					cerr << "Failed to get information!" << endl;
+				pause();
+			}
+			if (choice == 6) {
+				if (!viewscore(user))
+					cerr << "Failed to get information!" << endl;
+				pause();
+			}
 			if (choice == 7) {
 				logOut(user);
 				cout << "The account has been logged out!" << endl;
 				pause();
 			}
 		}
+
 	}
 
 	return 0;

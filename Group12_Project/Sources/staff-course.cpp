@@ -422,12 +422,14 @@ bool addCourse() {
 		courseArr = nullptr;
 		delete[] slack;
 		slack = nullptr;
+		fout.close();
 		cout << "Course info has been updated!" << endl;
 	}
 
 	//* Load [ClassID]_Students.txt to student array
 	cout << "Loading student list of the class..." << endl;
 	Path = "./TextFiles/" + inCourse.className + "_Students.txt";
+	int nInactive = 0;
 	if (emptyFile(Path)) {
 		cerr << "Can't find student list of " << inCourse.className << ". Please import the class first!" << endl;
 		return false;
@@ -447,6 +449,8 @@ bool addCourse() {
 			getline(fin, line);
 			inCourse.studentArr[i].active = stoi(line);
 			fin.ignore(INT_MAX, '\n');
+			if (inCourse.studentArr[i].active == false)
+				nInactive++;
 		}
 		fin.close();
 	}
@@ -549,8 +553,9 @@ bool addCourse() {
 			delete[] dateArr;
 			return false;
 		}
-		fout << inCourse.nStudents << endl;
+		fout << inCourse.nStudents - nInactive << endl;
 		for (int i = 0; i < inCourse.nStudents; i++) {
+			if (inCourse.studentArr[i].active == false) continue; //Inactive students won't be registered with the course
 			fout << inCourse.studentArr[i].ID << endl
 				<< inCourse.studentArr[i].fullname << endl
 				<< inCourse.className << endl
@@ -594,7 +599,7 @@ bool addCourse() {
 		fout.open(Path);
 		if (addedClass == false) {
 			//If the class hasn't been record
-			fout << nReg + inCourse.nStudents << endl;
+			fout << nReg + inCourse.nStudents - nInactive << endl;
 			for (int i = 0; i < nReg; i++) {	//Output existed regStudents
 				fout << regStudents[i].studentID << endl
 					<< regStudents[i].studentName << endl
@@ -605,6 +610,7 @@ bool addCourse() {
 				fout << endl;
 			}
 			for (int i = 0; i < inCourse.nStudents; i++) {	//Add studentArr of this class with a new course
+				if (inCourse.studentArr[i].active == false) continue; //Inactive students won't be registered with the course
 				fout << inCourse.studentArr[i].ID << endl
 					<< inCourse.studentArr[i].fullname << endl
 					<< inCourse.className << endl
@@ -830,6 +836,7 @@ bool addCourse(Course inCourse, string slackName) {
 	//* Load [ClassID]_Students.txt to student array
 	cout << "Loading student list of the class..." << endl;
 	Path = "./TextFiles/" + inCourse.className + "_Students.txt";
+	int nInactive = 0;
 	if (emptyFile(Path)) {
 		cerr << "Can't find student list of " << inCourse.className << ". Please import the class first!" << endl;
 		return false;
@@ -849,6 +856,8 @@ bool addCourse(Course inCourse, string slackName) {
 			getline(fin, line);
 			inCourse.studentArr[i].active = stoi(line);
 			fin.ignore(INT_MAX, '\n');
+			if (inCourse.studentArr[i].active == false)
+				nInactive++;
 		}
 		fin.close();
 	}
@@ -949,10 +958,11 @@ bool addCourse(Course inCourse, string slackName) {
 			cerr << "Can't add this course to the list!" << endl;
 			delete[] inCourse.studentArr;
 			delete[] dateArr;
-return false;
+			return false;
 		}
-		fout << inCourse.nStudents << endl;
+		fout << inCourse.nStudents - nInactive << endl;
 		for (int i = 0; i < inCourse.nStudents; i++) {
+			if (inCourse.studentArr[i].active == false) continue; //Inactive students won't be registered with the course
 			fout << inCourse.studentArr[i].ID << endl
 				<< inCourse.studentArr[i].fullname << endl
 				<< inCourse.className << endl
@@ -964,84 +974,85 @@ return false;
 		cout << "The course has been added to the students' Courses list." << endl;
 	}
 	else {
-	//If the file already existed, load it to an array of RegCourses
-	int nReg; //Number of students recorded in the file
-	bool addedClass = false; //Flag to check if the class are already recorded
-	bool* sameCourse; //Flag to check if a recorded student already enrolled in the same course of different class
-	fin.open(Path);
-	getline(fin, line);
-	nReg = stoi(line);
-	RegCourses* regStudents = new RegCourses[nReg];
-	sameCourse = new bool[nReg] {false}; //This flag uses the same iterator as regStudents to check the recorded students
-	for (int i = 0; i < nReg; i++) {
-		getline(fin, regStudents[i].studentID);
-		getline(fin, regStudents[i].studentName);
-		getline(fin, regStudents[i].studentClass);
-		if (regStudents[i].studentClass == inCourse.className) addedClass = true;
+		//If the file already existed, load it to an array of RegCourses
+		int nReg; //Number of students recorded in the file
+		bool addedClass = false; //Flag to check if the class are already recorded
+		bool* sameCourse; //Flag to check if a recorded student already enrolled in the same course of different class
+		fin.open(Path);
 		getline(fin, line);
-		regStudents[i].nCourses = stoi(line);
-		regStudents[i].courseID = new string[regStudents[i].nCourses];
-		regStudents[i].classID = new string[regStudents[i].nCourses];
-		for (int j = 0; j < regStudents[i].nCourses; j++) {
-			getline(fin, regStudents[i].courseID[j], ' ');
-			getline(fin, regStudents[i].classID[j]);
-			//In case the student is in this class but already enrolled in the same course of another class
-			if (regStudents[i].courseID[j] == inCourse.courseID) sameCourse[i] = true;
-		}
-		fin.ignore(INT_MAX, '\n');
-	}
-	fin.close();
-
-	//Write new course to the Enrolled Courses list of the recorded students
-	fout.open(Path);
-	if (addedClass == false) {
-		//If the class hasn't been record
-		fout << nReg + inCourse.nStudents << endl;
-		for (int i = 0; i < nReg; i++) {	//Output existed regStudents
-			fout << regStudents[i].studentID << endl
-				<< regStudents[i].studentName << endl
-				<< regStudents[i].studentClass << endl
-				<< regStudents[i].nCourses << endl;
-			for (int j = 0; j < regStudents[i].nCourses; j++)
-				fout << regStudents[i].courseID[j] << ' ' << regStudents[i].classID[j] << endl;
-			fout << endl;
-		}
-		for (int i = 0; i < inCourse.nStudents; i++) {	//Add studentArr of this class with a new course
-			fout << inCourse.studentArr[i].ID << endl
-				<< inCourse.studentArr[i].fullname << endl
-				<< inCourse.className << endl
-				<< 1 << endl
-				<< inCourse.courseID << ' ' << inCourse.className << endl;
-			fout << endl;
-		}
-	}
-	if (addedClass == true) {
-		//If the class has been recorded
-		fout << nReg << endl;
-		for (int i = 0; i < nReg; i++) {	//Output existed regStudents
-			fout << regStudents[i].studentID << endl
-				<< regStudents[i].studentName << endl
-				<< regStudents[i].studentClass << endl;
-			if (regStudents[i].studentClass == inCourse.className && sameCourse[i] == false) {
-				//If it's the student in the class and they haven't enrolled in the course
-				fout << regStudents[i].nCourses + 1 << endl;
-				fout << inCourse.courseID << ' ' << inCourse.className << endl;
+		nReg = stoi(line);
+		RegCourses* regStudents = new RegCourses[nReg];
+		sameCourse = new bool[nReg] {false}; //This flag uses the same iterator as regStudents to check the recorded students
+		for (int i = 0; i < nReg; i++) {
+			getline(fin, regStudents[i].studentID);
+			getline(fin, regStudents[i].studentName);
+			getline(fin, regStudents[i].studentClass);
+			if (regStudents[i].studentClass == inCourse.className) addedClass = true;
+			getline(fin, line);
+			regStudents[i].nCourses = stoi(line);
+			regStudents[i].courseID = new string[regStudents[i].nCourses];
+			regStudents[i].classID = new string[regStudents[i].nCourses];
+			for (int j = 0; j < regStudents[i].nCourses; j++) {
+				getline(fin, regStudents[i].courseID[j], ' ');
+				getline(fin, regStudents[i].classID[j]);
+				//In case the student is in this class but already enrolled in the same course of another class
+				if (regStudents[i].courseID[j] == inCourse.courseID) sameCourse[i] = true;
 			}
-			else fout << regStudents[i].nCourses << endl;
-			for (int j = 0; j < regStudents[i].nCourses; j++)
-				fout << regStudents[i].courseID[j] << ' ' << regStudents[i].classID[j] << endl;
-			fout << endl;
+			fin.ignore(INT_MAX, '\n');
 		}
-	}
-	fout.close();
-	cout << "The course has been added to the students' Enrolled Courses list!" << endl;
-	//REMEMBER TO DELETE THE ARRAY INSIDE EACH STRUCT ELEMENT AND THE STRUCT ARRAY ITSELF
-	delete[] sameCourse;
-	for (int i = 0; i < nReg; i++) {
-		delete[] regStudents[i].classID;
-		delete[] regStudents[i].courseID;
-	}
-	delete[] regStudents;
+		fin.close();
+
+		//Write new course to the Enrolled Courses list of the recorded students
+		fout.open(Path);
+		if (addedClass == false) {
+			//If the class hasn't been record
+			fout << nReg + inCourse.nStudents - nInactive << endl;
+			for (int i = 0; i < nReg; i++) {	//Output existed regStudents
+				fout << regStudents[i].studentID << endl
+					<< regStudents[i].studentName << endl
+					<< regStudents[i].studentClass << endl
+					<< regStudents[i].nCourses << endl;
+				for (int j = 0; j < regStudents[i].nCourses; j++)
+					fout << regStudents[i].courseID[j] << ' ' << regStudents[i].classID[j] << endl;
+				fout << endl;
+			}
+			for (int i = 0; i < inCourse.nStudents; i++) {	//Add studentArr of this class with a new course
+				if (inCourse.studentArr[i].active == false) continue; //Inactive students won't be registered with the course
+				fout << inCourse.studentArr[i].ID << endl
+					<< inCourse.studentArr[i].fullname << endl
+					<< inCourse.className << endl
+					<< 1 << endl
+					<< inCourse.courseID << ' ' << inCourse.className << endl;
+				fout << endl;
+			}
+		}
+		if (addedClass == true) {
+			//If the class has been recorded
+			fout << nReg << endl;
+			for (int i = 0; i < nReg; i++) {	//Output existed regStudents
+				fout << regStudents[i].studentID << endl
+					<< regStudents[i].studentName << endl
+					<< regStudents[i].studentClass << endl;
+				if (regStudents[i].studentClass == inCourse.className && sameCourse[i] == false) {
+					//If it's the student in the class and they haven't enrolled in the course
+					fout << regStudents[i].nCourses + 1 << endl;
+					fout << inCourse.courseID << ' ' << inCourse.className << endl;
+				}
+				else fout << regStudents[i].nCourses << endl;
+				for (int j = 0; j < regStudents[i].nCourses; j++)
+					fout << regStudents[i].courseID[j] << ' ' << regStudents[i].classID[j] << endl;
+				fout << endl;
+			}
+		}
+		fout.close();
+		cout << "The course has been added to the students' Enrolled Courses list!" << endl;
+		//REMEMBER TO DELETE THE ARRAY INSIDE EACH STRUCT ELEMENT AND THE STRUCT ARRAY ITSELF
+		delete[] sameCourse;
+		for (int i = 0; i < nReg; i++) {
+			delete[] regStudents[i].classID;
+			delete[] regStudents[i].courseID;
+		}
+		delete[] regStudents;
 	}
 	//Function only returns true after all processes are done, student array of input class and date array are deleted 
 	delete[] inCourse.studentArr;

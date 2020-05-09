@@ -240,7 +240,7 @@ bool viewcheckin(Account user)
 	getline(cin, B.c_semester.semester);
 	printf("Enter course ID: ");
 	getline(cin, B.courseID);
-	printf("Enter course Name: ");
+	printf("Enter class ID: ");
 	getline(cin, B.className);
 	ifstream fin;
 	fin.open(path + B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + x + ".txt");
@@ -274,19 +274,23 @@ bool viewcheckin(Account user)
 				cout << classdate[j] << " " << *(B.checkList + i * B.nWeeks + j) << endl;
 			}
 			cout << endl;
+			fin.close();
+			delete[]classdate;
+			delete[]B.checkList;
+			delete[]B.studentArr;
 			return true;//co hoc sinh de xuat ra
 		}
 		else
 		{
-			for (int i = 0; i < 19; i++)
+			for (int i = 0; i < 9 + B.nWeeks; i++)
 				fin.ignore(INT_MAX, '\n');
 		}
 	}
-	return false;//khong co hoc sinh de xuat ra;
 	fin.close();
 	delete[]classdate;
 	delete[]B.checkList;
 	delete[]B.studentArr;
+	return false;//khong co hoc sinh de xuat ra;
 }
 bool viewscore(Account user)
 {
@@ -300,7 +304,7 @@ bool viewscore(Account user)
 	getline(cin, B.c_semester.semester);
 	printf("Enter course ID: ");
 	getline(cin, B.courseID);
-	printf("Enter course Name: ");
+	printf("Enter class ID: ");
 	getline(cin, B.className);
 	ifstream fin;
 	fin.open(path + B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + x + ".txt");
@@ -319,7 +323,7 @@ bool viewscore(Account user)
 		getline(fin, B.studentArr[i].ID);
 		if (B.studentArr[i].ID == ID)
 		{
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 4; i++)
 				fin.ignore(INT_MAX, '\n');
 			getline(fin, line);
 			cout << "Mid : " << line << endl;
@@ -329,16 +333,17 @@ bool viewscore(Account user)
 			cout << "Bonus : " << line << endl;
 			getline(fin, line);
 			cout << "Total : " << line << endl;
-
+			fin.close();
+			delete[]B.studentArr;
 			return true;
 		}
 		else
 		{
-			for (int i = 0; i < 19; i++)
+			for (int i = 0; i < 9 + B.nWeeks; i++)
 				fin.ignore(INT_MAX, '\n');
 		}
 	}
-	return false;//khong co hoc sinh de xuat ra;
 	fin.close();
 	delete[]B.studentArr;
+	return false;//khong co hoc sinh de xuat ra;
 }
