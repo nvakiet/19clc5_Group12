@@ -467,23 +467,21 @@ int menuCourse() {
 	cout << string(21, ' ') << "COURSES" << string(21, ' ') << endl;
 	cout << string(50, '*') << endl;
 	cout << "1 - VIEW: ALL SEMESTERS" << endl;
-	cout << "2 - VIEW: CURRENT SEMESTER" << endl;
-	cout << "3 - DELETE A SEMESTER" << endl;
-	cout << "4 - IMPORT: COURSE LIST OF A SEMESTER" << endl;
-	cout << "5 - ADD A COURSE" << endl;
-	cout << "6 - EDIT A COURSE" << endl;
-	cout << "7 - REMOVE A COURSE" << endl;
-	cout << "8 - REMOVE STUDENT FROM A COURSE" << endl;
-	cout << "9 - ADD A STUDENT TO A COURSE" << endl;
-	cout << "10 - VIEW: COURSES IN THE CURRENT SEMESTER" << endl;
-	cout << "11 - VIEW: STUDENT OF A COURSE" << endl;
-	cout << "12 - VIEW: ATTENDANCE LIST OF A COURSE" << endl;
-	cout << "13 - VIEW: ALL LECTURERS AVAILABLE" << endl;
-	cout << "14 - RETURN" << endl;
+	cout << "2 - DELETE A SEMESTER" << endl;
+	cout << "3 - IMPORT: COURSE LIST OF A SEMESTER" << endl;
+	cout << "4 - ADD A COURSE" << endl;
+	cout << "5 - EDIT A COURSE" << endl;
+	cout << "6 - REMOVE A COURSE" << endl;
+	cout << "7 - REMOVE STUDENT FROM A COURSE" << endl;
+	cout << "8 - ADD A STUDENT TO A COURSE" << endl;
+	cout << "9 - VIEW: COURSES IN THE CURRENT SEMESTER" << endl;
+	cout << "10 - VIEW: STUDENT OF A COURSE" << endl;
+	cout << "11 - VIEW: ALL LECTURERS AVAILABLE" << endl;
+	cout << "12 - RETURN" << endl;
 	cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
 	int choice;
 	cin >> choice;
-	while (!cin || choice < 1 || choice > 14) {
+	while (!cin || choice < 1 || choice > 12) {
 		flushin(cin);
 		cerr << "Invalid input!" << endl;
 		cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";

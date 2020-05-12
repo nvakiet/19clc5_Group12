@@ -5,7 +5,6 @@ bool importClass();
 bool addStudent();
 bool removeStudent();
 bool editStudent();
-bool viewClasses();
 bool viewStudentsInClass();
 bool changeClass();
 #endif

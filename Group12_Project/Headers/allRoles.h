@@ -41,14 +41,6 @@ int menuClass();
 //Menu loop break condition: When user choice is "Back to main menu"
 int menuCourse();
 
-//Prints Scoreboard menu
-//Menu loop break condition: When user choice is "Back to main menu"
-int menuScoreboard();
-
-//Prints Attendance List menu
-//Menu loop break condition: When user choice is "Back to main menu"
-int menuAttendanceList();
-
 //simply prints out the profile stored in the account currently logging in
 //the profile printed out will be depended on the "role" value
 void viewProfile(Account user);

@@ -99,7 +99,7 @@ tm sToDate(string date_str);
 tm sToTime(string time_str);
 
 //Print struct tm in date YYYY-MM-DD format
-void printDate(ostream& stream, tm date);
+void printDate(ostream &stream, tm date);
 
 //Print struct tm in time HH:MM format
 void printTime(ostream &stream, tm time);
@@ -118,4 +118,9 @@ bool generateFile(string filePath, string init);
 
 //Calculate difference between 2 dates in number of weeks and return a pointer to an array containing week dates starting from startDate
 tm* getWeeks(tm startDate, tm endDate, int* nWeeks);
+
+//Functions from staff-class.cpp used for other .cpp
+string* readClassesID(string path, int* nClasses);
+bool viewClasses();
+
 #endif // !_GENERAL_H_

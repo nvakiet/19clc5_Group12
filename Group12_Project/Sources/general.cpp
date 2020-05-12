@@ -21,10 +21,11 @@ tm sToDate(string date_str) {
 	return date;
 }
 
-void printDate(ostream& stream, tm date) {
+void printDate(ostream &stream, tm date) {
 	stream << setfill('0') << right << date.tm_year + 1900 << '-'
 		<< setw(2) << date.tm_mon + 1 << '-' 
 		<< setw(2) << date.tm_mday << endl;
+	stream << setfill(' ');
 }
 
 void resetTM(tm &time) {
@@ -56,9 +57,10 @@ tm sToTime(string time_str) {
 	return time;
 }
 
-void printTime(ostream& stream, tm time) {
+void printTime(ostream &stream, tm time) {
 	stream << setfill('0') << right << setw(2) << time.tm_hour << ':' 
 		   << setw(2) << time.tm_min << endl;
+	stream << setfill(' ');
 }
 
 void flushin(istream& input) {
