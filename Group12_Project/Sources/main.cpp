@@ -24,7 +24,8 @@ int main() {
 		else cerr << "Failed to update the current semester. Some functions may not work properly!" << endl;
 		//Show main menu based on account's role
 		//STAFF MENU
-		while (user.role == 1) {	
+		while (user.role == 1) {
+			cout << "Current semester: " << currentSemester.year << " - " << currentSemester.semester << endl;
 			choice = menuStaff();
 			//View staff profile
 			if (choice == 1) {
@@ -55,6 +56,24 @@ int main() {
 						else cerr << "Failed to import class!" << endl;
 						pause();
 					}
+					if (choice == 2) {
+						if (addStudent())
+							cout << "The student has been added successfully!" << endl;
+						else cerr << "Failed to add the student!" << endl;
+						pause();
+					}
+					if (choice == 3) {
+						if (editStudent())
+							cout << "The student's info has been edited successfully!" << endl;
+						else cerr << "Failed to edit the student's info!" << endl;
+						pause();
+					}
+					if (choice == 4) {
+						if (removeStudent())
+							cout << "The student has been removed successfully!" << endl;
+						else cerr << "Failed to remove the student!" << endl;
+						pause();
+					}
 					/*Do something with classes data here
 
 
@@ -66,19 +85,13 @@ int main() {
 			//COURSES MENU
 			if (choice == 4) {
 				choice = 0;
-				while (choice != 14) {
+				while (choice != 12) {
 					choice = menuCourse();
 					if (choice == 1) {
 						viewSemesterList();
 						pause();
 					}
 					if (choice == 2) {
-						cout << "Current semester: " << endl;
-						cout << "Academic year: " << currentSemester.year << endl;
-						cout << "Semester: " << currentSemester.semester << endl;
-						pause();
-					}
-					if (choice == 3) {
 						if (deleteSemester()) {
 							cout << "The semester has been deleted!" << endl;
 							pause();
@@ -88,7 +101,7 @@ int main() {
 							pause();
 						}
 					}
-					if (choice == 4) {
+					if (choice == 3) {
 						if (importCourse()) {
 							cout << "The course list has been imported successfully!" << endl;
 							pause();
@@ -98,7 +111,7 @@ int main() {
 							pause();
 						}
 					}
-					if (choice == 5) {
+					if (choice == 4) {
 						if (addCourse()) {
 							cout << "The course has been added successfully!" << endl;
 							pause();
@@ -135,6 +148,7 @@ int main() {
 
 		//LECTURER MENU
 		while (user.role == 2) {
+			cout << "Current semester: " << currentSemester.year << " - " << currentSemester.semester << endl;
 			choice = menuLecturer();
 			//View lecturer profile
 			if (choice == 1) {
@@ -172,6 +186,7 @@ int main() {
 
 		//STUDENT MENU
 		while (user.role == 3) {
+			cout << "Current semester: " << currentSemester.year << " - " << currentSemester.semester << endl;
 			choice = menuStudent();
 			//View student profile
 			if (choice == 1) {
@@ -191,21 +206,26 @@ int main() {
 					continue;
 				}
 			}
-			/*	ADD FUNCTIONS FOR CHOICE 3 TO 6 HERE
-
-
-
-
-
-
-			*/
-			//LOG OUT
+			//View check in result
+			if (choice == 4) {
+				if (!viewcheckin(user))
+					cerr << "Failed to get information!" << endl;
+				pause();
+			}
+			//View student's scoreboard
+			if (choice == 6) {
+				if (!viewscore(user))
+					cerr << "Failed to get information!" << endl;
+				pause();
+			}
+			//Logout
 			if (choice == 7) {
 				logOut(user);
 				cout << "The account has been logged out!" << endl;
 				pause();
 			}
 		}
+
 	}
 
 	return 0;
