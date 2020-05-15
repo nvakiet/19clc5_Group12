@@ -343,7 +343,8 @@ bool viewscore(Account user)
 				fin.ignore(INT_MAX, '\n');
 		}
 	}
-	fin.close();
 	delete[]B.studentArr;
 	return false;//khong co hoc sinh de xuat ra;
+	fin.close();
 }
+
