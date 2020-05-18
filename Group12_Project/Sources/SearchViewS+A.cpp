@@ -347,4 +347,117 @@ bool viewscore(Account user)
 	return false;//khong co hoc sinh de xuat ra;
 	fin.close();
 }
+void viewSchedules(Account user, Semester curSem)
+{
+	Course B;
+	string ID = user.studentProfile.ID;
+	string s = curSem.semester;
+	string year = curSem.year;
+	string line;
+	ifstream fin;
+	string x = "Student Courses";
+	string h = "Schedules";
+	fin.open(year + "_" + s + "_" + x + ".txt");
+	if (fin.fail())
+	{
+		printf("Failed to open this file!\n");
+		return;
+	}
+	getline(fin, line);
+	int n = stoi(line);
+	for (int i = 0; i < n; i++)
+	{
+		getline(fin, line);
+		if (line == ID)
+		{
+			cout << "=======SCHEDULES======= " << endl;
+			for (int j = 0; j < 2; j++)
+				fin.ignore(INT_MAX, '\n');
+			getline(fin, line);
+			int t = stoi(line);
+			for (int j = 0; j < t; j++)
+			{
+				string courseID, classID;
+				getline(fin, courseID, ' ');
+				getline(fin, classID);
+				ifstream f;
 
+				f.open(year + "_" + s + "_" + classID + "_" + h + ".txt");
+				getline(f, line);
+				int num = stoi(line);
+				for (int i = 0; i < num; i++)
+				{
+					getline(f, line);
+					if (line == courseID)
+					{
+						cout << line << endl;
+						getline(f, line);
+						cout << line << endl;
+						for (int i = 0; i < 5; i++)
+							f.ignore(INT_MAX, '\n');
+
+						getline(f, line);
+						cout << "Start date : " << line;
+						getline(f, line);
+						cout << "  End date : " << line << endl;
+						getline(f, line);
+						cout << "Day of week : " << line << endl;
+						getline(f, line);
+						cout << "Start time : " << line;
+						getline(f, line);
+						cout << "  End time : " << line << endl;
+						getline(f, line);
+						cout << "Room : " << line << endl;
+						cout << endl;
+						break;
+					}
+					else
+					{
+						for (int i = 0; i < 13; i++)
+							f.ignore(INT_MAX, '\n');
+					}
+				}
+				f.close();
+			}
+
+		}
+		else
+		{
+			for (int i = 0; i < 6; i++)
+				fin.ignore(INT_MAX, '\n');
+		}
+	}
+	fin.close();
+
+	return;
+}
+void viewLecture()
+{
+	cout << "		======== Lecturers ========" << endl;
+	string line;
+	ifstream fout;
+	fout.open("Lecturers.txt");
+	if (fout.fail())
+	{
+		printf("Failed to open this file!\n");
+		return;
+	}
+	getline(fout, line);
+	int n = stoi(line);
+	for (int i = 0; i < n; i++)
+	{
+		fout.ignore(INT_MAX, '\n');
+		fout.ignore(INT_MAX, '\n');
+		getline(fout, line);
+		cout << "Lecturer name : " << line << endl;
+		getline(fout, line);
+		cout << "Email : " << line << endl;
+		getline(fout, line);
+		cout << line << endl;
+		getline(fout, line);
+		cout << "Gender : " << line << endl;
+		fout.ignore(INT_MAX, '\n');
+		cout << endl;
+	}
+	fout.close();
+}

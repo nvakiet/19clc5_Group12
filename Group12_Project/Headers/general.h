@@ -11,27 +11,31 @@
 #include "../Headers/sha256.h"
 using namespace std;
 
-struct score {
+struct score 
+{
 	float midterm = -1;
 	float final = -1;
 	float bonus = -1;
 	float total = -1;
 };
 
-struct Staff {
+struct Staff 
+{
 	string fullname;
 	string email;
 	char gender = NULL; //'F' for female and 'M' for male
 };
 
-struct Lecturer {
+struct Lecturer 
+{
 	string fullname;
 	string email;
 	string academicRank;//Rank: Master/PhD/Professor
 	char gender = NULL; //'F' for female and 'M' for male
 };
 
-struct Student {
+struct Student
+{
 	string fullname, ID, classID;
 	char gender = NULL; //'F' for female and 'M' for male
 	tm birthDate;
@@ -46,18 +50,21 @@ struct Account {//When "role" value is changed, the corresponding profile will b
 	Student studentProfile;
 };
 
-struct Class {
+struct Class 
+{
 	string className;
 	int nStudents = 0;
 	Student* studentArr = nullptr;	//Ptr to dynamic array of students
 };
 
-struct Semester {	//Semester info from SemesterList
+struct Semester 
+{	//Semester info from SemesterList
 	string year;	//Academic year "YearA-YearB". Example: 2018-2019
 	string semester;//First or Second or Third semester
 };
 
-struct Course {
+struct Course 
+{
 	Semester c_semester;
 	string courseID, courseName;
 	string className;
@@ -80,7 +87,8 @@ struct Course {
 	//}
 };
 
-struct RegCourses { //Store the registered courses of a student
+struct RegCourses 
+{ //Store the registered courses of a student
 	string studentID;
 	string studentName;
 	string studentClass;

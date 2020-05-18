@@ -9,4 +9,6 @@ void CSVScoreboard(Course B);
 void CSVAttendance(Course B, string*& classdate);
 bool viewcheckin(Account user);
 bool viewscore(Account user);
+void viewSchedules(Account user, Semester curSem);
+void viewLecture();
 #endif // !_SearchViewS+A_H_
