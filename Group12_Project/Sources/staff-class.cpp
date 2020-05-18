@@ -821,12 +821,10 @@ bool viewClasses() {
 	ofstream fout;
 	string line;
 
-	//string path = "./TextFiles/Classes.txt";
-	string path = "./TextFiles/Test-class.txt";
+	string path = "./TextFiles/Classes.txt";
 	int n;
 	string* classID = readClassesID(path, &n);
 	if (classID == nullptr) {
-		cerr << "Can't get data for list of classes from Classes.txt!" << endl;
 		return false;
 	}
 	cout << "Available classes: " << endl;
@@ -844,8 +842,8 @@ bool viewStudentsInClass() {
 	if (!viewClasses()) return false;
 	cout << "Enter class ID: ";
 	getline(cin, ClassID);
-	string path = systemPath + ClassID + "_students.txt";
-	/*string path = "./Textfiles/Test-19CLC5.txt";*/
+	cout << endl;
+	string path = systemPath + ClassID + "_Students.txt";
 	fin.open(path);
 	if (!fin.is_open()) {
 		cerr << "Cannot open file " << path;
@@ -872,13 +870,15 @@ bool viewStudentsInClass() {
 	fin.close();
 
 	for (int i = 0; i < n; i++) {
-		cout << oldStu[i].ID << endl
-			<< oldStu[i].fullname << endl
-			<< oldStu[i].gender << endl
-			<< setfill('0') << right << oldStu[i].birthDate.tm_year + 1900 << '-'
+		cout << "Student ID: " << oldStu[i].ID << endl
+			<< "Student name: " << oldStu[i].fullname << endl
+			<< "Student gender: " << oldStu[i].gender << endl
+			<< "Student birthdate: " << setfill('0') << right << oldStu[i].birthDate.tm_year + 1900 << '-'
 			<< setw(2) << oldStu[i].birthDate.tm_mon + 1 << '-'
-			<< setw(2) << oldStu[i].birthDate.tm_mday << endl
-			<< oldStu[i].active << endl;
+			<< setw(2) << oldStu[i].birthDate.tm_mday << endl;
+		cout << "Status: ";
+		if (oldStu[i].active) cout << "Active" << endl;
+		else cout << "Inactive" << endl;
 		cout << endl;
 	}
 	delete[] oldStu;
@@ -894,8 +894,7 @@ bool changeClass() {
 
 	if (!viewClasses()) return false;
 	int n;
-	//string* classes = readClassesID("./TextFiles/Classes.txt", &n);
-	string* classes = readClassesID("./TextFiles/Test-class.txt", &n);
+	string* classes = readClassesID("./TextFiles/Classes.txt", &n);
 	cout << "Enter class ID: ";
 	getline(cin, ClassID);
 	bool flag = false;
@@ -911,8 +910,7 @@ bool changeClass() {
 				flag = true;
 		}
 	}
-	//string path1 = systemPath + ClassID + "_Students.txt";
-	string path1 = "./TextFiles/Test-19CLC5.txt";
+	string path1 = systemPath + ClassID + "_Students.txt";
 	fin.open(path1);
 	if (emptyFile(path1)) {
 		cerr << "Can't read student data in this class!" << endl;
@@ -937,8 +935,7 @@ bool changeClass() {
 	}
 	fin.close();
 
-	//string path2 = "./TextFiles/Students.txt";
-	string path2 = "./TextFiles/Test-student.txt";
+	string path2 = "./TextFiles/Students.txt";
 	fin.open(path2);
 	if (emptyFile(path2)) {
 		cerr << "Cannot read students data from Students.txt" << endl;
@@ -988,8 +985,7 @@ bool changeClass() {
 			return false;
 		}
 		if (choice == 1) {
-			//string path3 = systemPath + newClass + "_Students.txt";
-			string path3 = "./TextFiles/Test-19CLC7.txt";
+			string path3 = systemPath + newClass + "_Students.txt";
 			fin.open(path3);
 			if (emptyFile(path3)) {
 				cerr << "Can't read student data in this class!" << endl;
@@ -1109,8 +1105,7 @@ bool changeClass() {
 			return false;
 		}
 		if (choice == 1) {
-			//string path4 = "./TextFiles/Classes.txt";
-			string path4 = "./TextFiles/Test-class.txt";
+			string path4 = "./TextFiles/Classes.txt";
 			fout.open(path4);
 			if (!fout.is_open()) {
 				cerr << "Cannot open file " << path4;
@@ -1140,8 +1135,7 @@ bool changeClass() {
 			}
 			fout.close();
 
-			//string path6 = systemPath + ClassID + "_Students.txt";
-			string path6 = "./TextFiles/Test-19CLC5.txt";
+			string path6 = systemPath + ClassID + "_Students.txt";
 			fout.open(path6);
 			if (!fout.is_open()) {
 				cerr << "Cannot open file " << path6;

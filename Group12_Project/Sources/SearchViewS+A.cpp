@@ -163,7 +163,9 @@ void viewAttendance(Course B, string* classdate)
 		printDate(cout, B.studentArr[i].birthDate);
 		for (int j = 0; j < B.nWeeks; j++)
 		{
-			cout << classdate[j] << " " << *(B.checkList + i * B.nWeeks + j) << endl;
+			cout << classdate[j] << " ";
+			if (*(B.checkList + i * B.nWeeks + j) == true) cout << "Attended" << endl;
+			else cout << "X" << endl;
 		}
 		cout << endl;
 	}
@@ -271,7 +273,9 @@ bool viewcheckin(Account user)
 			}
 			for (int j = 0; j < B.nWeeks; j++)
 			{
-				cout << classdate[j] << " " << *(B.checkList + i * B.nWeeks + j) << endl;
+				cout << classdate[j] << " ";
+				if (*(B.checkList + i * B.nWeeks + j) == true) cout << "Attended" << endl;
+				else cout << "X" << endl;
 			}
 			cout << endl;
 			fin.close();
@@ -359,7 +363,7 @@ void viewSchedules(Account user, Semester curSem)
 	ifstream fin;
 	string x = "Student Courses";
 	string h = "Schedules";
-	fin.open(year + "_" + s + "_" + x + ".txt");
+	fin.open("./TextFiles/" + year + "_" + s + "_" + x + ".txt");
 	if (fin.fail())
 	{
 		printf("Failed to open this file!\n");
@@ -384,7 +388,7 @@ void viewSchedules(Account user, Semester curSem)
 				getline(fin, classID);
 				ifstream f;
 
-				f.open(year + "_" + s + "_" + classID + "_" + h + ".txt");
+				f.open("./TextFiles/" + year + "_" + s + "_" + classID + "_" + h + ".txt");
 				getline(f, line);
 				int num = stoi(line);
 				for (int i = 0; i < num; i++)
@@ -438,10 +442,10 @@ void viewLecture()
 	cout << "		======== Lecturers ========" << endl;
 	string line;
 	ifstream fout;
-	fout.open("Lecturers.txt");
+	fout.open("./TextFiles/Lecturers.txt");
 	if (fout.fail())
 	{
-		printf("Failed to open this file!\n");
+		printf("Failed to open the file Lecturers.txt!\n");
 		return;
 	}
 	getline(fout, line);
@@ -455,7 +459,7 @@ void viewLecture()
 		getline(fout, line);
 		cout << "Email : " << line << endl;
 		getline(fout, line);
-		cout << line << endl;
+		cout << "Academic degree: " << line << endl;
 		getline(fout, line);
 		cout << "Gender : " << line << endl;
 		fout.ignore(INT_MAX, '\n');

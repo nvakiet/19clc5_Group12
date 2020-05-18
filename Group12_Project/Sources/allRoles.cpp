@@ -444,7 +444,7 @@ int menuClass() {
 	cout << "2 - ADD A STUDENT" << endl;
 	cout << "3 - EDIT A STUDENT" << endl;
 	cout << "4 - REMOVE A STUDENT" << endl;
-	cout << "5 - CHANGE CLASS" << endl;
+	cout << "5 - CHANGE CLASS OF A STUDENT" << endl;
 	cout << "6 - VIEW: CLASSES" << endl;
 	cout << "7 - VIEW: CLASS STUDENTS" << endl;
 	cout << "8 - RETURN" << endl;

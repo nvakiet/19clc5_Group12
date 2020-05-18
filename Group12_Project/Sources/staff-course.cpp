@@ -178,23 +178,37 @@ void viewSemesterList() {
 	delete[] fileSem;
 }
 
-bool addCourse() {
+bool addCourse(Semester curSem) {
 	//To do list:
 	//* Read inputs from user and store to a Course structure
 	ifstream fin;
 	ofstream fout;
 	string line, slackName;
 	Course inCourse;
-	cout << "Enter academic year (Year A - Year B): ";
-	getline(cin, inCourse.c_semester.year);
-	cout << "Enter semester: ";
-	getline(cin, inCourse.c_semester.semester);
+	inCourse.c_semester = curSem;
 	cout << "Enter course ID: ";
 	getline(cin, inCourse.courseID);
 	cout << "Enter course name: ";
 	getline(cin, inCourse.courseName);
-	cout << "Enter class ID of the course: ";
+	int n;
+	string* classes = readClassesID("./TextFiles/Classes.txt", &n);
+	cout << "Enter class ID: ";
 	getline(cin, inCourse.className);
+	bool flag = false;
+	for (int i = 0; i < n && flag == false; i++) {
+		if (inCourse.className == classes[i])
+			flag = true;
+	}
+	while (!flag) {
+		cout << "Enter existing class: ";
+		getline(cin, inCourse.className);
+		for (int i = 0; i < n && flag == false; i++) {
+			if (inCourse.className == classes[i])
+				flag = true;
+		}
+	}
+	delete[] classes;
+	classes = nullptr;
 	cout << "Enter lecturer username: ";
 	getline(cin, slackName);
 	cout << "Enter lecturer's full name: ";
@@ -1060,17 +1074,14 @@ bool addCourse(Course inCourse, string slackName) {
 	return true;
 }
 
-bool importCourse() {
+bool importCourse(Semester curSem) {
 	ifstream fin;
 	ofstream fout;
 	string line, lecturerUsername, csvPath;
 	Course inCourse;
 	cout << "Enter csv file path: ";
 	getline(cin, csvPath);
-	cout << "Enter academic year for these courses: ";
-	getline(cin, inCourse.c_semester.year);
-	cout << "Enter semester for these courses: ";
-	getline(cin, inCourse.c_semester.semester);
+	inCourse.c_semester = curSem;
 	if (emptyFile(csvPath)) {
 		cerr << "Can't find data in the path you entered!" << endl;
 		return false;
@@ -1111,3 +1122,559 @@ bool importCourse() {
 	}
 }
 
+void readRegCourses(ifstream& fin, RegCourses*& regStudents, int& nReg) {
+	string line;
+	getline(fin, line);
+	nReg = stoi(line);
+	if (nReg == 0) {
+		regStudents = nullptr;
+		return;
+	}
+	regStudents = new RegCourses[nReg];
+	for (int i = 0; i < nReg; i++) {
+		getline(fin, regStudents[i].studentID);
+		getline(fin, regStudents[i].studentName);
+		getline(fin, regStudents[i].studentClass);
+		getline(fin, line);
+		regStudents[i].nCourses = stoi(line);
+		if (regStudents[i].nCourses != 0) {
+			regStudents[i].courseID = new string[regStudents[i].nCourses];
+			regStudents[i].classID = new string[regStudents[i].nCourses];
+			for (int j = 0; j < regStudents[i].nCourses; j++) {
+				getline(fin, regStudents[i].courseID[j], ' ');
+				getline(fin, regStudents[i].classID[j]);
+			}
+		}
+		fin.ignore(INT_MAX, '\n');
+	}
+}
+
+bool removeRegCourse(string path, string courseID, string classID) {
+	ifstream fin;
+	ofstream fout;
+	RegCourses* reg = nullptr;
+	int nReg;
+	fin.open(path);
+	if (emptyFile(path)) {
+		cerr << "Can't access the list of student courses!" << endl;
+		return false;
+	}
+	readRegCourses(fin, reg, nReg);
+	fin.close();
+
+	if (reg != nullptr) {
+		fout.open(path);
+		if (!fout.is_open() || fout.fail()) {
+			cerr << "Error while rewriting the Student Courses!" << endl;
+			return false;
+		}
+		fout << nReg << endl;
+		for (int i = 0; i < nReg; i++) {
+			bool haveCourse = false;	//Flag to check if the student enrolled in the removed course
+			fout << reg[i].studentID << endl;
+			fout << reg[i].studentName << endl;
+			fout << reg[i].studentClass << endl;
+			//Scan the course list of student i to check if they have the course
+			for (int j = 0; j < reg[i].nCourses && haveCourse == false; j++) {
+				if (reg[i].courseID[j] == courseID && reg[i].classID[j] == classID)
+					haveCourse = true;
+			}
+			//Print the new course list if they have the course
+			if (haveCourse) fout << reg[i].nCourses - 1 << endl;
+			else fout << reg[i].nCourses << endl;
+			for (int j = 0; j < reg[i].nCourses; j++) {
+				if (reg[i].courseID[j] != courseID || reg[i].classID[j] != classID)
+					fout << reg[i].courseID[j] << ' ' << reg[i].classID[j] << endl;
+			}
+			fout << endl;
+		}
+		fout.close();
+		
+		//Delete reg array after everything is done
+		for (int i = 0; i < nReg; i++) {
+			if (reg[i].nCourses != 0) {
+				delete[] reg[i].courseID;
+				delete[] reg[i].classID;
+			}
+		}
+		delete[] reg;
+		return true;
+	}
+	return false; //If no reg array
+}
+
+void readCoursesInfos(ifstream& fin, string*& slack, Course*& courseArr, int& nCourses) {
+	string line;
+	getline(fin, line);
+	nCourses = stoi(line);
+	if (nCourses == 0) {
+		slack = nullptr;
+		courseArr = nullptr;
+		return;
+	}
+	courseArr = new Course[nCourses];
+	slack = new string[nCourses];
+	for (int i = 0; i < nCourses; i++) {
+		getline(fin, courseArr[i].courseID);
+		getline(fin, courseArr[i].courseName);
+		getline(fin, slack[i]);
+		getline(fin, courseArr[i].courseLecturer.fullname);
+		getline(fin, courseArr[i].courseLecturer.email);
+		getline(fin, courseArr[i].courseLecturer.academicRank);
+		getline(fin, line);
+		courseArr[i].courseLecturer.gender = line.front();
+		getline(fin, line);
+		courseArr[i].startDate = sToDate(line);
+		getline(fin, line);
+		courseArr[i].endDate = sToDate(line);
+		getline(fin, courseArr[i].classDay);
+		getline(fin, line);
+		courseArr[i].startTime = sToTime(line);
+		getline(fin, line);
+		courseArr[i].endTime = sToTime(line);
+		getline(fin, courseArr[i].room);
+		fin.ignore(INT_MAX, '\n');
+	}
+}
+
+bool removeCourse() {
+	ifstream fin;
+	ofstream fout;
+	Course target;
+	cout << "ENTER THE INFO TO FIND THE COURSE: " << endl;
+	viewSemesterList();
+	cout << "- Academic year: ";
+	getline(cin, target.c_semester.year);
+	cout << "- Semester: ";
+	getline(cin, target.c_semester.semester);
+	if (!viewClasses()) {
+		cout << "There are no class in the system!" << endl;
+		return false;
+	}
+	int n;
+	string* classes = readClassesID("./TextFiles/Classes.txt", &n);
+	cout << "Enter class ID: ";
+	getline(cin, target.className);
+	bool flag = false;
+	for (int i = 0; i < n && flag == false; i++) {
+		if (target.className == classes[i])
+			flag = true;
+	}
+	while (!flag) {
+		cout << "Enter existing class: ";
+		getline(cin, target.className);
+		for (int i = 0; i < n && flag == false; i++) {
+			if (target.className == classes[i])
+				flag = true;
+		}
+	}
+	delete[] classes;
+	classes = nullptr;
+	cout << "- Course ID: ";
+	getline(cin, target.courseID);
+	//Remove the course recorded in the student enrollment list
+	string path = "./TextFiles/" + target.c_semester.year + '_' + target.c_semester.semester + "_Student Courses.txt";
+	if (!removeRegCourse(path, target.courseID, target.className)) {
+		cerr << "Can't remove the course recorded in the student enrollment list!" << endl;
+		return false;
+	}
+	//Remove course info
+	path = "./TextFiles/" + target.c_semester.year + '_' + target.c_semester.semester + '_' + target.className + "_Schedules.txt";
+	fin.open(path);
+	if (emptyFile(path)) {
+		cerr << "Can't access course data of this class!" << endl;
+		return false;
+	}
+	int nCourses;
+	string* slack;
+	Course* courseArr;
+	readCoursesInfos(fin, slack, courseArr, nCourses);
+	fin.close();
+	bool haveCourse = false;
+	if (slack != nullptr && courseArr != nullptr) {
+		for (int i = 0; i < nCourses && haveCourse == false; i++) {
+			if (courseArr[i].courseID == target.courseID)
+				haveCourse = true;
+		}
+	}
+	if (haveCourse == true) {
+		if (nCourses - 1 == 0) {
+			if (remove(path.c_str()) != 0) {
+				cerr << "Can't delete the course info!" << endl;
+				return false;
+			}
+		}
+		else {
+			fout.open(path);
+			if (!fout.is_open() || fout.fail()) {
+				cerr << "Can't rewrite the course data of this class!" << endl;
+				return false;
+			}
+			fout << nCourses - 1 << endl;
+			for (int i = 0; i < nCourses; i++) {
+				if (courseArr[i].courseID != target.courseID) {
+					fout << courseArr[i].courseID << endl
+						<< courseArr[i].courseName << endl
+						<< slack[i] << endl
+						<< courseArr[i].courseLecturer.fullname << endl
+						<< courseArr[i].courseLecturer.email << endl
+						<< courseArr[i].courseLecturer.academicRank << endl
+						<< courseArr[i].courseLecturer.gender << endl;
+					printDate(fout, courseArr[i].startDate);
+					printDate(fout, courseArr[i].endDate);
+					fout << courseArr[i].classDay << endl;
+					printTime(fout, courseArr[i].startTime);
+					printTime(fout, courseArr[i].endTime);
+					fout << courseArr[i].room << endl;
+					fout << endl;
+				}
+			}
+			fout.close();
+		}
+	}
+	else {
+		cout << "The course does not exist in this class!" << endl;
+		return false;
+	}
+	if (slack != nullptr && courseArr != nullptr) {
+		delete[] slack;
+		delete[] courseArr;
+	}
+	//Remove student list of this course
+	path = "./TextFiles/" + target.c_semester.year + '_' + target.c_semester.semester + '_' + target.courseID + '_' + target.className + "_Students.txt";
+	if (remove(path.c_str()) != 0) {
+		cerr << "Can't delete the student list of this course!" << endl;
+		return false;
+	}
+	//If everything is done successfully
+	return true;
+}
+
+bool editCourse() {
+	ifstream fin;
+	ofstream fout;
+	Semester sem;
+	string inputCourseID, inputClassID, line;
+	cout << "ENTER THE INFO TO FIND THE COURSE: " << endl;
+	viewSemesterList();
+	cout << "- Academic year: ";
+	getline(cin, sem.year);
+	cout << "- Semester: ";
+	getline(cin, sem.semester);
+	if (!viewClasses()) {
+		cout << "There are no class in the system!" << endl;
+		return false;
+	}
+	int n;
+	string* classes = readClassesID("./TextFiles/Classes.txt", &n);
+	cout << "Enter class ID: ";
+	getline(cin, inputClassID);
+	bool flag = false;
+	for (int i = 0; i < n && flag == false; i++) {
+		if (inputClassID == classes[i])
+			flag = true;
+	}
+	while (!flag) {
+		cout << "Enter existing class: ";
+		getline(cin, inputClassID);
+		for (int i = 0; i < n && flag == false; i++) {
+			if (inputClassID == classes[i])
+				flag = true;
+		}
+	}
+	delete[] classes;
+	classes = nullptr;
+	cout << "- Course ID: ";
+	getline(cin, inputCourseID);
+	//Load the courses info
+	string path = "./TextFiles/" + sem.year + '_' + sem.semester + '_' + inputClassID + "_Schedules.txt";
+	fin.open(path);
+	if (emptyFile(path)) {
+		cerr << "Can't access course data of this class!" << endl;
+		return false;
+	}
+	int nCourses;
+	string* slack;
+	Course* courseArr;
+	readCoursesInfos(fin, slack, courseArr, nCourses);
+	fin.close();
+	if (slack == nullptr && courseArr == nullptr) {
+		cerr << "There's no course recorded for this class!" << endl;
+		return false;
+	}
+	//Find the course to edit
+	int cpos = -1;
+	for (int i = 0; i < nCourses && cpos == -1; i++) {
+		if (inputCourseID == courseArr[i].courseID)
+			cpos = i;
+	}
+	if (cpos == -1) {
+		cerr << "Can't find the course!" << endl;
+		delete[] courseArr;
+		return false;
+	}
+	int choice = 0;
+	while (choice != 4) {
+		//View current info
+		cout << "\n* Current course info *" << endl;
+		cout << "Course name: " << courseArr[cpos].courseName << endl;
+		cout << "Lecturer's account: " << slack[cpos] << endl;
+		cout << "Lecturer's name: " << courseArr[cpos].courseLecturer.fullname << endl;
+		cout << "Lecturer's email: " << courseArr[cpos].courseLecturer.email << endl;
+		cout << "Lecturer's degree: " << courseArr[cpos].courseLecturer.academicRank << endl;
+		cout << "Lecturer's gender (M = Male/F = Female): " << courseArr[cpos].courseLecturer.gender << endl;
+		cout << "Course dates (YYYY-MM-DD): " << put_time(&courseArr[cpos].startDate, "%Y-%m-%d") << " - " << put_time(&courseArr[cpos].endDate, "%Y-%m-%d") << endl;
+		cout << "Course time (HH:MM): " << put_time(&courseArr[cpos].startTime, "%H:%M") << " - " << put_time(&courseArr[cpos].endTime, "%H:%M") << endl;
+		cout << "Course Day of Week: " << courseArr[cpos].classDay << endl;
+		cout << "Course room: " << courseArr[cpos].room << endl;
+		//Select info to edit
+		cout << "\nSelect what you want to edit:" << endl;
+		cout << "1 - Course name and room" << endl;
+		cout << "2 - Course lecturer" << endl;
+		cout << "3 - Course schedule (WARNING: THIS WILL RESET THE ATTENDANCE LIST OF THE COURSE)" << endl;
+		cout << "4 - Stop editing and Save all changes" << endl;
+		cout << "Enter a number for your choice: ";
+		cin >> choice;
+		while (!cin || choice < 1 || choice > 4) {
+			cerr << "Invalid input!" << endl;
+			flushin(cin);
+			cout << "Enter a number for your choice: ";
+			cin >> choice;
+		}
+		flushin(cin);
+		if (choice == 1) {
+			cout << "Enter new course name: ";
+			getline(cin, courseArr[cpos].courseName);
+			cout << "Enter new course room: ";
+			getline(cin, courseArr[cpos].room);
+		}
+		if (choice == 2) {
+			Lecturer inputLecturer;
+			cout << "Enter lecturer account: ";
+			getline(cin, slack[cpos]);
+			cout << "Enter lecturer full name: ";
+			getline(cin, inputLecturer.fullname);
+			string LecturerPath = "./TextFiles/Lecturers.txt";
+			if (emptyFile(LecturerPath)) {
+				//If Lecturers.txt hasn't been created or is empty
+				fout.open(LecturerPath);
+				if (!fout.is_open()) {
+					cerr << "Can't update lecturer account!" << endl;
+					delete[] courseArr;
+					return false;
+				}
+				fout << 1 << endl;
+				fout << slack[cpos] << endl
+					<< sha256(slack[cpos] + "_HCMUS") << endl
+					<< inputLecturer.fullname << endl
+					<< inputLecturer.email << endl
+					<< inputLecturer.academicRank << endl
+					<< inputLecturer.gender << endl;
+				fout << endl;
+				fout.close();
+			}
+			else {
+				//Store data file into account array and check if the lecturer account has been created before
+				fin.open(LecturerPath);
+				Account* userArr;
+				int nLecturers;
+				bool sameLecturer = false; //Flag to check if it's new account
+				getline(fin, line);
+				nLecturers = stoi(line) + 1;
+				userArr = new Account[nLecturers];
+				for (int i = 0; i < nLecturers - 1 && sameLecturer == false; i++) {
+					getline(fin, userArr[i].username);
+					getline(fin, userArr[i].password);
+					getline(fin, userArr[i].lecturerProfile.fullname);
+					getline(fin, userArr[i].lecturerProfile.email);
+					getline(fin, userArr[i].lecturerProfile.academicRank);
+					getline(fin, line);
+					userArr[i].lecturerProfile.gender = line.front(); //Get first character of the gender string 'F' or 'M'
+					fin.ignore(INT_MAX, '\n'); //This one is to skip the blank line
+					if (userArr[i].username == slack[cpos] && userArr[i].lecturerProfile.fullname == inputLecturer.fullname) {
+						cout << "\n\nThe lecturer's account is available in the system. Proceed to load account info to the course..." << endl;
+						sameLecturer = true;
+						//If lecturer already has an account, load that account to the course info
+						inputLecturer = userArr[i].lecturerProfile;
+					}
+				}
+				fin.close();
+				//Input new lecturer as last element in the array and write new array to file
+				if (sameLecturer == false) {
+					cout << "Detected a new lecturer. Please enter new information for this lecturer's account." << endl;
+					cout << "Enter new lecturer email: ";
+					getline(cin, inputLecturer.email);
+					cout << "Enter new lecturer degree (Master/PhD/Professor): ";
+					getline(cin, inputLecturer.academicRank);
+					cout << "Enter new lecturer gender (Male/Female): ";
+					getline(cin, line);
+					inputLecturer.gender = line.front();
+					userArr[nLecturers - 1].username = slack[cpos];
+					userArr[nLecturers - 1].password = sha256(slack[cpos] + "_HCMUS");
+					userArr[nLecturers - 1].lecturerProfile = inputLecturer;
+					fout.open(LecturerPath);
+					if (!fout.is_open()) {
+						cerr << "Can't update lecturer's account!" << endl;
+						delete[] courseArr;
+						delete[] userArr;
+						return false;
+					}
+					fout << nLecturers << endl;
+					for (int i = 0; i < nLecturers; i++) {	//Rewrite existed accounts and new account
+						fout << userArr[i].username << endl
+							<< userArr[i].password << endl
+							<< userArr[i].lecturerProfile.fullname << endl
+							<< userArr[i].lecturerProfile.email << endl
+							<< userArr[i].lecturerProfile.academicRank << endl
+							<< userArr[i].lecturerProfile.gender << endl;
+						fout << endl;
+					}
+					fout.close();
+				}
+				//After reading and writing, release the memory of array
+				delete[] userArr;
+				userArr = nullptr;
+			}
+			courseArr[cpos].courseLecturer = inputLecturer;
+		}
+		if (choice == 3) {
+			cout << "Enter new start date of course (YYYY-MM-DD): ";
+			cin >> get_time(&courseArr[cpos].startDate, "%Y-%m-%d");
+			if (!cin) {
+				cerr << "Invalid input!" << endl;
+				flushin(cin);
+				cout << "Enter new start date of course (YYYY-MM-DD): ";
+				cin >> get_time(&courseArr[cpos].startDate, "%Y-%m-%d");
+			}
+			flushin(cin);
+			cout << "Enter new end date of course (YYYY-MM-DD): ";
+			cin >> get_time(&courseArr[cpos].endDate, "%Y-%m-%d");
+			if (!cin) {
+				cerr << "Invalid input!" << endl;
+				flushin(cin);
+				cout << "Enter new end date of course (YYYY-MM-DD): ";
+				cin >> get_time(&courseArr[cpos].endDate, "%Y-%m-%d");
+			}
+			flushin(cin);
+			cout << "Enter new course day of week (Shorten form: Thu, Fri,...): ";
+			getline(cin, courseArr[cpos].classDay);
+			cout << "Enter new start time of course (HH:MM): ";
+			cin >> get_time(&courseArr[cpos].startTime, "%H:%M");
+			if (!cin) {
+				cerr << "Invalid input!" << endl;
+				flushin(cin);
+				cout << "Enter new start time of course (HH:MM): ";
+				cin >> get_time(&courseArr[cpos].startTime, "%H:%M");
+			}
+			flushin(cin);
+			cout << "Enter new end time of course (HH:MM): ";
+			cin >> get_time(&courseArr[cpos].endTime, "%H:%M");
+			if (!cin) {
+				cerr << "Invalid input!" << endl;
+				flushin(cin);
+				cout << "Enter new start time of course (HH:MM): ";
+				cin >> get_time(&courseArr[cpos].endTime, "%H:%M");
+			}
+			flushin(cin);
+			tm* dateArr = getWeeks(courseArr[cpos].startDate, courseArr[cpos].endDate, &courseArr[cpos].nWeeks);
+			if (dateArr == nullptr) {
+				cerr << "Can't get dates between the new start date and end date!" << endl;
+				delete[] courseArr;
+				return false;
+			}
+			string StudentPath = "./TextFiles/" + sem.year + '_' + sem.semester + '_' + inputCourseID + '_' + inputClassID + "_Students.txt";
+			fin.open(StudentPath);
+			if (emptyFile(path)) {
+				cerr << "Can't find the attendance list of this course!" << endl;
+				delete[] courseArr;
+				delete[] dateArr;
+				return false;
+			}
+			int oldWeeks;
+			getline(fin, line);
+			oldWeeks = stoi(line);
+			getline(fin, line);
+			courseArr[cpos].nStudents = stoi(line);
+			courseArr[cpos].studentArr = new Student[courseArr[cpos].nStudents];
+			courseArr[cpos].board = new score[courseArr[cpos].nStudents];
+			for (int i = 0; i < courseArr[cpos].nStudents; i++) {
+				getline(fin, courseArr[cpos].studentArr[i].ID);
+				getline(fin, courseArr[cpos].studentArr[i].fullname);
+				getline(fin, line);
+				courseArr[cpos].studentArr[i].gender = line.front();
+				getline(fin, line);
+				courseArr[cpos].studentArr[i].birthDate = sToDate(line);
+				getline(fin, line);
+				courseArr[cpos].studentArr[i].active = stoi(line);
+				getline(fin, line);
+				courseArr[cpos].board[i].midterm = stof(line);
+				getline(fin, line);
+				courseArr[cpos].board[i].final = stof(line);
+				getline(fin, line);
+				courseArr[cpos].board[i].bonus = stof(line);
+				getline(fin, line);
+				courseArr[cpos].board[i].total = stof(line);
+				for (int j = 0; j < oldWeeks + 1; j++)
+					fin.ignore(INT_MAX, '\n');
+			}
+			fin.close();
+
+			fout.open(StudentPath);
+			if (!fout.is_open() || fout.fail()) {
+				cout << "Failed to reset the attendance list!" << endl;
+				delete[] courseArr[cpos].studentArr;
+				delete[] courseArr[cpos].board;
+				delete[] courseArr;
+				delete[] dateArr;
+				return false;
+			}
+			fout << courseArr[cpos].nWeeks << endl;
+			fout << courseArr[cpos].nStudents << endl;
+			for (int i = 0; i < courseArr[cpos].nStudents; i++) {
+				fout << courseArr[cpos].studentArr[i].ID << endl
+					<< courseArr[cpos].studentArr[i].fullname << endl
+					<< courseArr[cpos].studentArr[i].gender << endl
+					<< put_time(&courseArr[cpos].studentArr[i].birthDate, "%Y-%m-%d") << endl
+					<< courseArr[cpos].studentArr[i].active << endl
+					<< courseArr[cpos].board[i].midterm << endl
+					<< courseArr[cpos].board[i].final << endl
+					<< courseArr[cpos].board[i].bonus << endl
+					<< courseArr[cpos].board[i].total << endl;
+				for (int j = 0; j < courseArr[cpos].nWeeks; j++)
+					fout << put_time(&dateArr[j], "%Y-%m-%d") << " 0" << endl;
+				fout << endl;
+			}
+			fout.close();
+			delete[] courseArr[cpos].studentArr;
+			delete[] courseArr[cpos].board;
+			delete[] dateArr;
+		}
+	}
+	//Rewrite the course info file
+	fout.open(path);
+	if (!fout.is_open() || fout.fail()) {
+		cerr << "Can't update course info!" << endl;
+		delete[] courseArr;
+		return false;
+	}
+	fout << nCourses << endl;
+	for (int i = 0; i < nCourses; i++) {
+		fout << courseArr[i].courseID << endl
+			<< courseArr[i].courseName << endl
+			<< slack[i] << endl
+			<< courseArr[i].courseLecturer.fullname << endl
+			<< courseArr[i].courseLecturer.email << endl
+			<< courseArr[i].courseLecturer.academicRank << endl
+			<< courseArr[i].courseLecturer.gender << endl
+			<< put_time(&courseArr[i].startDate, "%Y-%m-%d") << endl
+			<< put_time(&courseArr[i].endDate, "%Y-%m-%d") << endl
+			<< courseArr[i].classDay << endl
+			<< put_time(&courseArr[i].startTime, "%H:%M") << endl
+			<< put_time(&courseArr[i].endTime, "%H:%M") << endl
+			<< courseArr[i].room << endl;
+		fout << endl;
+	}
+	fout.close();
+	delete[] courseArr;
+	return true;
+}

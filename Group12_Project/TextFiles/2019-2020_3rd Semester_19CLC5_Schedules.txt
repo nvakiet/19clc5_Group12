@@ -1,17 +1,17 @@
 2
 CS162
-Introduction to Programming
-dbtien
-Dinh Ba Tien
-dbtien@hcmus.edu.vn
-PhD
+Introduction To Programming
+htthanh
+Ho Tuan Thanh
+htthanh@hcmus.edu.vn
+Master
 M
-2020-04-06
-2020-06-01
-Mon
-07:30
-11:30
-I42
+2020-03-15
+2020-06-17
+Wed
+13:30
+17:30
+I23
 
 CM101
 Communications

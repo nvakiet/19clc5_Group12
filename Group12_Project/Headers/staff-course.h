@@ -20,11 +20,29 @@ bool deleteSemester();
 void viewSemesterList();
 
 //Get inputs from user and import those information to the system
-bool addCourse();
+bool addCourse(Semester curSem);
 
 //Parameter version to use with importCourse function
 bool addCourse(Course inCourse, string slackName);
 
 //Import course data from csv file to the system
-bool importCourse();
+bool importCourse(Semester curSem);
+
+//Read regCourses of students
+void readRegCourses(ifstream& fin, RegCourses*& students, int& nReg);
+
+//Remove a regCourse
+bool removeRegCourse(string path, string courseID, string classID);
+
+//Read info of courses from file
+void readCoursesInfos(ifstream& fin, string*& slack, Course*& courseArr, int& nCourses);
+
+//Delete a course in the program: delete info file, delete regCourse file, delete student list of course
+bool removeCourse();
+
+//Edit a course: No edit of courseID and class ID allowed
+//If the edited lecturer is new, register their account
+//If edit start/end date and start/end time, reset the attendance list and make change to student list of this course
+bool editCourse();
+
 #endif // !_COURSE_H
