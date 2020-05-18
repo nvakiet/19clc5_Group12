@@ -297,7 +297,7 @@ bool viewscore(Account user)
 	Course B;
 	string x = "Students", path = "./TextFiles/";
 	string line;
-	string ID=user.studentProfile.ID;
+	string ID = user.studentProfile.ID;
 	printf("Enter years : ");
 	getline(cin, B.c_semester.year);
 	printf("Enter semester : ");
@@ -343,8 +343,10 @@ bool viewscore(Account user)
 				fin.ignore(INT_MAX, '\n');
 		}
 	}
+	fin.close();
 	delete[]B.studentArr;
 	return false;//khong co hoc sinh de xuat ra;
+
 	fin.close();
 }
 void viewSchedules(Account user, Semester curSem)
@@ -460,4 +462,5 @@ void viewLecture()
 		cout << endl;
 	}
 	fout.close();
+
 }
