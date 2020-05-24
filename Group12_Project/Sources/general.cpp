@@ -116,3 +116,17 @@ tm* getWeeks(tm startDate, tm endDate, int *nWeeks = nullptr) {
 	}
 	return dateArr;
 }
+
+bool insDesID(string insertStu, string right, string left) {
+	if (left.empty()) left = "~";
+	if (left > insertStu && insertStu > right)
+		return true;
+	else return false;
+}
+
+bool insAscID(string insertStu, string right, string left) {
+	if (left.empty()) left = "!";
+	if (left < insertStu && insertStu < right)
+		return true;
+	else return false;
+}

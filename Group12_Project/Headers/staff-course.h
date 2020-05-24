@@ -3,6 +3,8 @@
 
 #include "../Headers/general.h"
 
+typedef bool (*insertOrder)(string, string, string);
+
 //Get current time from the system
 //Convert it to tm structure
 //If tm_mon > 7 (September-December), it's 1st semester, year: current year - next year
@@ -37,6 +39,9 @@ bool removeRegCourse(string path, string courseID, string classID);
 //Read info of courses from file
 void readCoursesInfos(ifstream& fin, string*& slack, Course*& courseArr, int& nCourses);
 
+//Find and read info of a course
+bool findACourseInfos(ifstream& fin, Course& crs, string crsID);
+
 //Delete a course in the program: delete info file, delete regCourse file, delete student list of course
 bool removeCourse();
 
@@ -45,4 +50,11 @@ bool removeCourse();
 //If edit start/end date and start/end time, reset the attendance list and make change to student list of this course
 bool editCourse();
 
+//Add a student to the course
+//This should only be used before the semester (first day of course) starts, because new student will have default scores and attendance
+bool addCourseStudent(Semester curSem, void* checkOrder = insAscID);
+
+//Remove a student from the course
+//Completely remove the student from the student list of the course, and remove the course from the student's enrolling course list
+bool removeCourseStudent(Semester curSem);
 #endif // !_COURSE_H

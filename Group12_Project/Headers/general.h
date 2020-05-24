@@ -131,4 +131,10 @@ tm* getWeeks(tm startDate, tm endDate, int* nWeeks);
 string* readClassesID(string path, int* nClasses);
 bool viewClasses();
 
+//Check if the position between 2 students is valid for insertion in descending order
+bool insDesID(string insertStu, string right, string left);
+
+//Check if the position between 2 students is valid for insertion in ascending order
+bool insAscID(string insertStu, string right, string left);
+
 #endif // !_GENERAL_H_

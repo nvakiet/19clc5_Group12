@@ -1237,6 +1237,41 @@ void readCoursesInfos(ifstream& fin, string*& slack, Course*& courseArr, int& nC
 	}
 }
 
+bool findACourseInfos(ifstream& fin, Course &crs, string crsID) {
+	string line;
+	getline(fin, line);
+	int nCourses = stoi(line);
+	if (nCourses == 0) return false;
+	for (int i = 0; i < nCourses; i++) {
+		getline(fin, crs.courseID);
+		if (crs.courseID == crsID) {
+			getline(fin, crs.courseName);
+			fin.ignore(INT_MAX, '\n');
+			getline(fin, crs.courseLecturer.fullname);
+			getline(fin, crs.courseLecturer.email);
+			getline(fin, crs.courseLecturer.academicRank);
+			getline(fin, line);
+			crs.courseLecturer.gender = line.front();
+			getline(fin, line);
+			crs.startDate = sToDate(line);
+			getline(fin, line);
+			crs.endDate = sToDate(line);
+			getline(fin, crs.classDay);
+			getline(fin, line);
+			crs.startTime = sToTime(line);
+			getline(fin, line);
+			crs.endTime = sToTime(line);
+			getline(fin, crs.room);
+			return true;
+		}
+		else {
+			for (int j = 0; j < 13; j++)
+				fin.ignore(INT_MAX, '\n');
+		}
+	}
+	return false;
+}
+
 bool removeCourse() {
 	ifstream fin;
 	ofstream fout;
@@ -1676,5 +1711,575 @@ bool editCourse() {
 	}
 	fout.close();
 	delete[] courseArr;
+	return true;
+}
+
+bool addCourseStudent(Semester curSem, void* checkOrder) {
+	string line, path;
+	string sysPath = "./TextFiles/";
+	ifstream fin;
+	ofstream fout;
+	Course crs;
+	Student newStu;
+	//- Get current semester from the system, course ID and course class from user
+	crs.c_semester = curSem;
+	cout << "Enter course ID: ";
+	getline(cin, crs.courseID);
+	cout << "Enter class ID of the course: ";
+	getline(cin, crs.className);
+	//- Find and load the course info
+	path = sysPath + curSem.year + '_' + curSem.semester + '_' + crs.className + "_Schedules.txt";
+	if (emptyFile(path)) {
+		cerr << "Can't find the course!" << endl;
+		return false;
+	}
+	fin.open(path);
+	if (!findACourseInfos(fin, crs, crs.courseID)) {
+		cerr << "Can't find the course!" << endl;
+		return false;
+	}
+	fin.close();
+	//- Get student ID and ask if the student is from an existed class or a class not in the system
+	cout << "Enter student ID: ";
+	getline(cin, newStu.ID);
+	if (!viewClasses()) cout << "There's currently no class in the system!" << endl;
+	cout << "Enter student class ID (Enter \"0\" if the student isn't from any existing class): ";
+	getline(cin, newStu.classID);
+	//- If they are from an existed class: Go the the class' student list and load the student infos
+	bool foundStu = false;
+	if (newStu.classID != "0") {
+		path = sysPath + newStu.classID + "_Students.txt";
+		if (emptyFile(path)) {
+			cerr << "Can't find the student!" << endl;
+			return false;
+		}
+		fin.open(path);
+		getline(fin, line);
+		int nStu = stoi(line);
+		for (int i = 0; i < nStu && foundStu == false; i++) {
+			getline(fin, line);
+			if (line == newStu.ID) {
+				getline(fin, newStu.fullname);
+				getline(fin, line);
+				newStu.gender = line.front();
+				getline(fin, line);
+				newStu.birthDate = sToDate(line);
+				getline(fin, line);
+				newStu.active = stoi(line);
+				foundStu = true;
+			}
+			else {
+				for (int j = 0; j < 5; j++)
+					fin.ignore(INT_MAX, '\n');
+			}
+		}
+		fin.close();
+		if (foundStu == false) {
+			cerr << "Can't find the student!" << endl;
+			return false;
+		}
+	}
+	//- If they are not from any class in the system: Take student info from user input (student class = 0) and create new account
+	else {
+		cout << "Enter student full name: ";
+		getline(cin, newStu.fullname);
+		cout << "Enter student gender (Male/Female): ";
+		getline(cin, line);
+		newStu.gender = line.front();
+		cout << "Enter student birth date (YYYY-MM-DD): ";
+		cin >> get_time(&newStu.birthDate, "%Y-%m-%d");
+		if (!cin) {
+			cerr << "Invalid input!" << endl;
+			flushin(cin);
+			cout << "Enter student birth date (YYYY-MM-DD): ";
+			cin >> get_time(&newStu.birthDate, "%Y-%m-%d");
+		}
+		flushin(cin);
+		newStu.active = true;
+		//Register student account
+		path = sysPath + "Students.txt";
+		if (emptyFile(path)) {
+			fout.open(path);
+			if (!fout.is_open()) {
+				cerr << "Can't register student account!" << endl;
+				return false;
+			}
+			fout << 1 << endl;
+			fout << newStu.ID << endl;
+			char temp[9];
+			strftime(temp, 9, "%Y%m%d", &newStu.birthDate);
+			line.assign(temp);
+			fout << sha256(line) << endl
+				<< newStu.fullname << endl
+				<< newStu.classID << endl
+				<< newStu.gender << endl;
+			printDate(fout, newStu.birthDate);
+			fout << 1 << endl;
+			fout << endl;
+			fout.close();
+		}
+		else {
+			fin.open(path);
+			int nStu;
+			getline(fin, line);
+			nStu = stoi(line);
+			Account* oldStu;
+			oldStu = new Account[nStu + 1];
+			for (int i = 0; i < nStu; i++) {
+				getline(fin, oldStu[i].username);
+				getline(fin, oldStu[i].password);
+				getline(fin, oldStu[i].studentProfile.fullname);
+				getline(fin, oldStu[i].studentProfile.classID);
+				getline(fin, line);
+				oldStu[i].studentProfile.gender = line.front();
+				getline(fin, line);
+				oldStu[i].studentProfile.birthDate = sToDate(line);
+				getline(fin, line);
+				oldStu[i].studentProfile.active = stoi(line);
+				fin.ignore(INT_MAX, '\n');
+			}
+			fin.close();
+
+			bool sameID = false;
+			for (int i = 0; i < nStu && sameID == false; i++) {
+				if (newStu.ID == oldStu[i].username)
+					sameID = true;
+			}
+			fout.open(path);
+			if (!fout.is_open()) {
+				cerr << "Can't register student account!" << endl;
+				delete[] oldStu;
+				oldStu = nullptr;
+				return false;
+			}
+			if (!sameID) {
+				oldStu[nStu].username = newStu.ID;
+				char temp[9];
+				strftime(temp, 9, "%Y%m%d", &newStu.birthDate);
+				line.assign(temp);
+				oldStu[nStu].password = sha256(line);
+				oldStu[nStu].studentProfile = newStu;
+				fout << nStu + 1 << endl;
+			}
+			else fout << nStu << endl;
+			for (int j = 0; j < nStu + 1; j++) {
+				if (j == nStu && sameID == true) break;
+				fout << oldStu[j].username << endl
+					<< oldStu[j].password << endl
+					<< oldStu[j].studentProfile.fullname << endl
+					<< oldStu[j].studentProfile.classID << endl
+					<< oldStu[j].studentProfile.gender << endl;
+				printDate(fout, oldStu[j].studentProfile.birthDate);
+				fout << oldStu[j].studentProfile.active << endl;
+				fout << endl;
+			}
+			fout.close();
+			delete[] oldStu;
+			oldStu = nullptr;
+		}
+	}
+	//- Load the course students to an array: if new student id is inbetween student i-1 and i, push student i to i+1 and place new student at i
+	tm* dateArr = getWeeks(crs.startDate, crs.endDate, &crs.nWeeks);
+	if (dateArr == nullptr || crs.nWeeks <= 0) {
+		cerr << "Error getting schedule of the course!" << endl;
+		return false;
+	}
+	path = sysPath + curSem.year + '_' + curSem.semester + '_' + crs.courseID + '_' + crs.className + "_Students.txt";
+	if (emptyFile(path)) {
+		fout.open(path);
+		if (!fout.is_open() || fout.fail()) {
+			cerr << "Error while adding new student entry to the course files!" << endl;
+			delete[] dateArr;
+			return false;
+		}
+		fout << crs.nWeeks << endl
+			<< 1 << endl
+			<< newStu.ID << endl
+			<< newStu.fullname << endl
+			<< newStu.gender << endl
+			<< put_time(&newStu.birthDate, "%Y-%m-%d") << endl
+			<< newStu.active << endl;
+		for (int i = 0; i < 4; i++)
+			fout << -1 << endl;
+		for (int i = 0; i < crs.nWeeks; i++)
+			fout << put_time(&dateArr[i], "%Y-%m-%d") << " 0" << endl;
+		fout << endl;
+		fout.close();
+		delete[] dateArr;
+	}
+	else {
+		foundStu = false;
+		bool insertedStu = false;
+		fin.open(path);
+		fin.ignore(INT_MAX, '\n'); //Skip line contains nWeeks
+		getline(fin, line);
+		crs.nStudents = stoi(line) + 1;
+		crs.studentArr = new Student[crs.nStudents];	//1D arr
+		crs.board = new score[crs.nStudents];	//1D arr, default value of all scores is -1
+		crs.checkList = new bool[crs.nWeeks * crs.nStudents]{false};	//2D arr, default value of all elements is false
+		for (int i = 0; i < crs.nStudents; i++) {
+			getline(fin, crs.studentArr[i].ID);
+			if (crs.studentArr[i].ID == newStu.ID) {
+				foundStu = true;	//Do not allow adding a duplicate student
+				break;
+			}
+			getline(fin, crs.studentArr[i].fullname);
+			getline(fin, line);
+			crs.studentArr[i].gender = line.front();
+			getline(fin, line);
+			crs.studentArr[i].birthDate = sToDate(line);
+			getline(fin, line);
+			crs.studentArr[i].active = stoi(line);
+			//Check if newStu can be insert at head
+			if (i == 0) {
+				if ((*(insertOrder)checkOrder)(newStu.ID, crs.studentArr[i].ID, "")) {
+					crs.studentArr[i + 1] = crs.studentArr[i];
+					crs.studentArr[i] = newStu;
+					insertedStu = true;
+					i++;
+				}
+			}
+			//Check if newStu can be insert in the middle
+			else if (i < crs.nStudents - 1 && insertedStu == false) {
+				if ((*(insertOrder)checkOrder)(newStu.ID, crs.studentArr[i].ID, crs.studentArr[i - 1].ID)) {
+					crs.studentArr[i + 1] = crs.studentArr[i];
+					crs.studentArr[i] = newStu;
+					insertedStu = true;
+					i++;
+				}
+			}
+			//If can't be insert at the head or middle then insert at the tail, break loop because there's no more information to be read from file
+			else if (i == crs.nStudents - 1 && insertedStu == false) {
+				crs.studentArr[i] = newStu;
+				insertedStu = true;
+				break;
+			}
+			//Load scoreboard and attendance list of student i (i will be updated after insertion)
+			getline(fin, line);
+			crs.board[i].midterm = stof(line);
+			getline(fin, line);
+			crs.board[i].final = stof(line);
+			getline(fin, line);
+			crs.board[i].bonus = stof(line);
+			getline(fin, line);
+			crs.board[i].total = stof(line);
+			for (int j = 0; j < crs.nWeeks; j++) {
+				getline(fin, line);
+				crs.checkList[i * crs.nWeeks + j] = line.back() - '0';
+			}
+			fin.ignore(INT_MAX, '\n');
+		}
+		fin.close();
+
+		//Rewrite the course student file
+		if (!foundStu) {
+			fout.open(path);
+			if (!fout.is_open() || fout.fail()) {
+				cerr << "Error while adding new student entry to the course files!" << endl;
+				delete[] dateArr;
+				delete[] crs.studentArr;
+				delete[] crs.board;
+				delete[] crs.checkList;
+				return false;
+			}
+			fout << crs.nWeeks << endl
+				<< crs.nStudents << endl;
+			for (int i = 0; i < crs.nStudents; i++) {
+				fout << crs.studentArr[i].ID << endl
+					<< crs.studentArr[i].fullname << endl
+					<< crs.studentArr[i].gender << endl
+					<< put_time(&crs.studentArr[i].birthDate, "%Y-%m-%d") << endl
+					<< crs.studentArr[i].active << endl;
+				fout << crs.board[i].midterm << endl
+					<< crs.board[i].final << endl
+					<< crs.board[i].bonus << endl
+					<< crs.board[i].total << endl;
+				for (int j = 0; j < crs.nWeeks; j++) {
+					fout << put_time(&dateArr[j], "%Y-%m-%d") << ' ' << crs.checkList[i * crs.nWeeks + j] << endl;
+				}
+				fout << endl;
+			}
+			fout.close();
+		}
+		delete[] dateArr;
+		delete[] crs.studentArr;
+		delete[] crs.board;
+		delete[] crs.checkList;
+	}
+
+	//- Load Student Courses file to array of RegCourses:
+	path = sysPath + curSem.year + '_' + curSem.semester + "_Student Courses.txt";
+	if (emptyFile(path)) {
+		fout.open(path);
+		if (!fout.is_open() || fout.fail()) {
+			cerr << "Can't register the student course list!" << endl;
+			return false;
+		}
+		fout << 1 << endl
+			<< newStu.ID << endl
+			<< newStu.fullname << endl
+			<< newStu.classID << endl
+			<< 1 << endl
+			<< crs.courseID << ' ' << crs.className << endl;
+		fout << endl;
+		fout.close();
+	}
+	else {
+		foundStu = false;
+		RegCourses* arrStu;
+		int nReg;
+		fin.open(path);
+		readRegCourses(fin, arrStu, nReg);
+		fin.close();
+		bool* haveCourse = new bool[nReg] {false};
+		//Scan the array for newStu, and check if the newStu already has this course
+		for (int i = 0; i < nReg && foundStu == false; i++) {
+			if (newStu.ID == arrStu[i].studentID) foundStu = true;
+			if (foundStu == true) {
+				for (int j = 0; j < arrStu[i].nCourses && haveCourse[i] == false; j++) {
+					if (arrStu[i].courseID[j] == crs.courseID && arrStu[i].classID[j] == crs.className)
+						haveCourse[i] = true;
+				}
+			}
+		}
+		fout.open(path);
+		if (!fout.is_open() || fout.fail()) {
+			cerr << "Can't register the student course list!" << endl;
+			for (int i = 0; i < nReg; i++) {
+				delete[] arrStu[i].courseID;
+				delete[] arrStu[i].classID;
+			}
+			delete[] arrStu;
+			delete[] haveCourse;
+			return false;
+		}
+		//	+ If new student is already in the file: find the student in the array and add the course to their course list
+		if (foundStu) {
+			fout << nReg << endl;
+			for (int i = 0; i < nReg; i++) {
+				fout << arrStu[i].studentID << endl
+					<< arrStu[i].studentName << endl
+					<< arrStu[i].studentClass << endl;
+				if (arrStu[i].studentID == newStu.ID && haveCourse[i] == false) {
+					fout << arrStu[i].nCourses + 1 << endl;
+					fout << crs.courseID << ' ' << crs.className << endl;
+				}
+				else fout << arrStu[i].nCourses << endl;
+				for (int j = 0; j < arrStu[i].nCourses; j++) {
+					fout << arrStu[i].courseID[j] << ' ' << arrStu[i].classID[j] << endl;
+				}
+				fout << endl;
+			}
+		}
+		//	+ If new student is not in the file: add a new student to the array with 1 course (this course)
+		else {
+			fout << nReg + 1 << endl;
+			for (int i = 0; i < nReg; i++) {
+				fout << arrStu[i].studentID << endl
+					<< arrStu[i].studentName << endl
+					<< arrStu[i].studentClass << endl;
+				fout << arrStu[i].nCourses << endl;
+				for (int j = 0; j < arrStu[i].nCourses; j++) {
+					fout << arrStu[i].courseID[j] << ' ' << arrStu[i].classID[j] << endl;
+				}
+				fout << endl;
+			}
+			fout << newStu.ID << endl
+				<< newStu.fullname << endl
+				<< newStu.classID << endl
+				<< 1 << endl
+				<< crs.courseID << ' ' << crs.className << endl;
+			fout << endl;
+		}
+		fout.close();
+		for (int i = 0; i < nReg; i++) {
+			delete[] arrStu[i].courseID;
+			delete[] arrStu[i].classID;
+		}
+		delete[] arrStu;
+		delete[] haveCourse;
+	}
+	//If everything has been done successfully
+	return true;
+}
+
+bool removeCourseStudent(Semester curSem) {
+	string line, path;
+	string sysPath = "./TextFiles/";
+	ifstream fin;
+	ofstream fout;
+	Course crs;
+	string stuID;
+	//- Get current semester from the system, course ID and course class from user
+	crs.c_semester = curSem;
+	cout << "Enter course ID: ";
+	getline(cin, crs.courseID);
+	if (!viewClasses()) {
+		cout << "There's currently no class in the system!" << endl;
+		return false;
+	}
+	cout << "Enter class ID of the course: ";
+	getline(cin, crs.className);
+	//- Find and load the course info
+	path = sysPath + curSem.year + '_' + curSem.semester + '_' + crs.className + "_Schedules.txt";
+	if (emptyFile(path)) {
+		cerr << "Can't find the course!" << endl;
+		return false;
+	}
+	fin.open(path);
+	if (!findACourseInfos(fin, crs, crs.courseID)) {
+		cerr << "Can't find the course!" << endl;
+		return false;
+	}
+	fin.close();
+	//- Get student ID to remove the student
+	cout << "Enter student ID: ";
+	getline(cin, stuID);
+	//- Load the student list of the course
+	tm* dateArr = getWeeks(crs.startDate, crs.endDate, &crs.nWeeks);
+	if (dateArr == nullptr || crs.nWeeks <= 0) {
+		cerr << "Error getting schedule of the course!" << endl;
+		return false;
+	}
+	path = sysPath + curSem.year + '_' + curSem.semester + '_' + crs.courseID + '_' + crs.className + "_Students.txt";
+	if (emptyFile(path)) {
+		cerr << "Can't get the student list of this course!" << endl;
+		delete[] dateArr;
+		return false;
+	}
+	else {
+		fin.open(path);
+		fin.ignore(INT_MAX, '\n'); //Skip line contains nWeeks
+		getline(fin, line);
+		crs.nStudents = stoi(line);
+		crs.studentArr = new Student[crs.nStudents];	//1D arr
+		crs.board = new score[crs.nStudents];	//1D arr, default value of all scores is -1
+		crs.checkList = new bool[crs.nWeeks * crs.nStudents]{ false };	//2D arr, default value of all elements is false
+		for (int i = 0; i < crs.nStudents; i++) {
+			getline(fin, crs.studentArr[i].ID);
+			if (crs.studentArr[i].ID == stuID) {
+				//If the student being read is the removal target, then do not load into the array
+				i--;
+				crs.nStudents--;
+				for (int j = 0; j < 9 + crs.nWeeks; j++)
+					fin.ignore(INT_MAX, '\n');
+			}
+			else {
+				getline(fin, crs.studentArr[i].fullname);
+				getline(fin, line);
+				crs.studentArr[i].gender = line.front();
+				getline(fin, line);
+				crs.studentArr[i].birthDate = sToDate(line);
+				getline(fin, line);
+				crs.studentArr[i].active = stoi(line);
+				//Load scoreboard and attendance list of student i (i will be updated after insertion)
+				getline(fin, line);
+				crs.board[i].midterm = stof(line);
+				getline(fin, line);
+				crs.board[i].final = stof(line);
+				getline(fin, line);
+				crs.board[i].bonus = stof(line);
+				getline(fin, line);
+				crs.board[i].total = stof(line);
+				for (int j = 0; j < crs.nWeeks; j++) {
+					getline(fin, line);
+					crs.checkList[i * crs.nWeeks + j] = line.back() - '0';
+				}
+				fin.ignore(INT_MAX, '\n');
+			}
+		}
+		fin.close();
+
+		//Rewrite the course student file
+		fout.open(path);
+		if (!fout.is_open() || fout.fail()) {
+			cerr << "Error while rewriting student list to the course files!" << endl;
+			delete[] dateArr;
+			delete[] crs.studentArr;
+			delete[] crs.board;
+			delete[] crs.checkList;
+			return false;
+		}
+		fout << crs.nWeeks << endl
+			<< crs.nStudents << endl;
+		for (int i = 0; i < crs.nStudents; i++) {
+			fout << crs.studentArr[i].ID << endl
+				<< crs.studentArr[i].fullname << endl
+				<< crs.studentArr[i].gender << endl
+				<< put_time(&crs.studentArr[i].birthDate, "%Y-%m-%d") << endl
+				<< crs.studentArr[i].active << endl;
+			fout << crs.board[i].midterm << endl
+				<< crs.board[i].final << endl
+				<< crs.board[i].bonus << endl
+				<< crs.board[i].total << endl;
+			for (int j = 0; j < crs.nWeeks; j++) {
+				fout << put_time(&dateArr[j], "%Y-%m-%d") << ' ' << crs.checkList[i * crs.nWeeks + j] << endl;
+			}
+			fout << endl;
+		}
+		fout.close();
+		delete[] dateArr;
+		delete[] crs.studentArr;
+		delete[] crs.board;
+		delete[] crs.checkList;
+	}
+
+	//Load regCourse and remove the course from the student's Enrolling Course list
+	path = sysPath + curSem.year + '_' + curSem.semester + "_Student Courses.txt";
+	if (emptyFile(path)) {
+		cerr << "Can't remove the course from the student's Enrolling Course list!" << endl;
+		return false;
+	}
+	else {
+		RegCourses* arrStu;
+		int nReg;
+		fin.open(path);
+		readRegCourses(fin, arrStu, nReg);
+		fin.close();
+		bool* haveCourse = new bool[nReg] {false};
+		//Scan the array for stuID, and check if the stuID already has this course
+		for (int i = 0; i < nReg; i++) {
+			if (stuID == arrStu[i].studentID) {
+				for (int j = 0; j < arrStu[i].nCourses && haveCourse[i] == false; j++) {
+					if (arrStu[i].courseID[j] == crs.courseID && arrStu[i].classID[j] == crs.className)
+						haveCourse[i] = true;
+				}
+				break;	//Stop scanning the array after the removal student is found
+			}
+		}
+		fout.open(path);
+		if (!fout.is_open() || fout.fail()) {
+			cerr << "Can't rewrite the student course list!" << endl;
+			for (int i = 0; i < nReg; i++) {
+				delete[] arrStu[i].courseID;
+				delete[] arrStu[i].classID;
+			}
+			delete[] arrStu;
+			delete[] haveCourse;
+			return false;
+		}
+		fout << nReg << endl;
+		for (int i = 0; i < nReg; i++) {
+			fout << arrStu[i].studentID << endl
+				<< arrStu[i].studentName << endl
+				<< arrStu[i].studentClass << endl;
+			if (arrStu[i].studentID == stuID && haveCourse[i] == true) {
+				fout << arrStu[i].nCourses - 1 << endl;
+			}
+			else fout << arrStu[i].nCourses << endl;
+			for (int j = 0; j < arrStu[i].nCourses; j++) {
+				if (arrStu[i].courseID[j] != crs.courseID || arrStu[i].classID[j] != crs.className)
+					fout << arrStu[i].courseID[j] << ' ' << arrStu[i].classID[j] << endl;
+			}
+			fout << endl;
+		}
+		fout.close();
+		for (int i = 0; i < nReg; i++) {
+			delete[] arrStu[i].courseID;
+			delete[] arrStu[i].classID;
+		}
+		delete[] arrStu;
+		delete[] haveCourse;
+	}
 	return true;
 }
