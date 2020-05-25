@@ -132,5 +132,6 @@ tm* getWeeks(tm startDate, tm endDate, int* nWeeks);
 string* readClassesID(string path, int* nClasses);
 bool viewClasses();
 string center(const string s, const int w);
+//Make string in the center
 string prd(const double x, const int decDigits, const int width);
 #endif // !_GENERAL_H_

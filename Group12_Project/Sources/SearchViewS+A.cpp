@@ -1,21 +1,6 @@
 #include "../Headers/SearchViewS+A.h"
 
-void viewScoreboard(Course B)
-{
-	for (int i = 0; i < B.nStudents; i++)
-	{
-		if (B.studentArr[i].active == false) continue;
-		cout << B.studentArr[i].ID << endl;
-		cout << B.studentArr[i].fullname << endl;
-		cout << B.studentArr[i].gender << endl;
-		printDate(cout, B.studentArr[i].birthDate);
-		cout << B.board[i].midterm << endl;
-		cout << B.board[i].final << endl;
-		cout << B.board[i].bonus << endl;
-		cout << B.board[i].total << endl;
-		cout << endl;
-	}
-}
+
 void CSVScoreboard(Course B)
 {
 
@@ -120,35 +105,60 @@ void SearchandViewScoreboard()
 	B.nStudents = stoi(line);
 	B.studentArr = new Student[B.nStudents];
 	B.board = new score[B.nStudents];
-	
+	cout << string(116, '-') << "\n";
+	cout << "|" << center("Student ID", 15) << "|" << center("S.Name", 18) << "|"
+		<< center("S.Gender", 10) << "|" << center("S.BirthDate", 13) << "|"
+		<< center("Active", 10) << "|"
+		<< center("Mid Term", 10) << "|" << center("Final", 10) << "|"
+		<< center("Bonus", 10) << "|" << center("Total", 10) << "|" << endl;
+	cout << string(116, '-') << "\n";
 	for (int i = 0; i < B.nStudents; i++)
 	{
-		getline(fin, B.studentArr[i].ID);
-		getline(fin, B.studentArr[i].fullname);
+		getline(fin, line);
+		B.studentArr[i].ID = line;
+		cout << "|" << center(line, 15) << "|";
+
+		getline(fin, line);
+		B.studentArr[i].fullname = line;
+		cout << center(line, 18) << "|";
+
 		getline(fin, line);
 		B.studentArr[i].gender = line.front();
+		cout << center(line, 10) << "|";
+
 		getline(fin, line);
 		B.studentArr[i].birthDate = sToDate(line);
+		cout << center(line, 13) << "|";
+
 		getline(fin, line);
 		B.studentArr[i].active = stoi(line);
+		cout << center(line, 10) << "|";
+
 		getline(fin, line);
 		B.board[i].midterm = stof(line);
+		cout << center(line, 10) << "|";
+
 		getline(fin, line);
 		B.board[i].final = stof(line);
+		cout << center(line, 10) << "|";
+
 		getline(fin, line);
 		B.board[i].bonus = stof(line);
+		cout << center(line, 10) << "|";
+
 		getline(fin, line);
 		B.board[i].total = stof(line);
+		cout << center(line, 10) << "|";
+
+		cout << endl;
 		for (int i = 0; i <= B.nWeeks; i++)
 		{
 			fin.ignore(INT_MAX, '\n');
 		}
-
+		cout << string(116, '-') << "\n";
 	}
-	
-
 	fin.close();
-	viewScoreboard(B);
+
 	CSVScoreboard(B);
 	delete[]B.studentArr;
 	delete[]B.board;

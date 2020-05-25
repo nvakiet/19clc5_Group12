@@ -1,7 +1,7 @@
 #ifndef _SearchViewSA_H_
 #define _SearchViewSA_H_
 #include "../Headers/general.h"
-void viewScoreboard(Course B);
+
 void viewAttendance(Course B, string* classdate);
 void SearchandViewScoreboard();
 void SearchandViewAttendance();
@@ -11,5 +11,5 @@ bool viewcheckin(Account user);
 bool viewscore(Account user);
 void viewSchedules(Account user, Semester curSem);
 void viewLecture();
-void ListOfCourse();
+void ListOfCourse(Semester curS);
 #endif // !_SearchViewS+A_H_
