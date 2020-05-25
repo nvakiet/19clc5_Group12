@@ -138,6 +138,21 @@ int main() {
 						if (removeCourse())
 							cout << "The course has been successfully removed from the system!" << endl;
 						else cerr << "Failed to completely remove to course!" << endl;
+						pause();
+					}
+					//Remove a student from the course
+					if (choice == 7) {
+						if (removeCourseStudent(currentSemester))
+							cout << "The student has been removed from the course!" << endl;
+						else cerr << "Failed to remove the student from the course!" << endl;
+						pause();
+					}
+					//Add a student to the course
+					if (choice == 8) {
+						if (addCourseStudent(currentSemester))
+							cout << "The student has been added to the course!" << endl;
+						else cerr << "Failed to add the student to the course!" << endl;
+						pause();
 					}
 					//View all lecturer accounts
 					if (choice == 11) {
