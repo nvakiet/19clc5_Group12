@@ -9,6 +9,7 @@
 #include <cstring>
 #include <ctime>
 #include "../Headers/sha256.h"
+#include <sstream>
 using namespace std;
 
 struct score 
@@ -130,5 +131,6 @@ tm* getWeeks(tm startDate, tm endDate, int* nWeeks);
 //Functions from staff-class.cpp used for other .cpp
 string* readClassesID(string path, int* nClasses);
 bool viewClasses();
-
+string center(const string s, const int w);
+string prd(const double x, const int decDigits, const int width);
 #endif // !_GENERAL_H_

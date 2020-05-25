@@ -1,4 +1,5 @@
 #include "../Headers/SearchViewS+A.h"
+
 void viewScoreboard(Course B)
 {
 	for (int i = 0; i < B.nStudents; i++)
@@ -467,4 +468,77 @@ void viewLecture()
 	}
 	fout.close();
 
+}
+void ListOfCourse(Semester curS)
+{
+	string sem = curS.semester;
+	string h = "2019-2020";
+	string line;
+	cout << "Here is the list of class  " << endl;
+	ifstream fout;
+	fout.open("./TextFiles/Classes.txt");
+	getline(fout, line);
+	int n = stoi(line);
+	for (int i = 0; i < n; i++)
+	{
+		getline(fout, line);
+		cout << line << endl;
+	}
+	fout.close();
+	cout << "Enter your class : ";
+	string y;
+	cin >> y;
+	ifstream fin;
+	fin.open("./TextFiles/"+h+"_"+sem+"_" + y + "_Schedules.txt");
+	if (fin.fail())
+	{
+		printf("Failed to open this file!\n");
+		return;
+	}
+	int x;
+	getline(fin, line);
+	x = stoi(line);
+	cout << std::string(178, '-') << "\n";
+	cout << "|" << center("C.ID", 10) << "|" << center("C.Name", 30) << "|"
+		<< center("L.ShortN", 10) << "|" << center("L.Name", 15) << "|"
+		<< center("L.Email", 25) << "|" << center("L.Degree", 15) << "|"
+		<< center("L.Gender", 10) << "|" << center("S.Date", 10) << "|"
+		<< center("E.Date", 10) << "|" << center("DoW", 5) << "|"
+		<< center("S.Time", 10) << "|" << center("E.Time", 10) << "|"
+		<< center("Room", 5) << "|" << endl;
+	cout << std::string(178, '-') << "\n";
+	for (int i = 0; i < x; i++)
+	{
+		getline(fin, line);
+		cout << "|" << center(line, 10) << "|";
+		getline(fin, line);
+		cout << center(line, 30) << "|";
+		getline(fin, line);
+		cout << center(line, 10) << "|";
+		getline(fin, line);
+		cout << center(line, 15) << "|";
+		getline(fin, line);
+		cout << center(line, 25) << "|";
+		getline(fin, line);
+		cout << center(line, 15) << "|";
+		getline(fin, line);
+		cout << center(line, 10) << "|";
+		getline(fin, line);
+		cout << center(line, 10) << "|";
+		getline(fin, line);
+		cout << center(line, 10) << "|";
+		getline(fin, line);
+		cout << center(line, 5) << "|";
+		getline(fin, line);
+		cout << center(line, 10) << "|";
+		getline(fin, line);
+		cout << center(line, 10) << "|";
+		getline(fin, line);
+		cout << center(line, 5) << "|";
+		cout << endl;
+		cout << std::string(178, '-') << "\n";
+		fin.ignore(INT_MAX, '\n');
+	}
+
+	fin.close();
 }
