@@ -9,6 +9,7 @@
 #include <cstring>
 #include <ctime>
 #include "../Headers/sha256.h"
+#include <sstream>
 using namespace std;
 
 struct score 
@@ -145,4 +146,8 @@ bool insDesID(string insertStu, string right, string left);
 //Check if the position between 2 students is valid for insertion in ascending order
 bool insAscID(string insertStu, string right, string left);
 
+//Make string in the center
+string center(const string s, const int w);
+//Print double values in a column width
+string prd(const double x, const int decDigits, const int width);
 #endif // !_GENERAL_H_
