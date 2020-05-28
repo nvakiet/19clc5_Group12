@@ -1,4 +1,4 @@
-#include "../Headers/staff-class.h"
+﻿#include "../Headers/staff-class.h"
 bool importClass() {
 	string systemPath = "./TextFiles/", fileEx = "_Students.txt";
 	ifstream fin;
@@ -868,17 +868,22 @@ bool viewStudentsInClass() {
 		fin.ignore(INT_MAX, '\n');
 	}
 	fin.close();
+	cout << std::string(178, '-') << "\n";//chỉnh số lại theo bang xuất ra
+	cout << "|" << center("Student ID", 10) << "|"
+		<< center("Student name", 15) << "|" << center("Student gender", 10) << "|"
+		<< center("Student birthdate", 15) << "|" << center("Status",15) << "|" << endl;
 
-	for (int i = 0; i < n; i++) {
-		cout << "Student ID: " << oldStu[i].ID << endl
-			<< "Student name: " << oldStu[i].fullname << endl
-			<< "Student gender: " << oldStu[i].gender << endl
-			<< "Student birthdate: " << setfill('0') << right << oldStu[i].birthDate.tm_year + 1900 << '-'
-			<< setw(2) << oldStu[i].birthDate.tm_mon + 1 << '-'
-			<< setw(2) << oldStu[i].birthDate.tm_mday << endl;
-		cout << "Status: ";
-		if (oldStu[i].active) cout << "Active" << endl;
-		else cout << "Inactive" << endl;
+	for (int i = 0; i < n; i++) 
+	{
+		cout << "|" << center(oldStu[i].ID, 10) << "|"
+			<< center(oldStu[i].fullname, 15) << "|"
+			<< setw(5) << oldStu[i].gender << setw(5) << "|"
+			<< setfill('0') << right << oldStu[i].birthDate.tm_year + 1900 << '-'
+			<< setw(7) << oldStu[i].birthDate.tm_mon + 1 << '-'
+			<< setw(7) << oldStu[i].birthDate.tm_mday << "|";
+		
+		if (oldStu[i].active) cout << center("Active",15) << endl;
+		else cout << center("Inactive",15) << endl;
 		cout << endl;
 	}
 	delete[] oldStu;
