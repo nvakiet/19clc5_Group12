@@ -6,5 +6,5 @@ bool addStudent();
 bool removeStudent();
 bool editStudent();
 bool viewStudentsInClass();
-bool changeClass();
+bool changeClass(Semester curSem);
 #endif

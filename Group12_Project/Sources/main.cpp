@@ -1,6 +1,7 @@
 #include "../Headers/main.h"
 int main() {
-	Account user;
+	viewStudentsInClass();
+/*	Account user;
 	Semester currentSemester;
 	int choice = 0; //Represent user's choice throughout the program
 	while (choice != 2) {
@@ -163,7 +164,7 @@ int main() {
 					
 					
 					*/
-				}
+/*				}
 				continue;
 			}
 			//SEARCH - VIEW - EXPORT SCOREBOARD
@@ -214,7 +215,7 @@ int main() {
 
 
 			*/
-			//LOG OUT
+/*			//LOG OUT
 			if (choice == 10) {
 				logOut(user);
 				cout << "The account has been logged out!" << endl;
@@ -277,7 +278,7 @@ int main() {
 		}
 
 	}
-
+	*/
 
 	return 0;
 }
