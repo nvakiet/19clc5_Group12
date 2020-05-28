@@ -30,17 +30,8 @@ bool addCourse(Course inCourse, string slackName);
 //Import course data from csv file to the system
 bool importCourse(Semester curSem);
 
-//Read regCourses of students
-void readRegCourses(ifstream& fin, RegCourses*& students, int& nReg);
-
 //Remove a regCourse
 bool removeRegCourse(string path, string courseID, string classID);
-
-//Read info of courses from file
-void readCoursesInfos(ifstream& fin, string*& slack, Course*& courseArr, int& nCourses);
-
-//Find and read info of a course
-bool findACourseInfos(ifstream& fin, Course& crs, string crsID);
 
 //Delete a course in the program: delete info file, delete regCourse file, delete student list of course
 bool removeCourse();
@@ -57,4 +48,5 @@ bool addCourseStudent(Semester curSem, void* checkOrder = insAscID);
 //Remove a student from the course
 //Completely remove the student from the student list of the course, and remove the course from the student's enrolling course list
 bool removeCourseStudent(Semester curSem);
+
 #endif // !_COURSE_H

@@ -131,6 +131,14 @@ tm* getWeeks(tm startDate, tm endDate, int* nWeeks);
 string* readClassesID(string path, int* nClasses);
 bool viewClasses();
 
+//Functions from staff-course.cpp used for other .cpp
+	//Read regCourses of students
+void readRegCourses(ifstream& fin, RegCourses*& students, int& nReg);
+	//Read info of courses from file
+void readCoursesInfos(ifstream& fin, string*& slack, Course*& courseArr, int& nCourses);
+	//Find and read info of a course
+bool findACourseInfos(ifstream& fin, Course& crs, string crsID);
+
 //Check if the position between 2 students is valid for insertion in descending order
 bool insDesID(string insertStu, string right, string left);
 

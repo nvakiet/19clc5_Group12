@@ -244,6 +244,13 @@ int main() {
 					continue;
 				}
 			}
+			//Student check in
+			if (choice == 3) {
+				if (checkin(currentSemester, user))
+					cout << "Check in successfully!" << endl;
+				else cerr << "Failed to check in!" << endl;
+				pause();
+			}
 			//View check in result
 			if (choice == 4) {
 				if (!viewcheckin(user))
@@ -270,6 +277,7 @@ int main() {
 		}
 
 	}
+
 
 	return 0;
 }
