@@ -598,3 +598,37 @@ void ListOfCourse(Semester curS)
 
 	fin.close();
 }
+void viewStudentofAcourse(Semester cursem)
+{
+	string line;
+	string sem = cursem.semester;
+	string year = "2019-2020";
+	string classID;
+	string courseID;
+	printf("Enter course ID : ");
+	getline(cin, courseID);
+	printf("Enter class ID : ");
+	getline(cin, classID);
+	ifstream fin;
+	fin.open("./TextFiles/"+year + "_" + sem + "_" + courseID + "_" + classID + "_" + "Students.txt");
+	if (fin.fail())
+	{
+		printf("Failed to open this file!\n");
+		return;
+	}
+	fin.ignore(INT_MAX, '\n');
+	getline(fin, line);
+	int n = stoi(line);
+	cout << "	       ======== Sudents of Course " << courseID << " =======" << endl;
+	for (int i = 0; i < n; i++)
+	{
+		fin.ignore(INT_MAX, '\n');
+		getline(fin, line);
+		cout << "			" << std::string(20, '-') << "\n";
+		cout << "			|" << setw(2) << i << setw(2) << "|" << center(line, 15) << "|" << endl;;
+		for (int i = 0; i < 17; i++)
+			fin.ignore(INT_MAX, '\n');
+	}
+	cout << "			" << std::string(20, '-') << "\n";
+	fin.close();
+}

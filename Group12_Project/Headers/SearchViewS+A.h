@@ -10,4 +10,5 @@ bool viewscore(Account user);
 void viewSchedules(Account user, Semester curSem);
 void viewLecture();
 void ListOfCourse(Semester curS);
+void viewStudentofAcourse(Semester cursem);
 #endif // !_SearchViewS+A_H_
