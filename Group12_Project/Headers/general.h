@@ -159,6 +159,4 @@ void mergeStudent(Student* a, int left, int mid, int right, cmpr cmprFunc);
 
 //Make string in the center
 string center(const string s, const int w);
-//Print double values in a column width
-string prd(const double x, const int decDigits, const int width);
 #endif // !_GENERAL_H_
