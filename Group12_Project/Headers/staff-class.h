@@ -6,5 +6,5 @@ bool addStudent(cmpr orderStu = ascendingID, cmpr orderAcc = ascendingUsername);
 bool removeStudent();
 bool editStudent();
 bool viewStudentsInClass();
-bool changeClass();
+bool changeClass(Semester curSem);
 #endif

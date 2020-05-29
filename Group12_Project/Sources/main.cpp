@@ -160,8 +160,8 @@ int main() {
 						pause();
 					}
 					/*	 DO SOMETHING WITH COURSE DATA HERE
-					
-					
+
+
 					*/
 				}
 				continue;

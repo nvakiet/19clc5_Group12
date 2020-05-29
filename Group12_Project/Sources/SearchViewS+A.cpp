@@ -163,24 +163,7 @@ void SearchandViewScoreboard()
 	delete[]B.studentArr;
 	delete[]B.board;
 }
-void viewAttendance(Course B, string* classdate)
-{
-	for (int i = 0; i < B.nStudents; i++)
-	{
-		if (B.studentArr[i].active == false) continue;
-		cout << B.studentArr[i].ID << endl;
-		cout << B.studentArr[i].fullname << endl;
-		cout << B.studentArr[i].gender << endl;
-		printDate(cout, B.studentArr[i].birthDate);
-		for (int j = 0; j < B.nWeeks; j++)
-		{
-			cout << classdate[j] << " ";
-			if (*(B.checkList + i * B.nWeeks + j) == true) cout << "Attended" << endl;
-			else cout << "X" << endl;
-		}
-		cout << endl;
-	}
-}
+
 void SearchandViewAttendance()
 {
 	Course B;
@@ -211,14 +194,22 @@ void SearchandViewAttendance()
 	B.studentArr = new Student[B.nStudents];
 	
 	
+	string* DoB = new string[B.nStudents];
+	cout << string(183, '-') << "\n";
+	cout << "|" << center("ID", 15) << "|" << center("Name", 15) << "|"
+		<< center("DoB", 10) << "|";
+
 	for (int i = 0; i < B.nStudents; i++)
 	{
 		getline(fin, B.studentArr[i].ID);
 		getline(fin, B.studentArr[i].fullname);
 		getline(fin, line);
 		B.studentArr[i].gender = line.front();
+
 		getline(fin, line);
+		DoB[i] = line;
 		B.studentArr[i].birthDate = sToDate(line);
+
 		getline(fin, line);
 		B.studentArr[i].active = stoi(line);
 		for (int i = 0; i < 4; i++)
@@ -227,19 +218,45 @@ void SearchandViewAttendance()
 		}
 		for (int j = 0; j < B.nWeeks; j++)
 		{
-			getline(fin, classdate[j], ' ');
+			getline(fin, line, ' ');
+			classdate[j] = line;
+
 			getline(fin, line);
 			*(B.checkList + i * B.nWeeks + j) = stoi(line);
+
 		}
 		fin.ignore(INT_MAX, '\n');
+
 	}
-	
+	for (int i = 0; i < B.nWeeks; i++)
+	{
+
+		cout << center(classdate[i], 13) << "|";
+	}
+
+	cout << endl;
+	cout << string(183, '-') << "\n";
+	for (int i = 0; i < B.nStudents; i++)
+	{
+
+		cout << "|" << center(B.studentArr[i].ID, 15) << "|"
+			<< center(B.studentArr[i].fullname, 15) << "|"
+			<< center(DoB[i], 10) << "|";
+		for (int j = 0; j < B.nWeeks; j++)
+		{
+			cout << setw(7) << *(B.checkList + i * B.nWeeks + j) << setw(7) << "|";
+		}
+		cout << endl;
+		cout << string(183, '-') << "\n";
+	}
 	fin.close();
-	viewAttendance(B, classdate);
+
 	CSVAttendance(B, classdate);
 	delete[]classdate;
 	delete[]B.checkList;
 	delete[]B.studentArr;
+	delete[]DoB;
+	
 }
 bool viewcheckin(Account user)
 {
@@ -282,13 +299,23 @@ bool viewcheckin(Account user)
 				getline(fin, line);
 				*(B.checkList + i * B.nWeeks + j) = stoi(line);
 			}
-			for (int j = 0; j < B.nWeeks; j++)
+			cout << string(140, '-') << "\n";
+			cout << "|";
+			for (int i = 0; i < B.nWeeks; i++)
 			{
-				cout << classdate[j] << " ";
-				if (*(B.checkList + i * B.nWeeks + j) == true) cout << "Attended" << endl;
-				else cout << "X" << endl;
+				cout << center(classdate[i], 13) << "|";
 			}
 			cout << endl;
+			cout << string(140, '-') << "\n";
+			cout << "|";
+			for (int j = 0; j < B.nWeeks; j++)
+			{
+				
+				if (*(B.checkList + i * B.nWeeks + j) == true) cout << center("Attendance",14)<<"|";
+				else cout << center("X",14) << "|";
+			}
+			cout << endl;
+			cout << string(140, '-') << "\n";
 			fin.close();
 			delete[]classdate;
 			delete[]B.checkList;
@@ -338,16 +365,23 @@ bool viewscore(Account user)
 		getline(fin, B.studentArr[i].ID);
 		if (B.studentArr[i].ID == ID)
 		{
+			cout << " " << string(44, '-') << "\n";
+			cout << "|" << center("Mid", 10) << "|" << center("Final", 10) << "|"
+				<< center("Bonus", 10) << "|" << center("Total", 10) << "|" << endl;
 			for (int i = 0; i < 4; i++)
 				fin.ignore(INT_MAX, '\n');
+			cout << " " << string(44, '-') << "\n";
+			cout << "|";
 			getline(fin, line);
-			cout << "Mid : " << line << endl;
+			cout << center(line, 10) << "|";
 			getline(fin, line);
-			cout << "Final : " << line << endl;
+			cout << center(line, 10) << "|";
 			getline(fin, line);
-			cout << "Bonus : " << line << endl;
+			cout << center(line, 10) << "|";
 			getline(fin, line);
-			cout << "Total : " << line << endl;
+			cout << center(line, 10) << "|";
+			cout << endl;
+			cout << " " << string(44, '-') << "\n";
 			fin.close();
 			delete[]B.studentArr;
 			return true;
@@ -387,7 +421,7 @@ void viewSchedules(Account user, Semester curSem)
 		getline(fin, line);
 		if (line == ID)
 		{
-			cout << "=======SCHEDULES======= " << endl;
+			cout << "		=======SCHEDULES======= " << endl;
 			for (int j = 0; j < 2; j++)
 				fin.ignore(INT_MAX, '\n');
 			getline(fin, line);
@@ -413,18 +447,24 @@ void viewSchedules(Account user, Semester curSem)
 						for (int i = 0; i < 5; i++)
 							f.ignore(INT_MAX, '\n');
 
+						cout << " " << string(90, '-') << "\n";
+						cout << "|" << center("S.Date", 15) << "|" << center("E.Date", 15) << "|"
+							<< center("DoW", 15) << "|" << center("S.Time", 15) << "|"
+							<< center("E.Time", 15) << "|" << center("Room", 10) << "|" << endl;
+						cout << " " << string(90, '-') << "\n";
 						getline(f, line);
-						cout << "Start date : " << line;
+						cout << "|" << center(line, 15) << "|";
 						getline(f, line);
-						cout << "  End date : " << line << endl;
+						cout << center(line, 15) << "|";
 						getline(f, line);
-						cout << "Day of week : " << line << endl;
+						cout << center(line, 15) << "|";
 						getline(f, line);
-						cout << "Start time : " << line;
+						cout << center(line, 15) << "|";
 						getline(f, line);
-						cout << "  End time : " << line << endl;
+						cout << center(line, 15) << "|";
 						getline(f, line);
-						cout << "Room : " << line << endl;
+						cout << center(line, 10) << "|" << endl;
+						cout << " " << string(90, '-') << "\n";
 						cout << endl;
 						break;
 					}
@@ -461,20 +501,26 @@ void viewLecture()
 	}
 	getline(fout, line);
 	int n = stoi(line);
+	cout << " " << string(63, '-') << "\n";
+	cout << "|" << center("L.Name", 20) << "|" << center("Email", 20) << "|"
+		<< center("Degree", 10) << "|" << center("Gender", 10) << "|" << endl;
+	cout << " " << string(63, '-') << "\n";
 	for (int i = 0; i < n; i++)
 	{
 		fout.ignore(INT_MAX, '\n');
 		fout.ignore(INT_MAX, '\n');
+
 		getline(fout, line);
-		cout << "Lecturer name : " << line << endl;
+		cout << "|" << center(line, 20) << "|";
 		getline(fout, line);
-		cout << "Email : " << line << endl;
+		cout << center(line, 20) << "|";
 		getline(fout, line);
-		cout << "Academic degree: " << line << endl;
+		cout << center(line, 10) << "|";
 		getline(fout, line);
-		cout << "Gender : " << line << endl;
+		cout << center(line, 10) << "|";
 		fout.ignore(INT_MAX, '\n');
 		cout << endl;
+		cout << " " << string(63, '-') << "\n";
 	}
 	fout.close();
 
