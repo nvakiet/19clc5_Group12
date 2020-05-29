@@ -140,11 +140,22 @@ void readCoursesInfos(ifstream& fin, string*& slack, Course*& courseArr, int& nC
 	//Find and read info of a course
 bool findACourseInfos(ifstream& fin, Course& crs, string crsID);
 
-//Check if the position between 2 students is valid for insertion in descending order
-bool insDesID(string insertStu, string right, string left);
 
-//Check if the position between 2 students is valid for insertion in ascending order
-bool insAscID(string insertStu, string right, string left);
+typedef bool (*cmpr)(void*, void*);
+//Check if the ID of 2 students is in descending order
+bool descendingID(void* left, void* right);
+//Check if the ID of 2 students is in ascending order
+bool ascendingID(void* left, void* right);
+//Check if the username of 2 accounts is in descending order
+bool descendingUsername(void* left, void* right);
+//Check if the username of 2 accounts is in ascending order
+bool ascendingUsername(void* left, void* right);
+
+//Sorting functions using merge sort algorithms
+void sortAccount(Account* a, int left, int right, cmpr cmprFunc = ascendingUsername);
+void mergeAccount(Account* a, int left, int mid, int right, cmpr cmprFunc);
+void sortStudent(Student* a, int left, int right, cmpr cmprFunc = ascendingID);
+void mergeStudent(Student* a, int left, int mid, int right, cmpr cmprFunc);
 
 //Make string in the center
 string center(const string s, const int w);

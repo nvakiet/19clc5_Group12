@@ -1,5 +1,5 @@
 #include "../Headers/staff-class.h"
-bool importClass() {
+bool importClass(cmpr orderStu, cmpr orderAcc) {
 	string systemPath = "./TextFiles/", fileEx = "_Students.txt";
 	ifstream fin;
 	ofstream fout;
@@ -8,20 +8,29 @@ bool importClass() {
 	cout << "Enter csv file path (or ./TextFiles/\"Filename\".csv if the file is in TextFiles folder): ";
 	cin >> path;
 	flushin(cin);
-	fin.open(path);
 	viewClasses();
 	cout << "Enter new class ID: ";
 	cin >> ClassID;
 	flushin(cin);
-	cout << "Enter number of students in the class: ";
-	cin >> n;
-	flushin(cin);
+	//Get number of student in the csv file
+	fin.open(path);
+	if (!fin.is_open()) {
+		cerr << "Can't open data file in the path: " << path << endl;
+		return false;
+	}
+	fin.ignore(INT_MAX, '\n');
+	while (getline(fin, line)) {
+		n = stoi(line.substr(0, line.find_first_of(';', 0)));
+	}
+	fin.close();
 
 	Student* newStu;
 	newStu = new Student[n];
 	//Read the csv
+	fin.open(path);
 	if (!fin.is_open()) {
 		cerr << "Can't open data file in the path: " << path << endl;
+		delete[] newStu;
 		return false;
 	}
 	fin.ignore(INT_MAX, '\n');
@@ -38,13 +47,17 @@ bool importClass() {
 	}
 	fin.close();
 
+	//Sort the student array
+	sortStudent(newStu, 0, n - 1, orderStu);
+
 	//Register students
 	string path2 = "./TextFiles/Students.txt";
 	//Case 1: if Students.txt is empty, paste all students to the file
 	if (emptyFile(path2)) {
 		fout.open(path2);
 		if (!fout.is_open()) {
-			cerr << "Cannot open file";
+			cerr << "Cannot open file" << endl;
+			delete[] newStu;
 			return false;
 		}
 		fout << n << endl;
@@ -70,75 +83,63 @@ bool importClass() {
 		int n2;
 		getline(fin, line);
 		n2 = stoi(line);
-		Account* oldStu;
-		oldStu = new Account[n2];
+		Account* accStu;
+		accStu = new Account[n2 + n];
 		for (int i = 0; i < n2; i++) {
-			getline(fin, oldStu[i].username);
-			getline(fin, oldStu[i].password);
-			getline(fin, oldStu[i].studentProfile.fullname);
-			getline(fin, oldStu[i].studentProfile.classID);
+			getline(fin, accStu[i].username);
+			getline(fin, accStu[i].password);
+			getline(fin, accStu[i].studentProfile.fullname);
+			getline(fin, accStu[i].studentProfile.classID);
 			getline(fin, line);
-			oldStu[i].studentProfile.gender = line.front();
+			accStu[i].studentProfile.gender = line.front();
 			getline(fin, line);
-			oldStu[i].studentProfile.birthDate = sToDate(line);
+			accStu[i].studentProfile.birthDate = sToDate(line);
 			getline(fin, line);
-			oldStu[i].studentProfile.active = stoi(line);
+			accStu[i].studentProfile.active = stoi(line);
 			fin.ignore(INT_MAX, '\n');
 		}
 		fin.close();
 
-		//Get new number of student accounts and check whether a student is already registered
+		//Get new number of student accounts and add new student accounts to the account array
 		int newN2 = n2 + n;
-		bool* sameStudent = new bool[n] {false};
 		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n2 && sameStudent[i] == false; j++) {
-				if (newStu[i].ID == oldStu[j].username) {
-					sameStudent[i] = true;
-					newN2--;
-				}
-				else sameStudent[i] = false;
-			}
+			accStu[n2 + i].username = newStu[i].ID;
+			char temp[9];
+			strftime(temp, 9, "%Y%m%d", &newStu[i].birthDate);
+			DoB.assign(temp);
+			accStu[n2 + i].password = sha256(DoB);
+			accStu[n2 + i].studentProfile.fullname = newStu[i].fullname;
+			accStu[n2 + i].studentProfile.classID = ClassID;
+			accStu[n2 + i].studentProfile.gender = newStu[i].gender;
+			accStu[n2 + i].studentProfile.birthDate = newStu[i].birthDate;
+			accStu[n2 + i].studentProfile.active = newStu[i].active;
 		}
 
-		//Save old accounts and new unique accounts to the file
+		//Sort the account array before output to file
+		sortAccount(accStu, 0, newN2 - 1, orderAcc);
+
+		//Save account array to the file
 		fout.open(path2);
 		if (!fout.is_open()) {
 			cerr << "Cannot open file";
+			delete[] accStu;
+			delete[] newStu;
 			return false;
 		}
 		fout << newN2 << endl;
-		for (int j = 0; j < n2; j++) {
-			//Save old accounts
-			fout << oldStu[j].username << endl
-				<< oldStu[j].password << endl
-				<< oldStu[j].studentProfile.fullname << endl
-				<< oldStu[j].studentProfile.classID << endl
-				<< oldStu[j].studentProfile.gender << endl;
-			printDate(fout, oldStu[j].studentProfile.birthDate);
-			fout << oldStu[j].studentProfile.active << endl;
+		for (int j = 0; j < newN2; j++) {
+			fout << accStu[j].username << endl
+				<< accStu[j].password << endl
+				<< accStu[j].studentProfile.fullname << endl
+				<< accStu[j].studentProfile.classID << endl
+				<< accStu[j].studentProfile.gender << endl;
+			printDate(fout, accStu[j].studentProfile.birthDate);
+			fout << accStu[j].studentProfile.active << endl;
 			fout << endl;
-		}
-		for (int i = 0; i < n; i++) {
-			//Save new accounts if student is not the same
-			if (!sameStudent[i]){
-				fout << newStu[i].ID << endl;
-				char temp[9];
-				strftime(temp, 9, "%Y%m%d", &newStu[i].birthDate);
-				DoB.assign(temp);
-				fout << sha256(DoB) << endl
-				<<	newStu[i].fullname << endl
-				<< ClassID << endl
-				<< newStu[i].gender << endl;
-			printDate(fout, newStu[i].birthDate);
-			fout << 1 << endl;
-			fout << endl;
-			}
 		}
 		fout.close();
-		delete[] oldStu;
-		delete[] sameStudent;
-		oldStu = nullptr;
-		sameStudent = nullptr;
+		delete[] accStu;
+		accStu = nullptr;
 	}
 
 	//Update Classes.txt
@@ -148,6 +149,7 @@ bool importClass() {
 		fout.open(path3);
 		if (!fout.is_open()) {
 			cerr << "Cannot open file";
+			delete[] newStu;
 			return false;
 		}
 		fout << 1 << endl
@@ -195,6 +197,7 @@ bool importClass() {
 			fout.open(systemPath + ClassID + "_Students.txt");
 			if (!fout.is_open()) {
 				cerr << "Cannot open file" << endl;
+				delete[] newStu;
 				return false;
 			}
 			fout << n << endl;
@@ -207,10 +210,10 @@ bool importClass() {
 				fout << endl;
 			}
 			fout.close();
-			return true;
 		}
 		if (choice == 0) {
 			cerr << "Import stopped!" << endl;
+			delete[] newStu;
 			return false;
 		}
 	}
@@ -219,6 +222,7 @@ bool importClass() {
 		fout.open(systemPath + ClassID + "_Students.txt");
 		if (!fout.is_open()) {
 			cerr << "Cannot open file" << endl;
+			delete[] newStu;
 			return false;
 		}
 		fout << n << endl;
@@ -231,29 +235,28 @@ bool importClass() {
 			fout << endl;
 		}
 		fout.close();
-		return true;
 	}
 	delete[] newStu;
 	newStu = nullptr;
 	return true;
 }
-bool addStudent() {
+bool addStudent(cmpr orderStu, cmpr orderAcc) {
 	string systemPath = "./TextFiles/", fileEx = "_Students.txt";
 	ifstream fin;
 	ofstream fout;
-	string ClassID, line, DoB;
+	string line, DoB;
 	int choice;
 
 	Student newStu;
 	string path = "./TextFiles/Classes.txt";
 	if (!viewClasses()) return false;
 	cout << "Enter ID of the class: ";
-	getline(cin, ClassID);
+	getline(cin, newStu.classID);
 	int n;
 	string* classesID = readClassesID(path, &n);
 	bool flag = false;
 	for (int i = 0; i < n && flag == false; i++) {
-		if (ClassID == classesID[i])
+		if (newStu.classID == classesID[i])
 			flag = true;
 	}
 	if (!flag) {
@@ -275,18 +278,18 @@ bool addStudent() {
 		if (choice == 1) {
 			fout.open(path);
 			if (!fout.is_open()) {
-				cerr << "Cannot open file " << path;
+				cerr << "Cannot open file " << path << endl;
 				delete[] classesID;
 				return false;
 			}
 			fout << n + 1 << endl;
 			for (int i = 0; i < n; i++)
 				fout << classesID[i] << endl;
-			fout << ClassID << endl;
+			fout << newStu.classID << endl;
 			fout.close();
-			delete[] classesID;
 		}
 	}
+	delete[] classesID;
 	cout << "Enter student ID: ";
 	getline(cin, newStu.ID);
 	cout << "Enter student fullname: ";
@@ -303,95 +306,90 @@ bool addStudent() {
 		cin >> get_time(&newStu.birthDate, "%Y-%m-%d");
 	}
 	flushin(cin);
-	//tao acc moi
+	//Create new account
+	bool sameID = false;
 	string path1 = "./TextFiles/Students.txt";
-	//neu chua co file
 	if (emptyFile(path1)) {
 		fout.open(path1);
 		if (!fout.is_open()) {
-			cerr << "Cannot open file " << path1;
+			cerr << "Can't register student account!" << endl;
 			return false;
 		}
 		fout << 1 << endl;
 		fout << newStu.ID << endl;
 		char temp[9];
 		strftime(temp, 9, "%Y%m%d", &newStu.birthDate);
-		DoB.assign(temp);
-		fout << sha256(DoB) << endl
+		line.assign(temp);
+		fout << sha256(line) << endl
 			<< newStu.fullname << endl
-			<< ClassID << endl
+			<< newStu.classID << endl
 			<< newStu.gender << endl;
 		printDate(fout, newStu.birthDate);
 		fout << 1 << endl;
 		fout << endl;
 		fout.close();
 	}
-	else //neu co file
-	{
+	else {
 		fin.open(path1);
-		int n1;
+		int nStu;
 		getline(fin, line);
-		n1 = stoi(line);
-		Account* oldStu;
-		oldStu = new Account[n1];
-		for (int i = 0; i < n1; i++) {
-			getline(fin, oldStu[i].username);
-			getline(fin, oldStu[i].password);
-			getline(fin, oldStu[i].studentProfile.fullname);
-			getline(fin, oldStu[i].studentProfile.classID);
+		nStu = stoi(line);
+		Account* accStu;
+		accStu = new Account[nStu + 1];
+		for (int i = 0; i < nStu; i++) {
+			getline(fin, accStu[i].username);
+			getline(fin, accStu[i].password);
+			getline(fin, accStu[i].studentProfile.fullname);
+			getline(fin, accStu[i].studentProfile.classID);
 			getline(fin, line);
-			oldStu[i].studentProfile.gender = line.front();
+			accStu[i].studentProfile.gender = line.front();
 			getline(fin, line);
-			oldStu[i].studentProfile.birthDate = sToDate(line);
+			accStu[i].studentProfile.birthDate = sToDate(line);
 			getline(fin, line);
-			oldStu[i].studentProfile.active = stoi(line);
+			accStu[i].studentProfile.active = stoi(line);
 			fin.ignore(INT_MAX, '\n');
 		}
 		fin.close();
 
-		bool flag1 = false;
-		for (int i = 0; i < n1 && flag1 == false; i++) {
-			if (newStu.ID == oldStu[i].username)
-				flag1 = true;
+		for (int i = 0; i < nStu && sameID == false; i++) {
+			if (newStu.ID == accStu[i].username)
+				sameID = true;
 		}
 		fout.open(path1);
 		if (!fout.is_open()) {
-			cerr << "Cannot open file " << path1;
-			delete[] oldStu;
-			oldStu = nullptr;
+			cerr << "Can't register student account!" << endl;
+			delete[] accStu;
+			accStu = nullptr;
 			return false;
 		}
-		if (!flag1) fout << n1 + 1 << endl;
-		else fout << n1 << endl;
-		for (int j = 0; j < n1; j++) {
-			fout << oldStu[j].username << endl
-				<< oldStu[j].password << endl
-				<< oldStu[j].studentProfile.fullname << endl
-				<< oldStu[j].studentProfile.classID << endl
-				<< oldStu[j].studentProfile.gender << endl;
-			printDate(fout, oldStu[j].studentProfile.birthDate);
-			fout << oldStu[j].studentProfile.active << endl;
-			fout << endl;
-		}
-		if (!flag1) {
-			fout << newStu.ID << endl;
+		if (!sameID) {
+			accStu[nStu].username = newStu.ID;
 			char temp[9];
 			strftime(temp, 9, "%Y%m%d", &newStu.birthDate);
-			DoB.assign(temp);
-			fout << sha256(DoB) << endl
-				<< newStu.fullname << endl
-				<< ClassID << endl
-				<< newStu.gender << endl;
-			printDate(fout, newStu.birthDate);
-			fout << 1 << endl;
+			line.assign(temp);
+			accStu[nStu].password = sha256(line);
+			accStu[nStu].studentProfile = newStu;
+			sortAccount(accStu, 0, nStu, orderAcc);	//Sort the array in ascending order before output to the file
+			fout << nStu + 1 << endl;
+		}
+		else fout << nStu << endl;
+		for (int j = 0; j < nStu + 1; j++) {
+			if (j == nStu && sameID == true) break;
+			fout << accStu[j].username << endl
+				<< accStu[j].password << endl
+				<< accStu[j].studentProfile.fullname << endl
+				<< accStu[j].studentProfile.classID << endl
+				<< accStu[j].studentProfile.gender << endl;
+			printDate(fout, accStu[j].studentProfile.birthDate);
+			fout << accStu[j].studentProfile.active << endl;
 			fout << endl;
 		}
 		fout.close();
-		delete[] oldStu;
-		oldStu = nullptr;
+		delete[] accStu;
+		accStu = nullptr;
 	}
-	//Add vao danh sach sv cua class
-	string path2 = systemPath + ClassID + "_Students.txt";
+	//Add to the class student list
+	string path2 = systemPath + newStu.classID + "_Students.txt";
 	if (emptyFile(path2)) {
 		fout.open(path2);
 		if (!fout.is_open()) {
@@ -409,12 +407,18 @@ bool addStudent() {
 	}
 	else {
 		fin.open(path2);
+		sameID = false;
+		bool addedStu = false;
 		int n3;
 		getline(fin, line);
-		n3 = stoi(line);
+		n3 = stoi(line) + 1;
 		Student* oldStu = new Student[n3];
 		for (int i = 0; i < n3; i++) {
 			getline(fin, oldStu[i].ID);
+			if (oldStu[i].ID == newStu.ID) {
+				sameID = true;
+				break;
+			}
 			getline(fin, oldStu[i].fullname);
 			getline(fin, line);
 			oldStu[i].gender = line.front();
@@ -423,32 +427,40 @@ bool addStudent() {
 			getline(fin, line);
 			oldStu[i].active = stoi(line);
 			fin.ignore(INT_MAX, '\n');
+			if (addedStu == false) {
+				if (i < n3 - 1 && (*orderStu)(&newStu, &oldStu[i])) {
+					oldStu[i + 1] = oldStu[i];
+					oldStu[i] = newStu;
+					addedStu = true;
+					i++;
+				}
+				else if (i == n3 - 1) {
+					oldStu[i] = newStu;
+					addedStu = true;
+				}
+			}
 		}
 		fin.close();
 
-		fout.open(path2);
-		if (!fout.is_open()) {
-			cerr << "Cannot open file " << path2;
-			delete[] oldStu;
-			oldStu = nullptr;
-			return false;
+		if (!sameID) {
+			fout.open(path2);
+			if (!fout.is_open()) {
+				cerr << "Cannot open file " << path2;
+				delete[] oldStu;
+				oldStu = nullptr;
+				return false;
+			}
+			fout << n3 << endl;
+			for (int i = 0; i < n3; i++) {
+				fout << oldStu[i].ID << endl
+					<< oldStu[i].fullname << endl
+					<< oldStu[i].gender << endl;
+				printDate(fout, oldStu[i].birthDate);
+				fout << oldStu[i].active << endl;
+				fout << endl;
+			}
+			fout.close();
 		}
-		fout << n3 + 1 << endl;
-		for (int i = 0; i < n3; i++) {
-			fout << oldStu[i].ID << endl
-				<< oldStu[i].fullname << endl
-				<< oldStu[i].gender << endl;
-			printDate(fout, oldStu[i].birthDate);
-			fout << oldStu[i].active << endl;
-			fout << endl;
-		}
-		fout << newStu.ID << endl
-			<< newStu.fullname << endl
-			<< newStu.gender << endl;
-		printDate(fout, newStu.birthDate);
-		fout << 1 << endl;
-		fout << endl;
-		fout.close();
 		delete[] oldStu;
 		oldStu = nullptr;
 	}

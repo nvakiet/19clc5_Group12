@@ -21,14 +21,13 @@ tm sToDate(string date_str) {
 	return date;
 }
 string center(const string s, const int w) {
-	stringstream ss, spaces;
+	string result;
 	int padding = w - s.size();
-	for (int i = 0; i < padding / 2; ++i)
-		spaces << " ";
-	ss << spaces.str() << s << spaces.str();
+	string spaces(padding / 2, ' ');
+	result = spaces + s + spaces;
 	if (padding > 0 && padding % 2 != 0)
-		ss << " ";
-	return ss.str();
+		result += " ";
+	return result;
 }
 string prd(const double x, const int decDigits, const int width) {
 	stringstream ss;
@@ -135,16 +134,140 @@ tm* getWeeks(tm startDate, tm endDate, int *nWeeks = nullptr) {
 	return dateArr;
 }
 
-bool insDesID(string insertStu, string right, string left) {
-	if (left.empty()) left = "~";
-	if (left > insertStu && insertStu > right)
-		return true;
-	else return false;
+bool descendingID(void* left, void* right) {
+	Student* leftStu = (Student*)left;
+	Student* rightStu = (Student*)right;
+	return leftStu->ID > rightStu->ID;
 }
 
-bool insAscID(string insertStu, string right, string left) {
-	if (left.empty()) left = "!";
-	if (left < insertStu && insertStu < right)
-		return true;
-	else return false;
+bool ascendingID(void* left, void* right) {
+	Student* leftStu = (Student*)left;
+	Student* rightStu = (Student*)right;
+	return leftStu->ID < rightStu->ID;
+}
+
+bool descendingUsername(void* left, void* right) {
+	Account* leftAcc = (Account*)left;
+	Account* rightAcc = (Account*)right;
+	return leftAcc->username > rightAcc->username;
+}
+
+bool ascendingUsername(void* left, void* right) {
+	Account* leftAcc = (Account*)left;
+	Account* rightAcc = (Account*)right;
+	return leftAcc->username < rightAcc->username;
+}
+
+void sortAccount(Account* a, int left, int right, cmpr cmprFunc) {
+	if (left < right) {
+		//Get middle position
+		int mid = (left + right) / 2;
+		//Sort left-half and right-half
+		sortAccount(a, left, mid, cmprFunc);
+		sortAccount(a, mid + 1, right, cmprFunc);
+		//Merge both halves together
+		mergeAccount(a, left, mid, right, cmprFunc);
+	}
+}
+
+void mergeAccount(Account* a, int left, int mid, int right, cmpr cmprFunc) {
+	//Create 2 temporary arrays for left-half and right-half of original array
+	int nL = mid - left + 1;	//a[left...m]
+	int nR = right - mid;	//a[mid + 1...right]
+	Account* L = new Account[nL];
+	Account* R = new Account[nR];
+
+	//Copy contents from 2 halves of original array to new arrays
+	for (int i = 0; i < nL; i++)
+		L[i] = a[i + left];
+	for (int i = 0; i < nR; i++)
+		R[i] = a[i + mid + 1];
+
+	//Merge 2 new arrays back into original array
+	int i = 0, j = 0, k = left;
+	//Check order
+	while (i < nL && j < nR) {
+		if ((*cmprFunc)(&L[i], &R[j])) {
+			a[k] = L[i];
+			i++;
+		}
+		else {
+			a[k] = R[j];
+			j++;
+		}
+		k++;
+	}
+	//If there are some values of L[i] left
+	while (i < nL) {
+		a[k] = L[i];
+		i++;
+		k++;
+	}
+	//If there are some values of R[j] left
+	while (j < nR) {
+		a[k] = R[j];
+		j++;
+		k++;
+	}
+
+	//Delete temporary arrays after use
+	delete[] L;
+	delete[] R;
+}
+
+void sortStudent(Student* a, int left, int right, cmpr cmprFunc) {
+	if (left < right) {
+		//Get middle position
+		int mid = (left + right) / 2;
+		//Sort left-half and right-half
+		sortStudent(a, left, mid, cmprFunc);
+		sortStudent(a, mid + 1, right, cmprFunc);
+		//Merge both halves together
+		mergeStudent(a, left, mid, right, cmprFunc);
+	}
+}
+
+void mergeStudent(Student* a, int left, int mid, int right, cmpr cmprFunc) {
+	//Create 2 temporary arrays for left-half and right-half of original array
+	int nL = mid - left + 1;	//a[left...m]
+	int nR = right - mid;	//a[mid + 1...right]
+	Student* L = new Student[nL];
+	Student* R = new Student[nR];
+
+	//Copy contents from 2 halves of original array to new arrays
+	for (int i = 0; i < nL; i++)
+		L[i] = a[i + left];
+	for (int i = 0; i < nR; i++)
+		R[i] = a[i + mid + 1];
+
+	//Merge 2 new arrays back into original array
+	int i = 0, j = 0, k = left;
+	//Check order
+	while (i < nL && j < nR) {
+		if ((*cmprFunc)(&L[i], &R[j])) {
+			a[k] = L[i];
+			i++;
+		}
+		else {
+			a[k] = R[j];
+			j++;
+		}
+		k++;
+	}
+	//If there are some values of L[i] left
+	while (i < nL) {
+		a[k] = L[i];
+		i++;
+		k++;
+	}
+	//If there are some values of R[j] left
+	while (j < nR) {
+		a[k] = R[j];
+		j++;
+		k++;
+	}
+
+	//Delete temporary arrays after use
+	delete[] L;
+	delete[] R;
 }

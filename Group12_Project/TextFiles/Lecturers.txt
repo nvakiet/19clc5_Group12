@@ -1,4 +1,4 @@
-3
+2
 dbtien
 75a0bca361cff4c3899dc84acfa0c0015e6e120754b805fe56916cc39ed76e99
 Dinh Ba Tien
@@ -11,12 +11,5 @@ d922f61081d5ecf98abe3a9e0d2bd093d3b38e16d2c6fed9867e00667b28f9ab
 Duong Nguyen Vu
 dnvu@hcmus.edu.vn
 Professor
-M
-
-htthanh
-9ba6b163eb6cec376c4abae2e61ab0271449530eceafb00f595e44783c80a86b
-Ho Tuan Thanh
-htthanh@hcmus.edu.vn
-Master
 M
 

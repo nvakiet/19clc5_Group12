@@ -3,8 +3,6 @@
 
 #include "../Headers/general.h"
 
-typedef bool (*insertOrder)(string, string, string);
-
 //Get current time from the system
 //Convert it to tm structure
 //If tm_mon > 7 (September-December), it's 1st semester, year: current year - next year
@@ -43,7 +41,7 @@ bool editCourse();
 
 //Add a student to the course
 //This should only be used before the semester (first day of course) starts, because new student will have default scores and attendance
-bool addCourseStudent(Semester curSem, void* checkOrder = insAscID);
+bool addCourseStudent(Semester curSem, cmpr orderStu = ascendingID, cmpr orderAcc = ascendingUsername);
 
 //Remove a student from the course
 //Completely remove the student from the student list of the course, and remove the course from the student's enrolling course list

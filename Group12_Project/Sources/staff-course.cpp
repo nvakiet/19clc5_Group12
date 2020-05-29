@@ -1714,7 +1714,7 @@ bool editCourse() {
 	return true;
 }
 
-bool addCourseStudent(Semester curSem, void* checkOrder) {
+bool addCourseStudent(Semester curSem, cmpr orderStu, cmpr orderAcc) {
 	string line, path;
 	string sysPath = "./TextFiles/";
 	ifstream fin;
@@ -1859,6 +1859,7 @@ bool addCourseStudent(Semester curSem, void* checkOrder) {
 				line.assign(temp);
 				oldStu[nStu].password = sha256(line);
 				oldStu[nStu].studentProfile = newStu;
+				sortAccount(oldStu, 0, nStu, orderAcc);	//Sort the array in ascending order before output to the file
 				fout << nStu + 1 << endl;
 			}
 			else fout << nStu << endl;
@@ -1930,29 +1931,20 @@ bool addCourseStudent(Semester curSem, void* checkOrder) {
 			crs.studentArr[i].birthDate = sToDate(line);
 			getline(fin, line);
 			crs.studentArr[i].active = stoi(line);
-			//Check if newStu can be insert at head
-			if (i == 0) {
-				if ((*(insertOrder)checkOrder)(newStu.ID, crs.studentArr[i].ID, "")) {
+			if (insertedStu == false) {
+				//If there's a spot to insert newStu in the array
+				if (i < crs.nStudents - 1 && (*orderStu)(&newStu, &crs.studentArr[i])) {
 					crs.studentArr[i + 1] = crs.studentArr[i];
 					crs.studentArr[i] = newStu;
 					insertedStu = true;
 					i++;
 				}
-			}
-			//Check if newStu can be insert in the middle
-			else if (i < crs.nStudents - 1 && insertedStu == false) {
-				if ((*(insertOrder)checkOrder)(newStu.ID, crs.studentArr[i].ID, crs.studentArr[i - 1].ID)) {
-					crs.studentArr[i + 1] = crs.studentArr[i];
+				//If there's no spot, insert at the end of array
+				else if (i == crs.nStudents - 1) {
 					crs.studentArr[i] = newStu;
 					insertedStu = true;
-					i++;
+					break;
 				}
-			}
-			//If can't be insert at the head or middle then insert at the tail, break loop because there's no more information to be read from file
-			else if (i == crs.nStudents - 1 && insertedStu == false) {
-				crs.studentArr[i] = newStu;
-				insertedStu = true;
-				break;
 			}
 			//Load scoreboard and attendance list of student i (i will be updated after insertion)
 			getline(fin, line);
