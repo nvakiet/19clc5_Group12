@@ -880,7 +880,7 @@ bool viewStudentsInClass() {
 		fin.ignore(INT_MAX, '\n');
 	}
 	fin.close();
-	cout << std::string(77, '-') << "\n";//chỉnh số lại theo bang xuất ra
+	cout << string(77, '-') << endl;//chỉnh số lại theo bang xuất ra
 	cout << "|" << center("Student ID", 10) << "|"
 		<< center("Student name", 15) << "|" << center("Student gender", 10) << "|"
 		<< center("Student birthdate", 15) << "|" << center("Status",15) << "|" << endl;
@@ -905,17 +905,18 @@ bool viewStudentsInClass() {
 	oldStu = nullptr;
 	return true;
 }
-bool changeClass(Semester curSem) {
+bool changeClass(Semester curSem, cmpr orderStu) {
 	string systemPath = "./TextFiles/", fileEx = "_Students.txt";
 	ifstream fin;
 	ofstream fout;
 	string ClassID, ID, line, DoB, newClass;
-	int choice;
-
-	if (!viewClasses()) return false;
+	if (!viewClasses()) {
+		cerr << "No class is available in the system now. Please import a class first!" << endl;
+		return false;
+	}
 	int n;
-	//string* classes = readClassesID("./TextFiles/Classes.txt", &n);
-	string* classes = readClassesID("./TextFiles/Test-class.txt", &n);
+	string* classes = readClassesID("./TextFiles/Classes.txt", &n);
+	//string* classes = readClassesID("./TextFiles/Test-class.txt", &n);
 	cout << "Enter class ID: ";
 	getline(cin, ClassID);
 	bool flag = false;
@@ -931,11 +932,12 @@ bool changeClass(Semester curSem) {
 				flag = true;
 		}
 	}
-	//string path1 = systemPath + ClassID + "_Students.txt";
-	string path1 = systemPath + "Test-" + ClassID + ".txt";
+	string path1 = systemPath + ClassID + "_Students.txt";
+	//string path1 = systemPath + "Test-" + ClassID + ".txt";
 	fin.open(path1);
 	if (emptyFile(path1)) {
 		cerr << "Can't read student data in this class!" << endl;
+		delete[] classes;
 		return false;
 	}
 	int n1;
@@ -969,20 +971,22 @@ bool changeClass(Semester curSem) {
 		cerr << "ID does not exist in this class" << endl;
 		delete[] oldStu;
 		oldStu = nullptr;
+		delete[] classes;
 		return false;
 	}
 
-	//string path2 = "./TextFiles/Students.txt";
-	string path2 = "./TextFiles/Test-student.txt";
+	string path2 = "./TextFiles/Students.txt";
+	//string path2 = "./TextFiles/Test-student.txt";
 	fin.open(path2);
 	if (emptyFile(path2)) {
 		cerr << "Cannot read students data from Students.txt" << endl;
+		delete[] classes;
+		delete[] oldStu;
 		return false;
 	}
 	int n2;
 	getline(fin, line);
 	n2 = stoi(line);
-	if (n2 == 0) return false;
 	Account* oldAcc = new Account[n2];
 	for (int i = 0; i < n2; i++) {
 		getline(fin, oldAcc[i].username);
@@ -1006,14 +1010,18 @@ bool changeClass(Semester curSem) {
 	}
 	if (flag2 == false) {
 		cerr << "ID does not exist in Students.txt" << endl;
+		delete[] oldStu;
+		oldStu = nullptr;
 		delete[] oldAcc;
 		oldAcc = nullptr;
+		delete[] classes;
 		return false;
 	}
 
 	Student* stu = new Student;
 	for (int i = 0; i < n1; i++) {
 		if (ID == oldStu[i].ID) {
+			stu->ID = ID;
 			stu->fullname = oldStu[i].fullname;
 			stu->gender = oldStu[i].gender;
 			stu->birthDate = oldStu[i].birthDate;
@@ -1022,7 +1030,14 @@ bool changeClass(Semester curSem) {
 	}
 	fout.open(path1);
 	if (!fout.is_open()) {
-		cerr << "Cannot open file " << path1;
+		cerr << "Cannot open file " << path1 << endl;
+		delete[] oldStu;
+		oldStu = nullptr;
+		delete[] oldAcc;
+		oldAcc = nullptr;
+		delete stu;
+		stu = nullptr;
+		delete[] classes;
 		return false;
 	}
 	fout << n1 - 1 << endl;
@@ -1037,6 +1052,8 @@ bool changeClass(Semester curSem) {
 		}
 	}
 	fout.close();
+	delete[] oldStu;
+	oldStu = nullptr;
 
 	cout << "Enter new class ID: ";
 	getline(cin, newClass);
@@ -1045,97 +1062,141 @@ bool changeClass(Semester curSem) {
 		if (newClass == classes[i])
 			flag3 = true;
 	}
-
-	fout.open(path2);
-	if (!fout.is_open()) {
-		cerr << "Cannot open file " << path2;
-		return false;
+	while (!flag3) {
+		cout << "Enter existing class: ";
+		getline(cin, newClass);
+		for (int i = 0; i < n && flag3 == false; i++) {
+			if (newClass == classes[i])
+				flag3 = true;
+		}
 	}
-	fout << n2 << endl;
-	for (int i = 0; i < n2; i++) {
-		fout << oldAcc[i].username << endl
-			<< oldAcc[i].password << endl
-			<< oldAcc[i].studentProfile.fullname << endl;
-		if (oldAcc[i].username == ID)
-			fout << newClass << endl;
-		else
-			fout << oldAcc[i].studentProfile.classID << endl;
-		fout << oldAcc[i].studentProfile.gender << endl;
-		printDate(fout, oldAcc[i].studentProfile.birthDate);
-		fout << oldAcc[i].studentProfile.active << endl;
-		fout << endl;
-	}
-	fout.close();
+	delete[] classes;
 
-	string path5 = "./TextFiles/Test-regCourse.txt";
+	if (flag3 == true) {
+		fout.open(path2);
+		if (!fout.is_open()) {
+			cerr << "Cannot open file " << path2 << endl;
+			delete[] oldAcc;
+			oldAcc = nullptr;
+			delete stu;
+			stu = nullptr;
+			return false;
+		}
+		fout << n2 << endl;
+		for (int i = 0; i < n2; i++) {
+			fout << oldAcc[i].username << endl
+				<< oldAcc[i].password << endl
+				<< oldAcc[i].studentProfile.fullname << endl;
+			if (oldAcc[i].username == ID)
+				fout << newClass << endl;
+			else
+				fout << oldAcc[i].studentProfile.classID << endl;
+			fout << oldAcc[i].studentProfile.gender << endl;
+			printDate(fout, oldAcc[i].studentProfile.birthDate);
+			fout << oldAcc[i].studentProfile.active << endl;
+			fout << endl;
+		}
+		fout.close();
+	}
+	delete[] oldAcc;
+	oldAcc = nullptr;
+
+	string path5 = systemPath + curSem.year + '_' + curSem.semester + "_Student Courses.txt";
+	//string path5 = "./TextFiles/Test-regCourse.txt";
 	fin.open(path5);
 	if (emptyFile(path5)) {
-		cerr << "Change successfully!" << endl;
+		delete stu;
+		stu = nullptr;
 		return true;
 	}
+	bool noEnrollment = false;
 	int nReg;
 	RegCourses* regStudents;
 	getline(fin, line);
 	nReg = stoi(line);
-	if (nReg == 0) {
-		regStudents = nullptr;
-		return false;
-	}
-	regStudents = new RegCourses[nReg];
-	for (int i = 0; i < nReg; i++) {
-		getline(fin, regStudents[i].studentID);
-		getline(fin, regStudents[i].studentName);
-		getline(fin, regStudents[i].studentClass);
-		getline(fin, line);
-		regStudents[i].nCourses = stoi(line);
-		if (regStudents[i].nCourses != 0) {
-			regStudents[i].courseID = new string[regStudents[i].nCourses];
-			regStudents[i].classID = new string[regStudents[i].nCourses];
-			for (int j = 0; j < regStudents[i].nCourses; j++) {
-				getline(fin, regStudents[i].courseID[j], ' ');
-				getline(fin, regStudents[i].classID[j]);
+	if (nReg != 0) {
+		regStudents = new RegCourses[nReg];
+		for (int i = 0; i < nReg; i++) {
+			getline(fin, regStudents[i].studentID);
+			getline(fin, regStudents[i].studentName);
+			getline(fin, regStudents[i].studentClass);
+			getline(fin, line);
+			regStudents[i].nCourses = stoi(line);
+			if (regStudents[i].nCourses != 0) {
+				regStudents[i].courseID = new string[regStudents[i].nCourses];
+				regStudents[i].classID = new string[regStudents[i].nCourses];
+				for (int j = 0; j < regStudents[i].nCourses; j++) {
+					getline(fin, regStudents[i].courseID[j], ' ');
+					getline(fin, regStudents[i].classID[j]);
+				}
 			}
+			fin.ignore(INT_MAX, '\n');
 		}
-		fin.ignore(INT_MAX, '\n');
-	}
-	fin.close();
+		fin.close();
 
-	fout.open(path5);
-	if (!fout.is_open() || fout.fail()) {
-		cerr << "Error while rewriting the Student Courses!" << endl;
-		return false;
+		fout.open(path5);
+		if (!fout.is_open() || fout.fail()) {
+			cerr << "Error while rewriting the Student Courses!" << endl;
+			for (int i = 0; i < nReg; i++) {
+				delete[] regStudents[i].courseID;
+				delete[] regStudents[i].classID;
+			}
+			delete[] regStudents;
+			delete stu;
+			stu = nullptr;
+			return false;
+		}
+		fout << nReg << endl;
+		for (int i = 0; i < nReg; i++) {
+			fout << regStudents[i].studentID << endl;
+			fout << regStudents[i].studentName << endl;
+			if (ClassID == regStudents[i].studentClass)
+				fout << newClass << endl;
+			else
+				fout << regStudents[i].studentClass << endl;
+			fout << regStudents[i].nCourses << endl;
+			for (int j = 0; j < regStudents[i].nCourses; j++)
+				fout << regStudents[i].courseID[j] << ' ' << regStudents[i].classID[j] << endl;
+			fout << endl;
+		}
+		fout.close();
+		for (int i = 0; i < nReg; i++) {
+			delete[] regStudents[i].courseID;
+			delete[] regStudents[i].classID;
+		}
+		delete[] regStudents;
 	}
-	fout << nReg << endl;
-	for (int i = 0; i < nReg; i++) {
-		fout << regStudents[i].studentID << endl;
-		fout << regStudents[i].studentName << endl;
-		if (ClassID == regStudents[i].studentClass)
-			fout << newClass << endl;
-		else
-			fout << regStudents[i].studentClass << endl;
-		fout << regStudents[i].nCourses << endl;
-		for (int j = 0; j < regStudents[i].nCourses; j++)
-			fout << regStudents[i].courseID[j] << ' ' << regStudents[i].classID[j] << endl;
-		fout << endl;
-	}
-	fout.close();
+	else fin.close();
 
 	if (flag3 == true) {
-		//string path3 = systemPath + newClass + "_Students.txt";
-		string path3 = systemPath + "Test-" + newClass + ".txt";
+		string path3 = systemPath + newClass + "_Students.txt";
+		//string path3 = systemPath + "Test-" + newClass + ".txt";
 		fin.open(path3);
 		if (emptyFile(path3)) {
-			cerr << "Can't read student data in this class!" << endl;
-			return false;
+			fout.open(path3);
+			if (!fout.is_open()) {
+				cerr << "Cannot open file " << path3 << endl;
+				delete stu;
+				stu = nullptr;
+				return false;
+			}
+			fout << 1 << endl
+				<< ID << endl
+				<< stu->fullname << endl
+				<< stu->gender << endl;
+			printDate(fout, stu->birthDate);
+			fout << stu->active << endl;
+			fout << endl;
+			fout.close();
+			delete stu;
+			stu = nullptr;
+			return true;
 		}
 		int n3;
 		getline(fin, line);
-		n3 = stoi(line);
-		if (n3 == 0) return false;
-
+		n3 = stoi(line) + 1;
 		Student* changedClass = new Student[n3];
-
-		for (int i = 0; i < n3; i++) {
+		for (int i = 0; i < n3 - 1; i++) {
 			getline(fin, changedClass[i].ID);
 			getline(fin, changedClass[i].fullname);
 			getline(fin, line);
@@ -1148,12 +1209,19 @@ bool changeClass(Semester curSem) {
 		}
 		fin.close();
 
+		changedClass[n3 - 1] = *stu;
+		sortStudent(changedClass, 0, n3 - 1, orderStu);
+
 		fout.open(path3);
 		if (!fout.is_open()) {
-			cerr << "Cannot open file " << path3;
+			cerr << "Cannot open file " << path3 << endl;
+			delete stu;
+			stu = nullptr;
+			delete[] changedClass;
+			changedClass = nullptr;
 			return false;
 		}
-		fout << n3 + 1 << endl;
+		fout << n3 << endl;
 		for (int i = 0; i < n3; i++) {
 			fout << changedClass[i].ID << endl
 				<< changedClass[i].fullname << endl
@@ -1162,69 +1230,10 @@ bool changeClass(Semester curSem) {
 			fout << changedClass[i].active << endl;
 			fout << endl;
 		}
-
-		fout << ID << endl
-			<< stu->fullname << endl
-			<< stu->gender << endl;
-		printDate(fout, stu->birthDate);
-		fout << stu->active << endl;
-		fout << endl;
 		fout.close();
 		delete[] changedClass;
 		changedClass = nullptr;
 	}
-
-	if (flag3 == false) {
-		cout << "The class does not exist. Create new? Choose 1 or 0" << endl;
-		cout << "1.Yes" << endl;
-		cout << "0.No" << endl;
-		cin >> choice;
-		while (!cin || choice < 0 || choice > 1) {
-			flushin(cin);
-			cerr << "Invalid input!" << endl;
-			cout << "--> ENTER A NUMBER FOR YOUR CHOICE: ";
-			cin >> choice;
-		}
-		flushin(cin);
-		if (choice == 0) {
-			cout << "Cancelled";
-			return false;
-		}
-		if (choice == 1) {
-			string path4 = systemPath + newClass + "_Students.txt";
-			fout.open(path4);
-			if (!fout.is_open()) {
-				cerr << "Cannot open file " << path4;
-				return false;
-			}
-			fout << 1 << endl;
-			fout << ID << endl
-				<< stu->fullname << endl
-				<< stu->gender << endl;
-			printDate(fout, stu->birthDate);
-			fout << stu->active << endl;
-			fout << endl;
-			fout.close();
-
-			//fout.open("./TextFiles/Classes.txt");
-			fout.open("./TextFiles/Test-class.txt");
-			if (!fout.is_open()) {
-				cerr << "Cannot open class file ";
-				delete[] classes;
-				classes = nullptr;
-				return false;
-			}
-			fout << n + 1 << endl;
-			for (int i = 0; i < n; i++)
-				fout << classes[i] << endl;
-			fout << newClass << endl;
-			fout.close();
-		}
-	}
-	delete[] oldAcc;
-	oldAcc = nullptr;
-	delete[] classes;
-	classes = nullptr;
 	delete stu;
 	stu = nullptr;
 	return true;

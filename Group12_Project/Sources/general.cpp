@@ -21,14 +21,18 @@ tm sToDate(string date_str) {
 	return date;
 }
 string center(const string s, const int w) {
-	string result;
-	int padding = w - s.size();
-	string spaces(padding / 2, ' ');
-	result = spaces + s + spaces;
-	if (padding > 0 && padding % 2 != 0)
+	string result, spaces;
+	result.reserve(w);
+	int padding = w - s.size();                 // count excess room to pad
+	for (int i = 0; i < padding / 2; ++i)
+		spaces += " ";
+	spaces.shrink_to_fit();
+	result = spaces + s + spaces;    // format with padding
+	if (padding > 0 && padding % 2 != 0)               // if odd #, add 1 space
 		result += " ";
 	return result;
 }
+
 void printDate(ostream &stream, tm date) {
 	stream << setfill('0') << right << date.tm_year + 1900 << '-'
 		<< setw(2) << date.tm_mon + 1 << '-' 
