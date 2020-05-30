@@ -887,12 +887,15 @@ bool viewStudentsInClass() {
 
 	for (int i = 0; i < n; i++) 
 	{
+		string t;
+		t.assign(oldStu[i].gender,1);
+		string DoB;
+		char buffer[11];
+		strftime(buffer, 11, "%Y-%m-%d", &oldStu[i].birthDate);
 		cout << "|" << center(oldStu[i].ID, 10) << "|"
 			<< center(oldStu[i].fullname, 15) << "|"
-			<< setw(5) << oldStu[i].gender << setw(5) << "|"
-			<< setfill('0') << right << oldStu[i].birthDate.tm_year + 1900 << '-'
-			<< setw(7) << oldStu[i].birthDate.tm_mon + 1 << '-'
-			<< setw(7) << oldStu[i].birthDate.tm_mday << "|";
+			<<setfill(' ')<< center(t,10) << "|"
+			<< setw(7)<<buffer<<setw(7)<< "|";
 		
 		if (oldStu[i].active) cout << center("Active",15) << endl;
 		else cout << center("Inactive",15) << endl;

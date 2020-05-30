@@ -195,7 +195,7 @@ void SearchandViewAttendance()
 	
 	
 	string* DoB = new string[B.nStudents];
-	cout << string(183, '-') << "\n";
+	cout << string(44 + B.nWeeks * 14, '-') << "\n";
 	cout << "|" << center("ID", 15) << "|" << center("Name", 15) << "|"
 		<< center("DoB", 10) << "|";
 
@@ -235,7 +235,7 @@ void SearchandViewAttendance()
 	}
 
 	cout << endl;
-	cout << string(183, '-') << "\n";
+	cout << string(44 + B.nWeeks * 14, '-') << "\n";
 	for (int i = 0; i < B.nStudents; i++)
 	{
 
@@ -247,7 +247,7 @@ void SearchandViewAttendance()
 			cout << setw(7) << *(B.checkList + i * B.nWeeks + j) << setw(7) << "|";
 		}
 		cout << endl;
-		cout << string(183, '-') << "\n";
+		cout << string(44 + B.nWeeks * 14, '-') << "\n";
 	}
 	fin.close();
 
