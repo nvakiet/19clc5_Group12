@@ -300,6 +300,6 @@ int main() {
 
 	//}
 Semester currentSemester = getCurrentSemester();
-viewStudentofAcourse(currentSemester);
+SearchandViewScoreboard();
 	return 0;
 }
