@@ -300,6 +300,6 @@ int main() {
 
 	//}
 Semester currentSemester = getCurrentSemester();
-editAttendance(currentSemester);
+editGrade(currentSemester);
 	return 0;
 }

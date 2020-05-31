@@ -155,11 +155,6 @@ bool editAttendance(Semester curSem) {
 
 	cout << "Enter course ID: ";
 	getline(cin, crs.courseID);
-	path = systemPath + curSem.year + '_' + curSem.semester + '_' + crs.className + "_Schedules.txt";
-	if (emptyFile(path)) {
-		cerr << "Can't find the course!" << endl;
-		return false;
-	}
 	if (!viewClasses()) {
 		cout << "There are no class in the system!" << endl;
 		return false;
@@ -235,7 +230,7 @@ bool editAttendance(Semester curSem) {
 		cout << "Error deleting file" << endl;
 	else
 		cout << "File successfully deleted" << endl;
-	if (rename("./TextFiles/Temp.txt", newFName) == 0)
+	if (rename("./TextFiles/Temp.txt", path.c_str()) == 0)
 		cout << "File successfully renamed" << endl;
 	else
 		cout << "Error renaming file" << endl;
@@ -332,9 +327,7 @@ bool editGrade(Semester curSem) {
 	fout.close();
 	fin.close();
 
-	char newFName[101];
-	strcpy(newFName, path.c_str());
-	if (remove(newFName) != 0)
+	if (remove(path.c_str()) != 0)
 		cout << "Error deleting file" << endl;
 	else
 		cout << "File successfully deleted" << endl;
