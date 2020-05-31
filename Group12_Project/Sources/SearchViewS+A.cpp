@@ -258,7 +258,7 @@ void SearchandViewAttendance()
 	delete[]DoB;
 	
 }
-bool viewcheckin(Account user)
+bool viewcheckin(Account user,Semester cursem)
 {
 	string ID = user.studentProfile.ID;//Truyen thong tin ID vao bien ID
 	Course B;
@@ -266,8 +266,7 @@ bool viewcheckin(Account user)
 	string line;
 	printf("Enter years : ");
 	getline(cin, B.c_semester.year);
-	printf("Enter semester : ");
-	getline(cin, B.c_semester.semester);
+	B.c_semester.semester = cursem.semester;
 	printf("Enter course ID: ");
 	getline(cin, B.courseID);
 	printf("Enter class ID: ");
@@ -299,23 +298,23 @@ bool viewcheckin(Account user)
 				getline(fin, line);
 				*(B.checkList + i * B.nWeeks + j) = stoi(line);
 			}
-			cout << string(140, '-') << "\n";
+			cout << string(B.nWeeks * 14, '-') << "\n";
 			cout << "|";
 			for (int i = 0; i < B.nWeeks; i++)
 			{
 				cout << center(classdate[i], 13) << "|";
 			}
 			cout << endl;
-			cout << string(140, '-') << "\n";
+			cout << string(B.nWeeks * 14, '-') << "\n";
 			cout << "|";
 			for (int j = 0; j < B.nWeeks; j++)
 			{
-				
-				if (*(B.checkList + i * B.nWeeks + j) == true) cout << center("Attendance",14)<<"|";
-				else cout << center("X",14) << "|";
+
+				if (*(B.checkList + i * B.nWeeks + j) == true) cout << center("Attendance", 14) << "|";
+				else cout << center("X", 13) << "|";
 			}
 			cout << endl;
-			cout << string(140, '-') << "\n";
+			cout << string(B.nWeeks * 14, '-') << "\n";
 			fin.close();
 			delete[]classdate;
 			delete[]B.checkList;
@@ -421,7 +420,7 @@ void viewSchedules(Account user, Semester curSem)
 		getline(fin, line);
 		if (line == ID)
 		{
-			cout << "		=======SCHEDULES======= " << endl;
+			cout << "				=======SCHEDULES======= " << endl;
 			for (int j = 0; j < 2; j++)
 				fin.ignore(INT_MAX, '\n');
 			getline(fin, line);
@@ -441,6 +440,8 @@ void viewSchedules(Account user, Semester curSem)
 					getline(f, line);
 					if (line == courseID)
 					{
+						cout << endl;
+						cout << classID << endl;
 						cout << line << endl;
 						getline(f, line);
 						cout << line << endl;
