@@ -621,20 +621,29 @@ void viewStudentofAcourse(Semester cursem)
 	getline(fin, line);
 	int n = stoi(line);
 	cout << "	       ======== Students of Course " << courseID << " =======" << endl;
+	cout << string(10 + 30 + 10 + 15 + 10 + 6, '-') << endl;
+	cout << '|' << center("Student ID", 10) << '|'
+		<< center("Full name", 30) << '|'
+		<< center("Gender", 10) << '|'
+		<< center("Birth Date", 15) << '|'
+		<< center("Status", 10) << '|' << endl;
+	cout << string(10 + 30 + 10 + 15 + 10 + 6, '-') << endl;
 	for (int i = 0; i < n; i++)
 	{
-		fin.ignore(INT_MAX, '\n');
 		getline(fin, line);
-		cout << string(20 + 10 + 15 + 2, '-') << "\n";
-		cout << setw(2) << i << setw(2) << "|" << center(line, 15) << "|";
+		cout << "|" << center(line, 10) << "|";
+		getline(fin, line);
+		cout << center(line, 30) << "|";
 		getline(fin, line);
 		cout << center(line, 10) << "|";
 		getline(fin, line);
 		cout << center(line, 15) << "|";
-		cout << endl;
-		for (int i = 0; i < 6 + nWeeks; i++)
+		getline(fin, line);
+		if (stoi(line) == 1) cout << center("Active", 10) << '|' << endl;
+		else cout << center("Inactive", 10) << '|' << endl;
+		for (int i = 0; i < 5 + nWeeks; i++)
 			fin.ignore(INT_MAX, '\n');
+		cout << string(10 + 30 + 10 + 15 + 10 + 6, '-') << endl;
 	}
-	cout << std::string(20, '-') << "\n";
 	fin.close();
 }

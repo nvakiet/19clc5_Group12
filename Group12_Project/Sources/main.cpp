@@ -300,6 +300,6 @@ int main() {
 
 	//}
 Semester currentSemester = getCurrentSemester();
-editGrade(currentSemester);
+viewStudentofAcourse(currentSemester);
 	return 0;
 }
