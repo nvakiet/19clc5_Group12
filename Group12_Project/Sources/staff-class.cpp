@@ -851,7 +851,10 @@ bool viewStudentsInClass() {
 	ifstream fin;
 	ofstream fout;
 	string ClassID, line, DoB;
-	if (!viewClasses()) return false;
+	if (!viewClasses()) {
+		cerr << "There is no class in the system now. Please import a class first!" << endl;
+		return false;
+	}
 	cout << "Enter class ID: ";
 	getline(cin, ClassID);
 	cout << endl;
@@ -880,26 +883,25 @@ bool viewStudentsInClass() {
 		fin.ignore(INT_MAX, '\n');
 	}
 	fin.close();
-	cout << string(77, '-') << endl;//chỉnh số lại theo bang xuất ra
+	cout << string(87, '-') << endl;
 	cout << "|" << center("Student ID", 10) << "|"
-		<< center("Student name", 15) << "|" << center("Student gender", 10) << "|"
-		<< center("Student birthdate", 15) << "|" << center("Status",15) << "|" << endl;
-
+		<< center("Student name", 30) << "|" << center("Student gender", strlen("Student gender")) << "|"
+		<< center("Student birthdate", strlen("Student birthdate")) << "|" << center("Status",10) << "|" << endl;
+	cout << string(87, '-') << endl;
 	for (int i = 0; i < n; i++) 
 	{
 		string t;
-		t.assign(oldStu[i].gender,1);
-		string DoB;
+		t.assign(1, oldStu[i].gender);
 		char buffer[11];
 		strftime(buffer, 11, "%Y-%m-%d", &oldStu[i].birthDate);
 		cout << "|" << center(oldStu[i].ID, 10) << "|"
-			<< center(oldStu[i].fullname, 15) << "|"
-			<<setfill(' ')<< center(t,10) << "|"
-			<< setw(7)<<buffer<<setw(7)<< "|";
+			<< center(oldStu[i].fullname, 30) << "|"
+			<< center(t, strlen("Student gender")) << "|"
+			<< center(buffer, strlen("Student birthdate")) << "|";
 		
-		if (oldStu[i].active) cout << center("Active",15) << endl;
-		else cout << center("Inactive",15) << endl;
-		cout << endl;
+		if (oldStu[i].active) cout << center("Active",10) << '|' << endl;
+		else cout << center("Inactive",10) << '|' << endl;
+		cout << string(87, '-') << endl;
 	}
 	delete[] oldStu;
 	oldStu = nullptr;

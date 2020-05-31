@@ -9,7 +9,6 @@
 #include <cstring>
 #include <ctime>
 #include "../Headers/sha256.h"
-#include <sstream>
 using namespace std;
 
 struct score 

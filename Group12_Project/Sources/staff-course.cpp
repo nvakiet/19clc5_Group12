@@ -191,6 +191,7 @@ bool addCourse(Semester curSem) {
 	cout << "Enter course name: ";
 	getline(cin, inCourse.courseName);
 	int n;
+	viewClasses();
 	string* classes = readClassesID("./TextFiles/Classes.txt", &n);
 	cout << "Enter class ID: ";
 	getline(cin, inCourse.className);
@@ -313,6 +314,7 @@ bool addCourse(Semester curSem) {
 			userArr[nLecturers - 1].username = slackName;
 			userArr[nLecturers - 1].password = sha256(slackName + "_HCMUS");
 			userArr[nLecturers - 1].lecturerProfile = inCourse.courseLecturer;
+			sortAccount(userArr, 0, nLecturers - 1);
 			fout.open(Path);
 			if (!fout.is_open()) {
 				cerr << "Can't update lecturer's account!" << endl;
@@ -336,14 +338,6 @@ bool addCourse(Semester curSem) {
 		//After reading and writing, release the memory of array
 		delete[] userArr;
 		userArr = nullptr;
-	}
-
-	//* Update to Semesters.txt
-	if (updateSemester(inCourse.c_semester))
-		cout << "Semesters.txt has been updated!" << endl;
-	else {
-		cerr << "Can't update semester!" << endl;
-		return false;
 	}
 
 	//* Add course info to [Year]_[Semester]_[ClassID]_Schedules.txt
@@ -671,9 +665,7 @@ bool addCourse(Course inCourse, string slackName) {
 	ifstream fin;
 	ofstream fout;
 	string line;
-	cout << endl;
 	//* Register lecturer account in Lecturers.txt
-	cout << "Registering lecturer's account if it's new..." << endl;
 	string Path = "./TextFiles/Lecturers.txt";
 	if (emptyFile(Path)) {
 		//If Lecturers.txt hasn't been created or is empty
@@ -691,7 +683,6 @@ bool addCourse(Course inCourse, string slackName) {
 			<< inCourse.courseLecturer.gender << endl;
 		fout << endl;
 		fout.close();
-		cout << "Lecturer's account has been created!" << endl;
 	}
 	else {
 		//Store data file into account array and check if the lecturer account has been created before
@@ -720,6 +711,7 @@ bool addCourse(Course inCourse, string slackName) {
 			userArr[nLecturers - 1].username = slackName;
 			userArr[nLecturers - 1].password = sha256(slackName + "_HCMUS");
 			userArr[nLecturers - 1].lecturerProfile = inCourse.courseLecturer;
+			sortAccount(userArr, 0, nLecturers - 1);
 			fout.open(Path);
 			if (!fout.is_open()) {
 				cerr << "Can't update lecturer's account!" << endl;
@@ -737,24 +729,13 @@ bool addCourse(Course inCourse, string slackName) {
 				fout << endl;
 			}
 			fout.close();
-			cout << "Lecturer's account has been created!" << endl;
 		}
-		else cout << "The lecturer's account already existed." << endl;
 		//After reading and writing, release the memory of array
 		delete[] userArr;
 		userArr = nullptr;
 	}
 
-	//* Update to Semesters.txt
-	if (updateSemester(inCourse.c_semester))
-		cout << "Semesters.txt has been updated!" << endl;
-	else {
-		cerr << "Can't update semester!" << endl;
-		return false;
-	}
-
 	//* Add course info to [Year]_[Semester]_[ClassID]_Schedules.txt
-	cout << "Updating course info..." << endl;
 	Path = "./TextFiles/" + inCourse.c_semester.year + '_' + inCourse.c_semester.semester + '_' + inCourse.className + "_Schedules.txt";
 	if (emptyFile(Path)) {
 		//If the file hasn't been created or is empty
@@ -779,7 +760,6 @@ bool addCourse(Course inCourse, string slackName) {
 		fout << inCourse.room << endl;
 		fout << endl;
 		fout.close();
-		cout << "Course info has been updated!" << endl;
 	}
 	else {
 		fin.open(Path);
@@ -844,11 +824,9 @@ bool addCourse(Course inCourse, string slackName) {
 		delete[] slack;
 		slack = nullptr;
 		fout.close();
-		cout << "Course info has been updated!" << endl;
 	}
 
 	//* Load [ClassID]_Students.txt to student array
-	cout << "Loading student list of the class..." << endl;
 	Path = "./TextFiles/" + inCourse.className + "_Students.txt";
 	int nInactive = 0;
 	if (emptyFile(Path)) {
@@ -875,21 +853,17 @@ bool addCourse(Course inCourse, string slackName) {
 		}
 		fin.close();
 	}
-	cout << "Student list has been loaded!" << endl;
 
 	//* Get nWeeks and date array from startDate and endDate (including startDate and endDate in array)
-	cout << "Loading dates between start date and end date of the course..." << endl;
 	tm* dateArr = getWeeks(inCourse.startDate, inCourse.endDate, &inCourse.nWeeks);
 	if (dateArr == nullptr) {
 		cerr << "Can't calculate dates between starting date and ending date of the course!" << endl;
 		delete[] inCourse.studentArr;
 		return false;
 	}
-	cout << "Date list has been loaded!" << endl;
 
 	//* Save the student array to [Year]_[Semester]_[CourseID]_[ClassID]_Students.txt
 	//  ^ along with default scoreboards of -1 and nWeeks and date array and default check lists of 0 for each student
-	cout << "Generating default student list for the course..." << endl;
 	Path = "./TextFiles/" + inCourse.c_semester.year + '_' + inCourse.c_semester.semester + '_' + inCourse.courseID + '_' + inCourse.className + "_Students.txt";
 	if (emptyFile(Path)) {
 		fout.open(Path);
@@ -914,7 +888,6 @@ bool addCourse(Course inCourse, string slackName) {
 			fout << endl;
 		}
 		fout.close();
-		cout << "The student list for this course has been generated!" << endl;
 	}
 	else {
 		cout << "The student list for this course already existed. Do you want to overwrite it with a new default list?" << endl;
@@ -958,12 +931,10 @@ bool addCourse(Course inCourse, string slackName) {
 				fout << endl;
 			}
 			fout.close();
-			cout << "The student list for this course has been generated!" << endl;
 		}
 	}
 
 	//* Add this course to register course list of each student in [Year]_[Semester]_Student Courses.txt
-	cout << "Adding this course to Enrolled Courses list of each student in this class by default..." << endl;
 	Path = "./TextFiles/" + inCourse.c_semester.year + '_' + inCourse.c_semester.semester + "_Student Courses.txt";
 	//If the file hasn't been created
 	if (emptyFile(Path)) {
@@ -985,7 +956,6 @@ bool addCourse(Course inCourse, string slackName) {
 			fout << endl;
 		}
 		fout.close();
-		cout << "The course has been added to the students' Courses list." << endl;
 	}
 	else {
 		//If the file already existed, load it to an array of RegCourses
@@ -1059,7 +1029,6 @@ bool addCourse(Course inCourse, string slackName) {
 			}
 		}
 		fout.close();
-		cout << "The course has been added to the students' Enrolled Courses list!" << endl;
 		//REMEMBER TO DELETE THE ARRAY INSIDE EACH STRUCT ELEMENT AND THE STRUCT ARRAY ITSELF
 		delete[] sameCourse;
 		for (int i = 0; i < nReg; i++) {
@@ -1115,7 +1084,7 @@ bool importCourse(Semester curSem) {
 				cerr << "Can't add a course of this file to the program!" << endl;
 				return false;
 			}
-			else cout << "\nCourse " << inCourse.courseID << " of class " << inCourse.className << " has been added!" << endl;
+			else cout << "Course " << inCourse.courseID << " of class " << inCourse.className << " has been added!" << endl;
 		}
 		fin.close();
 		return true;
