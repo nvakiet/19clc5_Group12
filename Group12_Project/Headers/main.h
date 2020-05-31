@@ -6,4 +6,5 @@
 #include "staff-course.h"
 #include "SearchViewS+A.h"
 #include "student.h"
+#include "lecturer.h"
 #endif // !_MAIN_H_

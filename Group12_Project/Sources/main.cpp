@@ -277,6 +277,7 @@ int main() {
 	//	}
 
 	//}
-SearchandViewAttendance();
+Semester currentSemester;
+editAttendance(currentSemester);
 	return 0;
 }
