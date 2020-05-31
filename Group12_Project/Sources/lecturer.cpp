@@ -10,7 +10,6 @@ bool importScoreBoard(Semester curSem) {
 	cout << "Enter csv file path (or ./TextFiles/\"Filename\".csv if the file is in TextFiles folder): ";
 	cin >> path;
 	flushin(cin);
-	path = "./TextFiles/CS162_19CLC5_Scoreboard.csv";
 	cout << "Enter course ID: ";
 	getline(cin, newScore.courseID);
 	cout << "Enter class ID of the course: ";
@@ -57,8 +56,7 @@ bool importScoreBoard(Semester curSem) {
 		cerr << "Error getting schedule of the course!" << endl;
 		return false;
 	}
-	//path = systemPath + curSem.year + '_' + curSem.semester + '_' + newScore.courseID + '_' + newScore.className + "_Students.txt";
-	path = systemPath + "Test_" + newScore.courseID + '_' + newScore.className + ".txt";
+	path = systemPath + curSem.year + '_' + curSem.semester + '_' + newScore.courseID + '_' + newScore.className + "_Students.txt";
 	fin.open(path);
 	if (emptyFile(path)) {
 		cerr << "Cannot read data of this course" << endl;
@@ -158,8 +156,6 @@ bool editAttendance(Semester curSem) {
 	cout << "Enter course ID: ";
 	getline(cin, crs.courseID);
 
-	curSem.year = "2019-2020";
-	curSem.semester = "3rd Semester";
 	path = systemPath + curSem.year + '_' + curSem.semester + '_' + crs.className + "_Schedules.txt";
 	if (emptyFile(path)) {
 		cerr << "Can't find the course!" << endl;
@@ -192,11 +188,10 @@ bool editAttendance(Semester curSem) {
 	getline(cin, ID);
 	cout << "Enter date you want to edit (YYYY-MM-DD): ";
 	getline(cin, date);
-	cout << "Edit attendance (0 or 1): ";
+	cout << "Edit attendance (0 = Absent or 1 = Attended): ";
 	getline(cin, active);
 
-	//path = systemPath + curSem.year + '_' + curSem.semester + '_' + crs.courseID + '_' + crs.className + "_Students.txt";
-	path = systemPath + "Test_" + crs.courseID + '_' + crs.className + ".txt";
+	path = systemPath + curSem.year + '_' + curSem.semester + '_' + crs.courseID + '_' + crs.className + "_Students.txt";
 	fin.open(path);
 	if (emptyFile(path)) {
 		cerr << "Cannot read data of this course" << endl;
@@ -223,13 +218,11 @@ bool editAttendance(Semester curSem) {
 	}
 	fout.close();
 	fin.close();
-	char newFName[101];
-	strcpy(newFName, path.c_str());
-	if (remove(newFName) != 0)
+	if (remove(path.c_str()) != 0)
 		cout << "Error deleting file" << endl;
 	else
 		cout << "File successfully deleted" << endl;
-	if (rename("./TextFiles/Temp.txt", newFName) == 0)
+	if (rename("./TextFiles/Temp.txt", path.c_str()) == 0)
 		cout << "File successfully renamed" << endl;
 	else
 		cout << "Error renaming file" << endl;

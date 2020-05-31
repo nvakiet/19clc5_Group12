@@ -17,16 +17,15 @@ int main() {
 	//			pause();
 	//			continue;
 	//		}
+	//		currentSemester = getCurrentSemester();
+	//		if (updateSemester(currentSemester))
+	//			cout << "The current semester has been updated!" << endl;
+	//		else cerr << "Failed to update the current semester. Some functions may not work properly!" << endl;
 	//	}
-	//	currentSemester = getCurrentSemester();
-	//	if (updateSemester(currentSemester))
-	//		cout << "The current semester has been updated!" << endl;
-	//	else cerr << "Failed to update the current semester. Some functions may not work properly!" << endl;
 	//	//Show main menu based on account's role
 	//	//STAFF MENU
 	//	while (user.role == 1) {
-	//		cout << "Current semester: " << currentSemester.year << " - " << currentSemester.semester << endl;
-	//		choice = menuStaff();
+	//		choice = menuStaff(currentSemester);
 	//		//View staff profile
 	//		if (choice == 1) {
 	//			viewProfile(user);
@@ -49,7 +48,7 @@ int main() {
 	//		if (choice == 3) {
 	//			choice = 0;
 	//			while (choice != 8) {
-	//				choice = menuClass();
+	//				choice = menuClass(currentSemester);
 	//				//Import student list of a class from csv file, sort the student list
 	//				if (choice == 1) {
 	//					if (importClass())
@@ -92,7 +91,7 @@ int main() {
 	//				}
 	//				//View student list of a class
 	//				if (choice == 7) {
-	//					if (!viewStudentsInClass()) cerr << "Can't find student list of this class! Please import the class first!" << endl;
+	//					if (!viewStudentsInClass()) cerr << "There's no student list available! Please import a class first!" << endl;
 	//					pause();
 	//				}
 	//			}
@@ -102,7 +101,7 @@ int main() {
 	//		if (choice == 4) {
 	//			choice = 0;
 	//			while (choice != 12) {
-	//				choice = menuCourse();
+	//				choice = menuCourse(currentSemester);
 	//				//View list of semester in the program
 	//				if (choice == 1) {
 	//					viewSemesterList();
@@ -154,15 +153,21 @@ int main() {
 	//					else cerr << "Failed to add the student to the course!" << endl;
 	//					pause();
 	//				}
+	//				//View list of courses
+	//				if (choice == 9) {
+	//					ListOfCourse(currentSemester);
+	//					pause();
+	//				}
+	//				//View list of students of a course
+	//				if (choice == 10) {
+	//					viewStudentofAcourse(currentSemester);
+	//					pause();
+	//				}
 	//				//View all lecturer accounts
 	//				if (choice == 11) {
 	//					viewLecture();
 	//					pause();
 	//				}
-	//				/*	 DO SOMETHING WITH COURSE DATA HERE
-
-
-	//				*/
 	//			}
 	//			continue;
 	//		}
@@ -187,7 +192,7 @@ int main() {
 	//	//LECTURER MENU
 	//	while (user.role == 2) {
 	//		cout << "Current semester: " << currentSemester.year << " - " << currentSemester.semester << endl;
-	//		choice = menuLecturer();
+	//		choice = menuLecturer(currentSemester);
 	//		//View lecturer profile
 	//		if (choice == 1) {
 	//			viewProfile(user);
@@ -206,14 +211,31 @@ int main() {
 	//				continue;
 	//			}
 	//		}
+	//		//View list of courses
+	//		if (choice == 3) {
+	//			ListOfCourse(currentSemester);
+	//			pause();
+	//		}
+	//		//View list of students of a course
+	//		if (choice == 4) {
+	//			viewStudentofAcourse(currentSemester);
+	//			pause();
+	//		}
+	//		//SEARCH - VIEW - EXPORT ATTENDANCE LIST
+	//		if (choice == 5) {
+	//			SearchandViewAttendance();
+	//			pause();
+	//		}
 	//		/*	ADD FUNCTIONS FOR CHOICE 3 TO 9 HERE
 
 
 
-
-
-
 	//		*/
+	//		//SEARCH - VIEW - EXPORT SCOREBOARD
+	//		if (choice == 9) {
+	//			SearchandViewScoreboard();
+	//			pause();
+	//		}
 	//		//LOG OUT
 	//		if (choice == 10) {
 	//			logOut(user);
@@ -225,7 +247,7 @@ int main() {
 	//	//STUDENT MENU
 	//	while (user.role == 3) {
 	//		cout << "Current semester: " << currentSemester.year << " - " << currentSemester.semester << endl;
-	//		choice = menuStudent();
+	//		choice = menuStudent(currentSemester);
 	//		//View student profile
 	//		if (choice == 1) {
 	//			viewProfile(user);
@@ -253,7 +275,7 @@ int main() {
 	//		}
 	//		//View check in result
 	//		if (choice == 4) {
-	//			if (!viewcheckin(user))
+	//			if (!viewcheckin(user, currentSemester))
 	//				cerr << "Failed to get information!" << endl;
 	//			pause();
 	//		}
@@ -277,7 +299,7 @@ int main() {
 	//	}
 
 	//}
-	Semester currentSemester;
-	editAttendance(currentSemester);
+Semester currentSemester = getCurrentSemester();
+editAttendance(currentSemester);
 	return 0;
 }

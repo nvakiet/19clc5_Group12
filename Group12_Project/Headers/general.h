@@ -1,6 +1,5 @@
 #ifndef _GENERAL_H_
 #define _GENERAL_H_
-#pragma warning(disable:4996)
 #include <iostream>
 #include <fstream>
 #include <iomanip>
