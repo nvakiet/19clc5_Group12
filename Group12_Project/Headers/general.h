@@ -8,8 +8,8 @@
 #include <string>
 #include <cstring>
 #include <ctime>
+#include <Windows.h>
 #include "../Headers/sha256.h"
-#include <sstream>
 using namespace std;
 
 struct score 

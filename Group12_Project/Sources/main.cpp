@@ -277,7 +277,7 @@ int main() {
 	//	}
 
 	//}
-Semester currentSemester;
-editAttendance(currentSemester);
+	Semester currentSemester;
+	editAttendance(currentSemester);
 	return 0;
 }
