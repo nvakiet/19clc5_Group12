@@ -17,16 +17,15 @@ int main() {
 				pause();
 				continue;
 			}
+			currentSemester = getCurrentSemester();
+			if (updateSemester(currentSemester))
+				cout << "The current semester has been updated!" << endl;
+			else cerr << "Failed to update the current semester. Some functions may not work properly!" << endl;
 		}
-		currentSemester = getCurrentSemester();
-		if (updateSemester(currentSemester))
-			cout << "The current semester has been updated!" << endl;
-		else cerr << "Failed to update the current semester. Some functions may not work properly!" << endl;
 		//Show main menu based on account's role
 		//STAFF MENU
 		while (user.role == 1) {
-			cout << "Current semester: " << currentSemester.year << " - " << currentSemester.semester << endl;
-			choice = menuStaff();
+			choice = menuStaff(currentSemester);
 			//View staff profile
 			if (choice == 1) {
 				viewProfile(user);
@@ -49,7 +48,7 @@ int main() {
 			if (choice == 3) {
 				choice = 0;
 				while (choice != 8) {
-					choice = menuClass();
+					choice = menuClass(currentSemester);
 					//Import student list of a class from csv file, sort the student list
 					if (choice == 1) {
 						if (importClass())
@@ -92,7 +91,7 @@ int main() {
 					}
 					//View student list of a class
 					if (choice == 7) {
-						if (!viewStudentsInClass()) cerr << "Can't find student list of this class! Please import the class first!" << endl;
+						if (!viewStudentsInClass()) cerr << "There's no student list available! Please import a class first!" << endl;
 						pause();
 					}
 				}
@@ -102,7 +101,7 @@ int main() {
 			if (choice == 4) {
 				choice = 0;
 				while (choice != 12) {
-					choice = menuCourse();
+					choice = menuCourse(currentSemester);
 					//View list of semester in the program
 					if (choice == 1) {
 						viewSemesterList();
@@ -193,7 +192,7 @@ int main() {
 		//LECTURER MENU
 		while (user.role == 2) {
 			cout << "Current semester: " << currentSemester.year << " - " << currentSemester.semester << endl;
-			choice = menuLecturer();
+			choice = menuLecturer(currentSemester);
 			//View lecturer profile
 			if (choice == 1) {
 				viewProfile(user);
@@ -248,7 +247,7 @@ int main() {
 		//STUDENT MENU
 		while (user.role == 3) {
 			cout << "Current semester: " << currentSemester.year << " - " << currentSemester.semester << endl;
-			choice = menuStudent();
+			choice = menuStudent(currentSemester);
 			//View student profile
 			if (choice == 1) {
 				viewProfile(user);
@@ -276,7 +275,7 @@ int main() {
 			}
 			//View check in result
 			if (choice == 4) {
-				if (!viewcheckin(user))
+				if (!viewcheckin(user, currentSemester))
 					cerr << "Failed to get information!" << endl;
 				pause();
 			}

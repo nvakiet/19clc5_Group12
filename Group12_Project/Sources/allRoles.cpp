@@ -339,6 +339,7 @@ bool changePassword(Account& user) {
 }
 
 int menuStart() {
+	system("cls");
 	cout << string(50, '*') << endl;
 	cout << string(12, ' ') << "STUDENT MANAGEMENT SYSTEM" << string(12, ' ') << endl;
 	cout << string(50, '*') << endl;
@@ -355,10 +356,13 @@ int menuStart() {
 	}
 	cout << endl;
 	flushin(cin);
+	system("cls");
 	return choice;
 }
 
-int menuStaff() {
+int menuStaff(Semester curSem) {
+	system("cls");
+	cout << "Current semester: " << curSem.year << " - " << curSem.semester << endl;
 	cout << string(50, '*') << endl;
 	cout << string(16, ' ') << "MAIN MENU - STAFF" << string(16, ' ') << endl;
 	cout << string(50, '*') << endl;
@@ -380,10 +384,13 @@ int menuStaff() {
 	}
 	cout << endl;
 	flushin(cin);
+	system("cls");
 	return choice;
 }
 
-int menuLecturer() {
+int menuLecturer(Semester curSem) {
+	system("cls");
+	cout << "Current semester: " << curSem.year << " - " << curSem.semester << endl;
 	cout << string(50, '*') << endl;
 	cout << string(15, ' ') << "MAIN MENU - LECTURER" << string(14, ' ') << endl;
 	cout << string(50, '*') << endl;
@@ -408,10 +415,13 @@ int menuLecturer() {
 	}
 	cout << endl;
 	flushin(cin);
+	system("cls");
 	return choice;
 }
 
-int menuStudent() {
+int menuStudent(Semester curSem) {
+	system("cls");
+	cout << "Current semester: " << curSem.year << " - " << curSem.semester << endl;
 	cout << string(50, '*') << endl;
 	cout << string(15, ' ') << "MAIN MENU - STUDENT" << string(15, ' ') << endl;
 	cout << string(50, '*') << endl;
@@ -433,10 +443,13 @@ int menuStudent() {
 	}
 	cout << endl;
 	flushin(cin);
+	system("cls");
 	return choice;
 }
 
-int menuClass() {
+int menuClass(Semester curSem) {
+	system("cls");
+	cout << "Current semester: " << curSem.year << " - " << curSem.semester << endl;
 	cout << string(50, '*') << endl;
 	cout << string(21, ' ') << "CLASSES" << string(21, ' ') << endl;
 	cout << string(50, '*') << endl;
@@ -459,10 +472,13 @@ int menuClass() {
 	}
 	cout << endl;
 	flushin(cin);
+	system("cls");
 	return choice;
 }
 
-int menuCourse() {
+int menuCourse(Semester curSem) {
+	system("cls");
+	cout << "Current semester: " << curSem.year << " - " << curSem.semester << endl;
 	cout << string(50, '*') << endl;
 	cout << string(21, ' ') << "COURSES" << string(21, ' ') << endl;
 	cout << string(50, '*') << endl;
@@ -489,11 +505,11 @@ int menuCourse() {
 	}
 	cout << endl;
 	flushin(cin);
+	system("cls");
 	return choice;
 }
 
 void viewProfile(Account user) {
-	cout << endl;
 	switch (user.role) {
 	case 1:
 		cout << "PROFILE: Academic Staff" << endl;

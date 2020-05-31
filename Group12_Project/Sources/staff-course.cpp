@@ -169,11 +169,13 @@ void viewSemesterList() {
 	}
 	fin.close();
 	//Print the semester array to the screen
-	cout << "Here's the semester list: " << endl;
+	cout << string(20, '=') << " ALL SEMESTERS " << string(20, '=') << endl;
+	cout << string(33, '-') << endl;
+	cout << '|' << center("Academic Year", 15) << '|' << center("Semester", 15) << '|' << endl;
+	cout << string(33, '-') << endl;
 	for (int i = 0; i < n; i++) {
-		cout << "Academic Year: " << fileSem[i].year << endl;
-		cout << "Semester: " << fileSem[i].semester << endl;
-		cout << endl;
+		cout << '|' << center(fileSem[i].year, 15) << '|' << center(fileSem[i].semester, 15) << '|' << endl;
+		cout << string(33, '-') << endl;
 	}
 	delete[] fileSem;
 }

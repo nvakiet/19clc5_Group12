@@ -23,23 +23,23 @@ int menuStart();
 
 //Prints main menu for Academic Staff user
 //Menu loop break condition: when user role is changed to 0 by logOut function
-int menuStaff();
+int menuStaff(Semester curSem);
 
 //Prints main menu for Lecturer user
 //Menu loop break condition: when user role is changed to 0 by logOut function
-int menuLecturer();
+int menuLecturer(Semester curSem);
 
 //Prints main menu for Student user
 //Menu loop break condition: when user role is changed to 0 by logOut function
-int menuStudent();
+int menuStudent(Semester curSem);
 
 //Prints Class menu
 //Menu loop break condition: When user choice is "Back to main menu"
-int menuClass();
+int menuClass(Semester curSem);
 
 //Prints Course menu
 //Menu loop break condition: When user choice is "Back to main menu"
-int menuCourse();
+int menuCourse(Semester curSem);
 
 //simply prints out the profile stored in the account currently logging in
 //the profile printed out will be depended on the "role" value

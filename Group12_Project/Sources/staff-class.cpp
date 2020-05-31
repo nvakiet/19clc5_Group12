@@ -852,7 +852,7 @@ bool viewStudentsInClass() {
 	ofstream fout;
 	string ClassID, line, DoB;
 	if (!viewClasses()) {
-		cerr << "There is no class in the system now. Please import a class first!" << endl;
+		cerr << "There is no class in the system now" << endl;
 		return false;
 	}
 	cout << "Enter class ID: ";

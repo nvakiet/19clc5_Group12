@@ -244,7 +244,8 @@ void SearchandViewAttendance()
 			<< center(DoB[i], 10) << "|";
 		for (int j = 0; j < B.nWeeks; j++)
 		{
-			cout << setw(7) << *(B.checkList + i * B.nWeeks + j) << setw(7) << "|";
+			if (B.checkList[i * B.nWeeks + j]) cout << center("Attended", 13) << '|';
+			else cout << center("X", 13) << '|';
 		}
 		cout << endl;
 		cout << string(54 + B.nWeeks * 14, '-') << "\n";
@@ -264,9 +265,7 @@ bool viewcheckin(Account user,Semester cursem)
 	Course B;
 	string x = "Students", path = "./TextFiles/";
 	string line;
-	printf("Enter years : ");
-	getline(cin, B.c_semester.year);
-	B.c_semester.semester = cursem.semester;
+	B.c_semester = cursem;
 	printf("Enter course ID: ");
 	getline(cin, B.courseID);
 	printf("Enter class ID: ");
@@ -310,7 +309,7 @@ bool viewcheckin(Account user,Semester cursem)
 			for (int j = 0; j < B.nWeeks; j++)
 			{
 
-				if (*(B.checkList + i * B.nWeeks + j) == true) cout << center("Attendance", 14) << "|";
+				if (*(B.checkList + i * B.nWeeks + j) == true) cout << center("Attended", 13) << "|";
 				else cout << center("X", 13) << "|";
 			}
 			cout << endl;
@@ -544,7 +543,7 @@ void ListOfCourse(Semester curS)
 	fout.close();
 	cout << "Enter your class : ";
 	string y;
-	cin >> y;
+	getline(cin, y);
 	ifstream fin;
 	fin.open("./TextFiles/"+h+"_"+sem+"_" + y + "_Schedules.txt");
 	if (fin.fail())
@@ -620,7 +619,7 @@ void viewStudentofAcourse(Semester cursem)
 	fin.ignore(INT_MAX, '\n');
 	getline(fin, line);
 	int n = stoi(line);
-	cout << "	       ======== Sudents of Course " << courseID << " =======" << endl;
+	cout << "	       ======== Students of Course " << courseID << " =======" << endl;
 	for (int i = 0; i < n; i++)
 	{
 		fin.ignore(INT_MAX, '\n');
