@@ -602,7 +602,7 @@ void viewStudentofAcourse(Semester cursem)
 {
 	string line;
 	string sem = cursem.semester;
-	string year = "2019-2020";
+	string year = cursem.year;
 	string classID;
 	string courseID;
 	printf("Enter course ID : ");
@@ -616,7 +616,8 @@ void viewStudentofAcourse(Semester cursem)
 		printf("Failed to open this file!\n");
 		return;
 	}
-	fin.ignore(INT_MAX, '\n');
+	getline(fin, line);
+	int nWeeks = stoi(line);
 	getline(fin, line);
 	int n = stoi(line);
 	cout << "	       ======== Students of Course " << courseID << " =======" << endl;
@@ -624,11 +625,16 @@ void viewStudentofAcourse(Semester cursem)
 	{
 		fin.ignore(INT_MAX, '\n');
 		getline(fin, line);
-		cout << "			" << std::string(20, '-') << "\n";
-		cout << "			|" << setw(2) << i << setw(2) << "|" << center(line, 15) << "|" << endl;;
-		for (int i = 0; i < 17; i++)
+		cout << string(20 + 10 + 15 + 2, '-') << "\n";
+		cout << setw(2) << i << setw(2) << "|" << center(line, 15) << "|";
+		getline(fin, line);
+		cout << center(line, 10) << "|";
+		getline(fin, line);
+		cout << center(line, 15) << "|";
+		cout << endl;
+		for (int i = 0; i < 6 + nWeeks; i++)
 			fin.ignore(INT_MAX, '\n');
 	}
-	cout << "			" << std::string(20, '-') << "\n";
+	cout << std::string(20, '-') << "\n";
 	fin.close();
 }
