@@ -1,4 +1,4 @@
-4
+6
 19127001
 Nguyen Van A
 19CLC5
@@ -26,4 +26,17 @@ Ngo Van D
 2
 CM101 19CLC5
 CS162 19CLC5
+
+188700
+Li Luong Kiet
+0
+2
+CM101 19CLC5
+CS162 19CLC5
+
+
+Li Luong Kiet
+0
+1
+CM101 19CLC5
 

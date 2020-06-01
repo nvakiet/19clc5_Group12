@@ -1,5 +1,5 @@
 #include "../Headers/lecturer.h"
-bool importScoreBoard(Semester curSem) {
+bool importScoreBoard(Semester curSem, Account user) {
 	string systemPath = "./TextFiles/";
 	ifstream fin;
 	ofstream fout;
@@ -8,8 +8,7 @@ bool importScoreBoard(Semester curSem) {
 	Course newScore;
 
 	cout << "Enter csv file path (or ./TextFiles/\"Filename\".csv if the file is in TextFiles folder): ";
-	cin >> path;
-	flushin(cin);
+	getline(cin, path);
 	//path = "./TextFiles/2019-2020_3rd Semester_CS162_19CLC5_Scoreboard.csv";
 	cout << "Enter course ID: ";
 	getline(cin, newScore.courseID);
@@ -53,14 +52,26 @@ bool importScoreBoard(Semester curSem) {
 	curSem.semester = "3rd Semester";*/
 	path = systemPath + curSem.year + '_' + curSem.semester + '_' + newScore.className + "_Schedules.txt";
 	fin.open(path);
-	if (!findACourseInfos(fin, newScore, newScore.courseID)) {
+	if (!findACourseInfos(fin, newScore, newScore.courseID, &line)) {
 		cerr << "Can't find the course!" << endl;
+		delete[] newScore.studentArr;
+		delete[] newScore.board;
 		return false;
 	}
 	fin.close();
+	if (line != user.username) {
+		cerr << "This account do not have the rights to edit this course." << endl;
+		cerr << "You are not the lecturer in charge of this course!" << endl;
+		delete[] newScore.studentArr;
+		delete[] newScore.board;
+		return false;
+	}
+
 	tm* dateArr = getWeeks(newScore.startDate, newScore.endDate, &newScore.nWeeks);
 	if (dateArr == nullptr || newScore.nWeeks <= 0) {
 		cerr << "Error getting schedule of the course!" << endl;
+		delete[] newScore.studentArr;
+		delete[] newScore.board;
 		return false;
 	}
 	path = systemPath + curSem.year + '_' + curSem.semester + '_' + newScore.courseID + '_' + newScore.className + "_Students.txt";
@@ -120,28 +131,39 @@ bool importScoreBoard(Semester curSem) {
 	}
 	fout << crs.nWeeks << endl
 		<< crs.nStudents << endl;
-	int i = 0;
-	for (int j = 0; j < crs.nStudents; j++) {
-		fout << crs.studentArr[j].ID << endl
-			<< crs.studentArr[j].fullname << endl
-			<< crs.studentArr[j].gender << endl
-			<< put_time(&crs.studentArr[j].birthDate, "%Y-%m-%d") << endl
-			<< crs.studentArr[j].active << endl;
-		if (newScore.studentArr[i].ID == crs.studentArr[j].ID) {
-			fout << newScore.board[i].midterm << endl
-				<< newScore.board[i].final << endl
-				<< newScore.board[i].bonus << endl
-				<< newScore.board[i].total << endl;
-			i++;
+	for (int i = 0; i < crs.nStudents; i++) {
+		fout << crs.studentArr[i].ID << endl
+			<< crs.studentArr[i].fullname << endl
+			<< crs.studentArr[i].gender << endl
+			<< put_time(&crs.studentArr[i].birthDate, "%Y-%m-%d") << endl
+			<< crs.studentArr[i].active << endl;
+		bool sameID = false;
+		for (int j = 0; j < newScore.nStudents; j++) {
+			//Delete an ID out of newScore array if that ID is the same
+			if (sameID == true) {
+				newScore.studentArr[j].ID = newScore.studentArr[j + 1].ID;
+				newScore.board[j] = newScore.board[j + 1];
+				continue;
+			}
+			else if (newScore.studentArr[j].ID == crs.studentArr[i].ID) {
+				fout << newScore.board[j].midterm << endl
+					<< newScore.board[j].final << endl
+					<< newScore.board[j].bonus << endl
+					<< newScore.board[j].total << endl;
+				sameID = true;
+				j--;
+				newScore.nStudents--;
+			}
 		}
-		else {
-			fout << crs.board[j].midterm << endl
-				<< crs.board[j].final << endl
-				<< crs.board[j].bonus << endl
-				<< crs.board[j].total << endl;
+		//If scanned all newScore array from csv file but still can't find the student's scores, output the old scores
+		if (sameID == false) {
+			fout << crs.board[i].midterm << endl
+				<< crs.board[i].final << endl
+				<< crs.board[i].bonus << endl
+				<< crs.board[i].total << endl;
 		}
 		for (int z = 0; z < crs.nWeeks; z++) {
-			fout << put_time(&dateArr[z], "%Y-%m-%d") << ' ' << crs.checkList[j * crs.nWeeks + z] << endl;
+			fout << put_time(&dateArr[z], "%Y-%m-%d") << ' ' << crs.checkList[i * crs.nWeeks + z] << endl;
 		}
 		fout << endl;
 	}
@@ -159,10 +181,8 @@ bool editAttendance(Semester curSem, Account user) {
 	ifstream fin;
 	ofstream fout;
 	int n;
-	string path, line, ID, date, active, lecturer;
+	string path, line, ID, date, active;
 	Course crs;
-	lecturer = user.username;
-	//lecturer = "dbtien";
 
 	cout << "Enter course ID: ";
 	getline(cin, crs.courseID);
@@ -197,35 +217,15 @@ bool editAttendance(Semester curSem, Account user) {
 		return false;
 	}
 	fin.open(path);
-	if (!findACourseInfos(fin, crs, crs.courseID)) {
+	if (!findACourseInfos(fin, crs, crs.courseID, &line)) {
 		cerr << "Can't find the course!" << endl;
 		return false;
 	}
 	fin.close();
 
-	fin.open(path);
-	if (!fin.is_open()) {
-		cerr << "Can't open data file in the path: " << path << endl;
-		return false;
-	}
-	getline(fin, line);
-	int nCourses = stoi(line);
-	if (nCourses == 0) return false;
-
-	bool correctAcc = false;
-	for (int i = 0; i < nCourses; i++) {
-		getline(fin, line);
-		if (line == crs.courseID) {
-			fin.ignore(INT_MAX, '\n');
-			getline(fin, line);
-			if (line == lecturer)
-				correctAcc = true;
-		}
-	}
-	fin.close();
-
-	if (!correctAcc) {
-		cout << "This account is not allowed to edit this course" << endl;
+	if (line != user.username) {
+		cerr << "This account do not have the rights to edit this course." << endl;
+		cerr << "You are not the lecturer in charge of this course!" << endl;
 		return false;
 	}
 
@@ -248,8 +248,7 @@ bool editAttendance(Semester curSem, Account user) {
 	getline(fin, line);
 	nWeeks = stoi(line);
 	fout << nWeeks << endl;
-	while (!fin.eof()) {
-		getline(fin, line);
+	while (getline(fin, line)) {
 		fout << line << endl;
 		if (ID == line) {
 			for (int i = 0; i < 8 + nWeeks; i++) {
@@ -265,18 +264,19 @@ bool editAttendance(Semester curSem, Account user) {
 	fin.close();
 
 	if (remove(path.c_str()) != 0) {
-		cout << "Error deleting file" << endl;
+		cerr << "Failed to delete old attendance list!" << endl;
 		remove("./TextFiles/Temp.txt");
 		return false;
 	}
-	else
-		cout << "File successfully deleted" << endl;
-
-	if (rename("./TextFiles/Temp.txt", path.c_str()) == 0)
-		cout << "File successfully renamed" << endl;
 	else {
-		cout << "Error renaming file" << endl;
-		return false;
+		cout << "The old attendance list has been successfully deleted!" << endl;
+		if (rename("./TextFiles/Temp.txt", path.c_str()) == 0)
+			cout << "Successfully created new attendance list!" << endl;
+		else {
+			cout << "Failed to create new attendance list!" << endl;
+			remove("./TextFiles/Temp.txt");
+			return false;
+		}
 	}
 
 	return true;
@@ -286,10 +286,8 @@ bool editGrade(Semester curSem, Account user) {
 	ifstream fin;
 	ofstream fout;
 	int n;
-	string path, line, ID, midterm, final, bonus, total, lecturer;
+	string path, line, ID, midterm, final, bonus, total;
 	Course crs;
-	lecturer = user.username;
-	//lecturer = "dbtien";
 
 	cout << "Enter course ID: ";
 	getline(cin, crs.courseID);
@@ -324,35 +322,15 @@ bool editGrade(Semester curSem, Account user) {
 		return false;
 	}
 	fin.open(path);
-	if (!findACourseInfos(fin, crs, crs.courseID)) {
+	if (!findACourseInfos(fin, crs, crs.courseID, &line)) {
 		cerr << "Can't find the course!" << endl;
 		return false;
 	}
 	fin.close();
 
-	fin.open(path);
-	if (!fin.is_open()) {
-		cerr << "Can't open data file in the path: " << path << endl;
-		return false;
-	}
-	getline(fin, line);
-	int nCourses = stoi(line);
-	if (nCourses == 0) return false;
-
-	bool correctAcc = false;
-	for (int i = 0; i < nCourses; i++) {
-		getline(fin, line);
-		if (line == crs.courseID) {
-			fin.ignore(INT_MAX, '\n');
-			getline(fin, line);
-			if (line == lecturer)
-				correctAcc = true;
-		}
-	}
-	fin.close();
-
-	if (!correctAcc) {
-		cout << "This account is not allowed to edit this course" << endl;
+	if (line != user.username) {
+		cerr << "This account do not have the rights to edit this course." << endl;
+		cerr << "You are not the lecturer in charge of this course!" << endl;
 		return false;
 	}
 
@@ -399,8 +377,7 @@ bool editGrade(Semester curSem, Account user) {
 	getline(fin, line);
 	nWeeks = stoi(line);
 	fout << nWeeks << endl;
-	while (!fin.eof()) {
-		getline(fin, line);
+	while (getline(fin, line)) {
 		fout << line << endl;
 		if (ID == line) {
 			for (int i = 0; i < 4; i++) {
@@ -419,18 +396,19 @@ bool editGrade(Semester curSem, Account user) {
 	fin.close();
 
 	if (remove(path.c_str()) != 0) {
-		cout << "Error deleting file" << endl;
+		cerr << "Failed to delete old scoreboard!" << endl;
 		remove("./TextFiles/Temp.txt");
 		return false;
 	}
-	else
-		cout << "File successfully deleted" << endl;
-
-	if (rename("./TextFiles/Temp.txt", path.c_str()) == 0)
-		cout << "File successfully renamed" << endl;
 	else {
-		cout << "Error renaming file" << endl;
-		return false;
+		cout << "The old scoreboard has been successfully deleted!" << endl;
+		if (rename("./TextFiles/Temp.txt", path.c_str()) == 0)
+			cout << "Successfully created new scoreboard!" << endl;
+		else {
+			cout << "Failed to create new scoreboard!" << endl;
+			remove("./TextFiles/Temp.txt");
+			return false;
+		}
 	}
 
 	return true;

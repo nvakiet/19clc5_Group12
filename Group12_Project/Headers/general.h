@@ -137,7 +137,7 @@ void readRegCourses(ifstream& fin, RegCourses*& students, int& nReg);
 	//Read info of courses from file
 void readCoursesInfos(ifstream& fin, string*& slack, Course*& courseArr, int& nCourses);
 	//Find and read info of a course
-bool findACourseInfos(ifstream& fin, Course& crs, string crsID);
+bool findACourseInfos(ifstream& fin, Course& crs, string crsID, string* lecturerAcc = nullptr);
 
 
 typedef bool (*cmpr)(void*, void*);

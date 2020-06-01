@@ -1208,7 +1208,7 @@ void readCoursesInfos(ifstream& fin, string*& slack, Course*& courseArr, int& nC
 	}
 }
 
-bool findACourseInfos(ifstream& fin, Course &crs, string crsID) {
+bool findACourseInfos(ifstream& fin, Course &crs, string crsID, string* lecturerAcc) {
 	string line;
 	getline(fin, line);
 	int nCourses = stoi(line);
@@ -1217,7 +1217,8 @@ bool findACourseInfos(ifstream& fin, Course &crs, string crsID) {
 		getline(fin, crs.courseID);
 		if (crs.courseID == crsID) {
 			getline(fin, crs.courseName);
-			fin.ignore(INT_MAX, '\n');
+			if (lecturerAcc != nullptr) getline(fin, *lecturerAcc);
+			else fin.ignore(INT_MAX, '\n');
 			getline(fin, crs.courseLecturer.fullname);
 			getline(fin, crs.courseLecturer.email);
 			getline(fin, crs.courseLecturer.academicRank);
@@ -1750,23 +1751,10 @@ bool addCourseStudent(Semester curSem, cmpr orderStu, cmpr orderAcc) {
 			return false;
 		}
 	}
-	//- If they are not from any class in the system: Take student info from user input (student class = 0) and create new account
+	//- If they are not from any class in the system:
+	//		+ If found their account, load the student info from their account
+	//		+ If can't find their account, take student info from user input (student class = 0) and create new account
 	else {
-		cout << "Enter student full name: ";
-		getline(cin, newStu.fullname);
-		cout << "Enter student gender (Male/Female): ";
-		getline(cin, line);
-		newStu.gender = line.front();
-		cout << "Enter student birth date (YYYY-MM-DD): ";
-		cin >> get_time(&newStu.birthDate, "%Y-%m-%d");
-		if (!cin) {
-			cerr << "Invalid input!" << endl;
-			flushin(cin);
-			cout << "Enter student birth date (YYYY-MM-DD): ";
-			cin >> get_time(&newStu.birthDate, "%Y-%m-%d");
-		}
-		flushin(cin);
-		newStu.active = true;
 		//Register student account
 		path = sysPath + "Students.txt";
 		if (emptyFile(path)) {
@@ -1813,8 +1801,13 @@ bool addCourseStudent(Semester curSem, cmpr orderStu, cmpr orderAcc) {
 
 			bool sameID = false;
 			for (int i = 0; i < nStu && sameID == false; i++) {
-				if (newStu.ID == oldStu[i].username)
+				if (newStu.ID == oldStu[i].username) {
+					newStu.fullname = oldStu[i].studentProfile.fullname;
+					newStu.gender = oldStu[i].studentProfile.gender;
+					newStu.birthDate = oldStu[i].studentProfile.birthDate;
+					newStu.active = oldStu[i].studentProfile.active;
 					sameID = true;
+				}
 			}
 			fout.open(path);
 			if (!fout.is_open()) {
@@ -1824,6 +1817,21 @@ bool addCourseStudent(Semester curSem, cmpr orderStu, cmpr orderAcc) {
 				return false;
 			}
 			if (!sameID) {
+				cout << "Enter student full name: ";
+				getline(cin, newStu.fullname);
+				cout << "Enter student gender (Male/Female): ";
+				getline(cin, line);
+				newStu.gender = line.front();
+				cout << "Enter student birth date (YYYY-MM-DD): ";
+				cin >> get_time(&newStu.birthDate, "%Y-%m-%d");
+				if (!cin) {
+					cerr << "Invalid input!" << endl;
+					flushin(cin);
+					cout << "Enter student birth date (YYYY-MM-DD): ";
+					cin >> get_time(&newStu.birthDate, "%Y-%m-%d");
+				}
+				flushin(cin);
+				newStu.active = true;
 				oldStu[nStu].username = newStu.ID;
 				char temp[9];
 				strftime(temp, 9, "%Y%m%d", &newStu.birthDate);
