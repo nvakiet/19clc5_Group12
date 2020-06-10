@@ -1,6 +1,6 @@
 No;Course ID;Course Name;Class;Lecturer Username;Lecturer Name;Lecturer Email;Lecturer Degree;Lecturer Gender;Start Date;End Date;Day Of Week;Start Time;End Time;Room
-1;CSC10101;Ky nang mem;19CLC7;btkngan;Bui Thi Kim Ngan;btkngan@hcmus.edu.vn;PhD;Female;06/04/2020;01/06/2020;Mon;9:30;11:30;I42
-2;MTH0009;Toan roi rac;19CLC5;lvchanh;Le Van Chanh;lvchanh@hcmus.edu.vn;Professor;Male;06/04/2020;01/06/2020;Sat;15:30;17:30;I23
-3;CT106;Vi tich phan 1B;19CLC5;bxthang;Bui Xuan Thanh;bxthang@hcmus.edu.vn;PhD;Male;06/04/2020;12/06/2020;Wen;13:30;17:30;F203
-4;BAA00005;Kinh Te Dai Cuong;19CLC5;htlna;Huynh Thi Ly Na;htlna@hcmus.edu.vn;PhD;Female;06/04/2020;01/07/2020;Tues;13:30;15:30;C22
-5;CMS002;Triet Hoc;19CLC5;ntphuong;Ngo Tuan Phuong;ntphuong@hcmus.edu.vn;PhD;Male;06/04/2020;25/06/2020;Tues;13:30;17:05;E102
+1;CSC10101;Ky nang mem;19CLC7;btkngan;Bui Thi Kim Ngan;btkngan@hcmus.edu.vn;PhD;Female;2020-04-06;2020-06-15;Mon;09:30;11:30;I42
+2;MTH0009;Toan roi rac;19CLC7;lvchanh;Le Van Chanh;lvchanh@hcmus.edu.vn;Professor;Male;2020-04-11;2020-06-20;Sat;13:30;17:30;I23
+3;CT106;Vi tich phan 1B;19CLC7;bxthang;Bui Xuan Thang;bxthang@hcmus.edu.vn;PhD;Male;2020-04-11;2020-06-20;Sat;07:30;11:30;I24
+4;BAA00005;Kinh Te Dai Cuong;19CLC7;htlna;Huynh Thi Ly Na;htlna@hcmus.edu.vn;PhD;Female;2020-04-07;2020-06-16;Tue;13:30;15:30;C22
+5;CMS002;Triet Hoc;19CLC7;nqhuy;Ngo Quang Huy;nqhuy@hcmus.edu.vn;PhD;Male;2020-04-07;2020-06-16;Tue;15:30;17:30;Giang duong 1

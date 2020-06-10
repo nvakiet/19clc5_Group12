@@ -1,0 +1,71 @@
+5
+CS162
+Introduction to Programming
+dbtien
+Dinh Ba Tien
+dbtien@hcmus.edu.vn
+PhD
+M
+2020-04-06
+2020-06-15
+Mon
+07:30
+11:30
+I42
+
+CM101
+Communications
+dnvu
+Duong Nguyen Vu
+dnvu@hcmus.edu.vn
+Professor
+M
+2020-04-08
+2020-06-17
+Wed
+19:30
+22:30
+I23
+
+CT106
+Vi tich phan 1B
+bxthang
+Bui Xuan Thang
+bxthang@hcmus.edu.vn
+PhD
+M
+2020-04-09
+2020-06-18
+Thu
+13:30
+17:30
+F203
+
+TH123
+Vat ly Dai Cuong
+vththu
+Vu Thi Hanh Thu
+vththu@hcmus.edu.vn
+PhD
+F
+2020-04-10
+2020-06-19
+Fri
+07:30
+11:30
+C22
+
+CMS002
+Triet Hoc
+ntphuong
+Ngo Tuan Phuong
+ntphuong@hcmus.edu.vn
+PhD
+M
+2020-04-11
+2020-06-20
+Sat
+07:30
+11:30
+Hoi truong 1
+

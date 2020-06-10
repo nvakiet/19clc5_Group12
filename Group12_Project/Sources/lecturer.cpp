@@ -23,7 +23,7 @@ bool importScoreBoard(Semester curSem, Account user) {
 	int count = 0;
 	fin.ignore(INT_MAX, '\n');
 	while (getline(fin, line))
-		count++;
+		if (!line.empty()) count++;
 	n = count;
 	newScore.nStudents = n;
 	newScore.studentArr = new Student[newScore.nStudents];

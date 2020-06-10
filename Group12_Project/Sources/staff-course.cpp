@@ -1060,8 +1060,7 @@ bool importCourse(Semester curSem) {
 	else {
 		fin.open(csvPath);
 		fin.ignore(INT_MAX, '\n'); //Ignore the first row that contains the column titles
-		while (!fin.eof()) {
-			fin.ignore(INT_MAX, ';'); //Ignore "No." column
+		while (getline(fin, line, ';')) {
 			getline(fin, inCourse.courseID, ';');
 			getline(fin, inCourse.courseName, ';');
 			getline(fin, inCourse.className, ';');

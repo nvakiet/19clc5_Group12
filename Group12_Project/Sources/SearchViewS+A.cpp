@@ -4,7 +4,7 @@
 void CSVScoreboard(Course B)
 {
 
-	string y = "Students", path = "./TextFiles/";
+	string y = "Scoreboard", path = "./TextFiles/";
 	int x;
 	int z = 1;//De luu tru thu tu hoc sinh
 	cout << "Do you want to export this file to CSV ? (1: Yes/0 : No) : ";
@@ -21,7 +21,7 @@ void CSVScoreboard(Course B)
 	{
 		ofstream fout;
 		fout.open(path +B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + y + ".csv");
-		fout << "[NO]" << ";" << "[ID]" << ";" << "[First Name]" << ";" << "[Last Name]" << ";" << "[Midterm]" << ";" << "[Final]" << ";" << "[Bonus]" << ";" << "[Total]" << endl;
+		fout << "NO" << ";" << "ID" << ";" << "First Name" << ";" << "Last Name" << ";" << "Midterm" << ";" << "Final" << ";" << "Bonus" << ";" << "Total" << endl;
 		for (int i = 0; i < B.nStudents; i++)
 		{
 			size_t found = B.studentArr[i].fullname.find_last_of(" ");
@@ -35,7 +35,7 @@ void CSVScoreboard(Course B)
 }
 void CSVAttendance(Course B, string*& classdate)
 {
-	string y = "Students", path = "./TextFiles/";
+	string y = "Attendance", path = "./TextFiles/";
 	int x;
 	int z = 1;//De luu tru thu tu hoc sinh
 	cout << "Do you want to export this file to CSV ? (1: Yes/0 : No) : ";
@@ -52,7 +52,7 @@ void CSVAttendance(Course B, string*& classdate)
 	{
 		ofstream fout;
 		fout.open(path +B.c_semester.year + "_" + B.c_semester.semester + "_" + B.courseID + "_" + B.className + "_" + y + ".csv");
-		fout << "[NO]" << ";" << "[ID]" << ";" << "[First Name]" << ";" << "[Last Name]" << ";" << "[Gender]" << ";" << "[BirthDate]";
+		fout << "NO" << ";" << "ID" << ";" << "First Name" << ";" << "Last Name" << ";" << "Gender" << ";" << "BirthDate";
 		for (int i = 0; i < B.nWeeks; i++)
 			fout << ";" << classdate[i];
 		fout << endl;
@@ -396,7 +396,7 @@ bool viewscore(Account user)
 void viewSchedules(Account user, Semester curSem)
 {
 	Course B;
-	string ID = user.studentProfile.ID;
+	string ID;
 	string s = curSem.semester;
 	string year = curSem.year;
 	string line;
@@ -411,23 +411,31 @@ void viewSchedules(Account user, Semester curSem)
 	}
 	getline(fin, line);
 	int n = stoi(line);
-	for (int i = 0; i < n; i++)
+	bool foundStu = false;
+	for (int i = 0; i < n && foundStu == false; i++)
 	{
+		getline(fin, ID);
+		for (int j = 0; j < 2; j++)
+			fin.ignore(INT_MAX, '\n');
 		getline(fin, line);
-		if (line == ID)
+		int t = stoi(line);
+		if (user.username == ID)
 		{
+			foundStu = true;
+			string courseID, classID;
+			ifstream f;
 			cout << "				=======SCHEDULES======= " << endl;
-			for (int j = 0; j < 2; j++)
-				fin.ignore(INT_MAX, '\n');
-			getline(fin, line);
-			int t = stoi(line);
+			cout << string(155, '-') << endl;
+			cout << "|" << center("Course ID", 15) << "|" << center("Course Name", 30) << "|"
+				<< center("Class", 10) << "|"
+				<< center("S.Date", 15) << "|" << center("E.Date", 15) << "|"
+				<< center("DoW", 15) << "|" << center("S.Time", 15) << "|"
+				<< center("E.Time", 15) << "|" << center("Room", 15) << "|" << endl;
+			cout << string(155, '-') << endl;
 			for (int j = 0; j < t; j++)
 			{
-				string courseID, classID;
 				getline(fin, courseID, ' ');
 				getline(fin, classID);
-				ifstream f;
-
 				f.open("./TextFiles/" + year + "_" + s + "_" + classID + "_" + h + ".txt");
 				getline(f, line);
 				int num = stoi(line);
@@ -436,21 +444,12 @@ void viewSchedules(Account user, Semester curSem)
 					getline(f, line);
 					if (line == courseID)
 					{
-						cout << endl;
-						cout << classID << endl;
-						cout << line << endl;
+						cout << '|' << center(courseID, 15) << '|';
 						getline(f, line);
-						cout << line << endl;
+						cout << center(line, 30) << '|';
+						cout << center(classID, 10) << '|';
 						for (int i = 0; i < 5; i++)
 							f.ignore(INT_MAX, '\n');
-
-						cout << " " << string(90, '-') << "\n";
-						cout << "|" << center("S.Date", 15) << "|" << center("E.Date", 15) << "|"
-							<< center("DoW", 15) << "|" << center("S.Time", 15) << "|"
-							<< center("E.Time", 15) << "|" << center("Room", 10) << "|" << endl;
-						cout << " " << string(90, '-') << "\n";
-						getline(f, line);
-						cout << "|" << center(line, 15) << "|";
 						getline(f, line);
 						cout << center(line, 15) << "|";
 						getline(f, line);
@@ -460,9 +459,10 @@ void viewSchedules(Account user, Semester curSem)
 						getline(f, line);
 						cout << center(line, 15) << "|";
 						getline(f, line);
-						cout << center(line, 10) << "|" << endl;
-						cout << " " << string(90, '-') << "\n";
-						cout << endl;
+						cout << center(line, 15) << "|";
+						getline(f, line);
+						cout << center(line, 15) << "|" << endl;
+						cout << string(155, '-') << endl;
 						break;
 					}
 					else
@@ -477,7 +477,7 @@ void viewSchedules(Account user, Semester curSem)
 		}
 		else
 		{
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < t+1; i++)
 				fin.ignore(INT_MAX, '\n');
 		}
 	}
@@ -551,15 +551,15 @@ void ListOfCourse(Semester curS)
 	int x;
 	getline(fin, line);
 	x = stoi(line);
-	cout << std::string(209, '-') << "\n";
+	cout << std::string(219, '-') << "\n";
 	cout << "|" << center("C.ID", 10) << "|" << center("C.Name", 40) << "|"
 		<< center("L.ShortN", 10) << "|" << center("L.Name", 30) << "|"
 		<< center("L.Email", 30) << "|" << center("L.Degree", 15) << "|"
 		<< center("L.Gender", 10) << "|" << center("S.Date", 10) << "|"
 		<< center("E.Date", 10) << "|" << center("DoW", 5) << "|"
 		<< center("S.Time", 10) << "|" << center("E.Time", 10) << "|"
-		<< center("Room", 5) << "|" << endl;
-	cout << std::string(209, '-') << "\n";
+		<< center("Room", 15) << "|" << endl;
+	cout << std::string(219, '-') << "\n";
 	for (int i = 0; i < x; i++)
 	{
 		getline(fin, line);
@@ -587,9 +587,9 @@ void ListOfCourse(Semester curS)
 		getline(fin, line);
 		cout << center(line, 10) << "|";
 		getline(fin, line);
-		cout << center(line, 5) << "|";
+		cout << center(line, 15) << "|";
 		cout << endl;
-		cout << std::string(209, '-') << "\n";
+		cout << std::string(219, '-') << "\n";
 		fin.ignore(INT_MAX, '\n');
 	}
 

@@ -3,15 +3,13 @@ bool importClass(cmpr orderStu, cmpr orderAcc) {
 	string systemPath = "./TextFiles/", fileEx = "_Students.txt";
 	ifstream fin;
 	ofstream fout;
-	int n;
+	int n = 0;
 	string path, DoB, sex, ClassID, line, lastname, firstname;
 	cout << "Enter csv file path (or ./TextFiles/\"Filename\".csv if the file is in TextFiles folder): ";
-	cin >> path;
-	flushin(cin);
+	getline(cin, path);
 	viewClasses();
 	cout << "Enter new class ID: ";
-	cin >> ClassID;
-	flushin(cin);
+	getline(cin, ClassID);
 	//Get number of student in the csv file
 	fin.open(path);
 	if (!fin.is_open()) {
@@ -20,7 +18,7 @@ bool importClass(cmpr orderStu, cmpr orderAcc) {
 	}
 	fin.ignore(INT_MAX, '\n');
 	while (getline(fin, line)) {
-		n = stoi(line.substr(0, line.find_first_of(';', 0)));
+		if (!line.empty()) n = stoi(line.substr(0, line.find_first_of(';', 0)));
 	}
 	fin.close();
 

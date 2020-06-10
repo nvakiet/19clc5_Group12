@@ -88,7 +88,7 @@ bool logIn(Account& user) {
 				return true;
 			}
 			else {
-				for (int j = 0; j < 6; j++)
+				for (int j = 0; j < 5; j++)
 					fin.ignore(INT_MAX, '\n');
 			}
 		}
