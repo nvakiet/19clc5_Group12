@@ -1,3 +1,6 @@
 No;Course ID;Course Name;Class;Lecturer Username;Lecturer Name;Lecturer Email;Lecturer Degree;Lecturer Gender;Start Date;End Date;Day Of Week;Start Time;End Time;Room
-1;CS162;Introduction to Programming;19CLC5;dbtien;Dinh Ba Tien;dbtien@hcmus.edu.vn;PhD;Male;2020-04-06;2020-06-01;Mon;07:30;11:30;I42
-2;CM101;Communications;19CLC5;dnvu;Duong Nguyen Vu;dnvu@hcmus.edu.vn;Professor;Male;2020-04-06;2020-06-01;Sat;13:30;17:30;I23
+1;CS162;Introduction to Programming;19CLC5;dbtien;Dinh Ba Tien;dbtien@hcmus.edu.vn;PhD;Male;06/04/2020;01/06/2020;Mon;7:30;11:30;I42
+2;CM101;Communications;19CLC5;dnvu;Duong Nguyen Vu;dnvu@hcmus.edu.vn;Professor;Male;06/04/2020;01/06/2020;Sat;13:30;17:30;I23
+3;CT106;Vi tich phan 1B;19CLC5;bxthang;Bui Xuan Thanh;bxthang@hcmus.edu.vn;PhD;Male;06/04/2020;12/06/2020;Wen;13:30;17:30;F203
+4;TH123;Vat ly Dai Cuong;19CLC5;vththu;Vu Thi Hanh Thu;vththu@hcmus.edu.vn;PhD;Female;06/04/2020;01/07/2020;Tues;7:30;11:30;C22
+5;CMS002;Triet Hoc;19CLC5;ntphuong;Ngo Tuan Phuong;ntphuong@hcmus.edu.vn;PhD;Male;06/04/2020;25/06/2020;Tues;13:30;15:30;E102
